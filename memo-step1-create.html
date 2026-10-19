@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal System - สร้างบันทึกข้อความ (แบบร่าง)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">@theme { --font-sans: 'Kanit', sans-serif; }</style>
+    <link rel="stylesheet" href="shared-styles.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        .field-row { display: grid; grid-template-columns: 160px 1fr; align-items: start; gap: 8px; }
+        .field-label { font-size: 13px; font-weight: 600; color: #475569; padding-top: 10px; display: flex; align-items: center; gap: 4px; }
+        .field-label .req { color: #EF4444; font-size: 14px; }
+        /* Multi-Select Dropdown */
+        .multi-select { position: relative; }
+        .multi-select-trigger {
+            display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+            min-height: 42px; padding: 6px 12px; border: 1px solid #CBD5E1; border-radius: 8px;
+            background: #fff; cursor: pointer; transition: border .2s;
+        }
+        .multi-select-trigger:focus-within, .multi-select-trigger.open { border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+        .multi-select-trigger .placeholder { color: #94A3B8; font-size: 14px; }
+        .ms-tag {
+            display: inline-flex; align-items: center; gap: 4px;
+            background: #EFF6FF; color: #2563EB; font-size: 12px; font-weight: 600;
+            padding: 3px 10px; border-radius: 6px; white-space: nowrap;
+        }
+        .ms-tag .ms-rm { cursor: pointer; font-size: 14px; color: #93C5FD; font-weight: 700; margin-left: 2px; }
+        .ms-tag .ms-rm:hover { color: #EF4444; }
+        .ms-chevron { margin-left: auto; color: #94A3B8; font-size: 12px; transition: transform .2s; flex-shrink: 0; }
+        .multi-select-trigger.open .ms-chevron { transform: rotate(180deg); }
+        .ms-dropdown {
+            display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+            background: #fff; border: 1px solid #E2E8F0; border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0,0,0,.12); z-index: 50; max-height: 220px; overflow-y: auto;
+        }
+        .ms-dropdown.open { display: block; }
+        .ms-option {
+            display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+            cursor: pointer; font-size: 14px; color: #475569; transition: background .15s;
+        }
+        .ms-option:hover { background: #F8FAFC; }
+        .ms-option.selected { background: #EFF6FF; color: #2563EB; font-weight: 600; }
+        .ms-option .ms-check { width: 18px; height: 18px; border: 2px solid #CBD5E1; border-radius: 4px;
+            display: flex; align-items: center; justify-content: center; font-size: 11px; color: transparent; flex-shrink: 0; }
+        .ms-option.selected .ms-check { background: #2563EB; border-color: #2563EB; color: #fff; }
+        /* LUR Modal */
+        .lur-row { cursor: pointer; transition: background .15s; }
+        .lur-row:hover { background: #F1F5F9; }
+        .lur-row.selected { background: #EFF6FF; }
+        .lur-row td { padding: 10px 12px; border-bottom: 1px solid #F1F5F9; }
+        /* Status Dropdown for ถอยสัญญา */
+        .status-option { display: flex; align-items: center; gap: 8px; padding: 8px 14px; cursor: pointer; transition: background .15s; border-radius: 6px; }
+        .status-option:hover { background: #F1F5F9; }
+        .status-option.selected { background: #EFF6FF; }
+    </style>
+</head>
+<body>
+<div id="topbar-container"></div>
+<div id="sidebar-container"></div>
+<div class="ml-[260px] mt-14 p-7 min-h-[calc(100vh-56px)] max-md:ml-0 max-md:p-4 max-[480px]:mt-[50px] max-[480px]:p-3">
+
+    <!-- Page Header -->
+    <div class="flex justify-between items-start mb-6 max-md:flex-col max-md:gap-3">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl">
+                <i data-lucide="notebook-pen" class="w-6 h-6" style="color:#2563EB;"></i> สร้างบันทึกข้อความ
+            </h1>
+            <p class="text-slate-500 text-sm mt-1">ขั้นตอนที่ 1: ผู้ใช้งานกรอกข้อมูลเพื่อสร้างบันทึกข้อความ</p>
+        </div>
+    </div>
+
+    <!-- Stepper -->
+    <div id="stepper-container"></div>
+
+    <!-- Status Header -->
+    <div class="flex items-center gap-4 mb-5 flex-wrap">
+        <div class="flex items-center gap-3 ml-auto">
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+                <i data-lucide="user" class="w-3.5 h-3.5"></i> ผู้ใช้งานทั่วไป
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-[13px] font-semibold bg-slate-100 text-slate-500 border border-slate-300">
+                <i data-lucide="circle" class="w-2 h-2 fill-current"></i> สร้างคำขอ (แบบร่าง)
+            </span>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- ส่วนที่ 1: ข้อมูลผู้ส่งคำขอ              -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="bg-white rounded-xl p-6 shadow-sm mb-5">
+        <h2 class="text-[16px] font-bold text-[#1B3A6B] mb-5 pb-3 border-b border-slate-200 flex items-center gap-2.5">
+            <i data-lucide="user" class="w-5 h-5 text-blue-600"></i> ข้อมูลผู้ส่งคำขอ
+        </h2>
+        <div class="space-y-4 mt-2">
+            <!-- ชื่อผู้ส่งคำขอ -->
+            <div class="field-row">
+                <div class="field-label">ชื่อผู้ส่งคำขอ <span class="req">*</span></div>
+                <input type="text" value="นางสาววิภา สุขใจ" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm bg-slate-50 text-slate-500" readonly>
+            </div>
+            <!-- เบอร์โทรศัพท์ -->
+            <div class="field-row">
+                <div class="field-label">เบอร์โทรศัพท์ <span class="req">*</span></div>
+                <input type="text" placeholder="ระบุเบอร์โทรศัพท์ที่ติดต่อได้" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm focus:border-blue-500 outline-none" value="091-234-5678">
+            </div>
+            <!-- แผนก -->
+            <div class="field-row">
+                <div class="field-label">แผนก <span class="req">*</span></div>
+                <select class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm focus:border-blue-500 outline-none bg-white">
+                    <option selected>ฝ่ายจัดซื้อ</option>
+                    <option>ฝ่ายการตลาด</option>
+                    <option>ฝ่ายเทคโนโลยีสารสนเทศ</option>
+                    <option>ฝ่ายปฏิบัติการ</option>
+                    <option>ฝ่ายทรัพยากรบุคคล</option>
+                    <option>ฝ่ายบัญชีและการเงิน</option>
+                </select>
+            </div>
+            <!-- ผู้อนุมัติ -->
+            <div class="field-row">
+                <div class="field-label">ผู้อนุมัติ <span class="req">*</span></div>
+                <select class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm focus:border-blue-500 outline-none bg-white">
+                    <option selected>คุณสมชาย ผู้จัดการฝ่าย</option>
+                    <option>คุณวิชัย รัตนกุล</option>
+                    <option>คุณธนากร ศรีสวัสดิ์</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- ส่วนที่ 2: ประเภทบันทึก                   -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="bg-white rounded-xl p-6 shadow-sm mb-5">
+        <h2 class="text-[16px] font-bold text-[#1B3A6B] mb-5 pb-3 border-b border-slate-200 flex items-center gap-2.5">
+            <i data-lucide="list-checks" class="w-5 h-5 text-blue-600"></i> ประเภทบันทึก
+        </h2>
+
+        <div class="field-row mb-5 mt-2">
+            <div class="field-label">เลือกประเภท <span class="req">*</span></div>
+            <select id="memoTypeSelect" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm focus:border-blue-500 outline-none bg-white" onchange="selectMemoType(this.value)">
+                <option value="">— เลือกประเภทบันทึก —</option>
+                <option value="withdraw">ขอถอยสัญญา</option>
+                <option value="amend">การแก้สัญญาฉบับสมบูรณ์</option>
+                <option value="cancel">ขอยกเลิกสัญญา</option>
+                <option value="backdate">ขอทำสัญญาย้อนหลัง</option>
+                <option value="other">อื่นๆ</option>
+            </select>
+        </div>
+
+        <!-- ข้อมูลอื่นๆ (แสดงเมื่อเลือก อื่นๆ) -->
+        <div id="otherDetail" class="field-row mb-5 is-hidden">
+            <div class="field-label">ข้อมูลอื่นๆ <span class="req">*</span></div>
+            <textarea rows="3" placeholder="กรุณาระบุรายละเอียดเพิ่มเติม..." class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm focus:border-blue-500 outline-none resize-y"></textarea>
+        </div>
+
+        <!-- เลขอ้างอิง LUR (แสดงเมื่อเลือก ขอถอยสัญญา / แก้สัญญา / ยกเลิกสัญญา) -->
+        <div id="lurRefSection" class="field-row mb-5 is-hidden">
+            <div class="field-label">เลขอ้างอิง LUR <span class="req">*</span></div>
+            <div class="flex items-center gap-3">
+                <input type="text" id="lurRefDisplay" placeholder="เลือก LUR จากระบบ" class="flex-1 px-3 py-2.5 border border-slate-300 rounded-lg text-sm bg-slate-50" readonly>
+                <button type="button" onclick="openLURModal()" class="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors shrink-0">
+                    <i data-lucide="search" class="w-4 h-4"></i> เลือก LUR
+                </button>
+            </div>
+        </div>
+
+        <!-- เลือกสถานะที่จะถอยสัญญา (เฉพาะขอถอยสัญญา) -->
+        <div id="withdrawStatusSection" class="field-row mb-5 is-hidden">
+            <div class="field-label">ถอยไปสถานะ <span class="req">*</span></div>
+            <select class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm focus:border-blue-500 outline-none bg-white">
+                <option value="">— เลือกสถานะที่จะถอย —</option>
+                <option>ส่งกลับเพื่อแก้ไข</option>
+                <option>เลือกการลงนาม</option>
+            </select>
+        </div>
+
+        <!-- บริษัทผู้ทำสัญญา (เฉพาะขอทำสัญญาย้อนหลัง) -->
+        <div id="backdateCompanySection" class="field-row mb-5 is-hidden">
+            <div class="field-label">บริษัทผู้ทำสัญญา <span class="req">*</span></div>
+            <div class="multi-select" id="companyMultiSelect">
+                <div class="multi-select-trigger" onclick="toggleCompanyDropdown()">
+                    <span class="placeholder" id="companyPlaceholder">— เลือกบริษัท (เลือกได้หลายบริษัท) —</span>
+                    <span class="ms-chevron">&#9662;</span>
+                </div>
+                <div class="ms-dropdown" id="companyDropdown">
+                    <div class="ms-option" data-value="planb" onclick="toggleCompanyOption(this)">
+                        <div class="ms-check">&#10003;</div>
+                        <span>บริษัท แพลนบี มีเดีย จำกัด (มหาชน)</span>
+                    </div>
+                    <div class="ms-option" data-value="masterad" onclick="toggleCompanyOption(this)">
+                        <div class="ms-check">&#10003;</div>
+                        <span>บริษัท มาสเตอร์ แอด จำกัด (มหาชน)</span>
+                    </div>
+                    <div class="ms-option" data-value="pbdigital" onclick="toggleCompanyOption(this)">
+                        <div class="ms-check">&#10003;</div>
+                        <span>บริษัท พีบี ดิจิทัล มีเดีย จำกัด</span>
+                    </div>
+                    <div class="ms-option" data-value="oppo" onclick="toggleCompanyOption(this)">
+                        <div class="ms-check">&#10003;</div>
+                        <span>บริษัท ออปโป้ จำกัด</span>
+                    </div>
+                    <div class="ms-option" data-value="brandcomm" onclick="toggleCompanyOption(this)">
+                        <div class="ms-check">&#10003;</div>
+                        <span>บริษัท แบรนด์ คอมมิวนิเคชั่น จำกัด</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- เลือกปีย้อนหลัง (เฉพาะขอทำสัญญาย้อนหลัง) -->
+        <div id="backdateYearSection" class="field-row mb-5 is-hidden">
+            <div class="field-label">เลือกปีย้อนหลัง <span class="req">*</span></div>
+            <select id="backdateYear" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm focus:border-blue-500 outline-none bg-white">
+                <option value="">— เลือกปี —</option>
+            </select>
+        </div>
+
+        <!-- เลือกจำนวนสัญญา (เฉพาะขอทำสัญญาย้อนหลัง) -->
+        <div id="backdateCountSection" class="field-row mb-5 is-hidden">
+            <div class="field-label">จำนวนสัญญา <span class="req">*</span></div>
+            <input type="number" min="1" value="1" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm focus:border-blue-500 outline-none" placeholder="ระบุจำนวนสัญญา">
+        </div>
+
+        <!-- ผู้รับผิดชอบสัญญา (เฉพาะขอทำสัญญาย้อนหลัง) -->
+        <div id="backdateOwnerSection" class="field-row mb-5 is-hidden">
+            <div class="field-label">ผู้รับผิดชอบสัญญา <span class="req">*</span></div>
+            <select class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm focus:border-blue-500 outline-none bg-white">
+                <option value="">— เลือกผู้รับผิดชอบ —</option>
+                <option>นางสาววิภา สุขใจ</option>
+                <option>นายสมชาย ใจดี</option>
+                <option>นางสาวพิมพ์ใจ สุขสม</option>
+                <option>นายอนุชา วงศ์ดี</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- ส่วนที่ 3: รายละเอียดและเอกสาร            -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="bg-white rounded-xl p-6 shadow-sm mb-5">
+        <h2 class="text-[16px] font-bold text-[#1B3A6B] mb-5 pb-3 border-b border-slate-200 flex items-center gap-2.5">
+            <i data-lucide="file-text" class="w-5 h-5 text-blue-600"></i> รายละเอียดและเอกสาร
+        </h2>
+        <div class="space-y-4 mt-2">
+            <!-- รายละเอียด (Rich Text) -->
+            <div class="field-row">
+                <div class="field-label">รายละเอียด <span class="req">*</span></div>
+                <div>
+                    <div class="border border-slate-300 rounded-lg overflow-hidden">
+                        <div class="flex items-center gap-1 px-3 py-2 bg-slate-50 border-b border-slate-200 flex-wrap">
+                            <button type="button" class="w-8 h-8 flex items-center justify-center rounded hover:bg-slate-200 text-slate-600 font-bold text-sm">B</button>
+                            <button type="button" class="w-8 h-8 flex items-center justify-center rounded hover:bg-slate-200 text-slate-600 italic text-sm">I</button>
+                            <button type="button" class="w-8 h-8 flex items-center justify-center rounded hover:bg-slate-200 text-slate-600 underline text-sm">U</button>
+                            <div class="w-px h-5 bg-slate-300 mx-1"></div>
+                            <button type="button" class="w-8 h-8 flex items-center justify-center rounded hover:bg-slate-200 text-slate-500"><i data-lucide="list" class="w-4 h-4"></i></button>
+                            <button type="button" class="w-8 h-8 flex items-center justify-center rounded hover:bg-slate-200 text-slate-500"><i data-lucide="list-ordered" class="w-4 h-4"></i></button>
+                            <div class="w-px h-5 bg-slate-300 mx-1"></div>
+                            <button type="button" class="w-8 h-8 flex items-center justify-center rounded hover:bg-slate-200 text-slate-500"><i data-lucide="link" class="w-4 h-4"></i></button>
+                            <button type="button" class="w-8 h-8 flex items-center justify-center rounded hover:bg-slate-200 text-slate-500"><i data-lucide="image" class="w-4 h-4"></i></button>
+                        </div>
+                        <div contenteditable="true" class="min-h-[120px] px-4 py-3 text-sm text-slate-700 outline-none" placeholder="พิมพ์รายละเอียดบันทึกข้อความ..."></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- แนบไฟล์เอกสารเพิ่มเติม -->
+            <div class="field-row">
+                <div class="field-label">แนบไฟล์เอกสารเพิ่มเติม</div>
+                <div>
+                    <div id="dropZone" class="border-2 border-dashed border-slate-300 rounded-xl px-6 py-8 text-center transition-all cursor-pointer hover:border-blue-400 hover:bg-blue-50/30"
+                         onclick="document.getElementById('fileInput').click()"
+                         ondragover="event.preventDefault();this.classList.add('border-blue-500','bg-blue-50');"
+                         ondragleave="this.classList.remove('border-blue-500','bg-blue-50');"
+                         ondrop="event.preventDefault();this.classList.remove('border-blue-500','bg-blue-50');handleFiles(event.dataTransfer.files);">
+                        <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center mx-auto mb-3">
+                            <i data-lucide="upload-cloud" class="w-6 h-6 text-blue-500"></i>
+                        </div>
+                        <p class="text-sm font-semibold text-slate-600">ลากไฟล์มาวางที่นี่ หรือ <span class="text-blue-600 underline">เลือกไฟล์</span></p>
+                        <p class="text-xs text-slate-400 mt-1.5">รองรับไฟล์ PDF, DOC, DOCX, XLS, XLSX, JPG, PNG (สูงสุด 10 MB ต่อไฟล์)</p>
+                        <input type="file" id="fileInput" class="hidden" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" onchange="handleFiles(this.files)">
+                    </div>
+                    <div id="fileList" class="mt-3 space-y-2"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- Action Buttons                          -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="border-t border-slate-200 pt-5 mt-2 flex items-center justify-between flex-wrap gap-3">
+        <a href="memo-repository.html" class="inline-flex items-center gap-2 px-5 py-2.5 border border-slate-300 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> ย้อนกลับ
+        </a>
+        <div class="flex items-center gap-3">
+            <button type="button" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-colors" style="background:#FFC567;color:#7C4A00;">
+                <i data-lucide="save" class="w-4 h-4"></i> บันทึกแบบร่าง
+            </button>
+            <button type="button" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-[#1B3A6B] transition-colors" style="background:#88D2F2;" onclick="alert('ส่งคำขอเรียบร้อย')">
+                <i data-lucide="send" class="w-4 h-4"></i> ส่งคำขอ
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<!-- ═══ LUR Search Modal ═══ -->
+<div id="lurModal" class="fixed inset-0 z-[9999] is-hidden">
+    <div class="absolute inset-0 bg-black/50" onclick="closeLURModal()"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl w-[90vw] max-w-[900px] max-h-[85vh] flex flex-col">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+            <h2 class="text-lg font-bold text-[#1B3A6B] flex items-center gap-2"><i data-lucide="file-search" class="w-5 h-5 text-blue-600"></i> ค้นหา LUR อ้างอิง</h2>
+            <button onclick="closeLURModal()" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors text-xl">&times;</button>
+        </div>
+        <div class="px-6 py-3 border-b border-slate-100 flex items-center justify-between gap-4 flex-wrap">
+            <div class="flex items-center gap-2 text-sm text-slate-600">
+                <span>แสดง</span>
+                <select class="px-2 py-1 border border-slate-300 rounded text-sm"><option>10</option><option selected>25</option><option>50</option></select>
+                <span>เร็คคอร์ด</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-sm text-slate-600">ค้นหา :</span>
+                <input type="text" id="memoLurSearch" placeholder="ค้นหา LUR, ชื่อสัญญา..." class="px-3 py-1.5 border border-slate-300 rounded-lg text-sm outline-none focus:border-blue-500 w-[200px]" oninput="filterMemoLUR()">
+            </div>
+        </div>
+        <div class="flex-1 overflow-auto px-6 py-3">
+            <table class="w-full text-sm border-collapse" id="memoLurTable">
+                <thead>
+                    <tr class="border-b-2 border-slate-300">
+                        <th class="text-left px-3 py-2.5 font-semibold text-slate-700 w-[40px]"></th>
+                        <th class="text-left px-3 py-2.5 font-semibold text-slate-700 whitespace-nowrap">LUR</th>
+                        <th class="text-left px-3 py-2.5 font-semibold text-slate-700 whitespace-nowrap">ชื่อสัญญา</th>
+                        <th class="text-left px-3 py-2.5 font-semibold text-slate-700 whitespace-nowrap">ประเภท</th>
+                        <th class="text-left px-3 py-2.5 font-semibold text-slate-700 whitespace-nowrap">สถานะ</th>
+                        <th class="text-left px-3 py-2.5 font-semibold text-slate-700 whitespace-nowrap">ผู้รับผิดชอบ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="lur-row" data-lur="VS2024/001" data-name="สัญญาจ้างบริการ IT ประจำปี" data-type="สัญญาจ้างบริการ" data-status="เสร็จสิ้น" data-owner="สมชาย ใจดี" onclick="selectMemoLUR(this)">
+                        <td><input type="radio" name="memoLur" class="accent-blue-600"></td>
+                        <td class="text-blue-600 font-semibold">VS2024/001</td>
+                        <td>สัญญาจ้างบริการ IT ประจำปี</td>
+                        <td>สัญญาจ้างบริการ</td>
+                        <td><span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-green-100 text-green-700">เสร็จสิ้น</span></td>
+                        <td>สมชาย ใจดี</td>
+                    </tr>
+                    <tr class="lur-row" data-lur="VS2024/002" data-name="สัญญาว่าจ้างผลิตสื่อโฆษณาดิจิทัล" data-type="สัญญาว่าจ้าง" data-status="เสร็จสิ้น" data-owner="พิมพ์ใจ สุขสม" onclick="selectMemoLUR(this)">
+                        <td><input type="radio" name="memoLur" class="accent-blue-600"></td>
+                        <td class="text-blue-600 font-semibold">VS2024/002</td>
+                        <td>สัญญาว่าจ้างผลิตสื่อโฆษณาดิจิทัล</td>
+                        <td>สัญญาว่าจ้าง</td>
+                        <td><span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-green-100 text-green-700">เสร็จสิ้น</span></td>
+                        <td>พิมพ์ใจ สุขสม</td>
+                    </tr>
+                    <tr class="lur-row" data-lur="VS2024/003" data-name="สัญญาบริการ Cloud Infrastructure" data-type="สัญญาบริการ" data-status="รอหัวหน้างานอนุมัติ" data-owner="อนุชา วงศ์ดี" onclick="selectMemoLUR(this)">
+                        <td><input type="radio" name="memoLur" class="accent-blue-600"></td>
+                        <td class="text-blue-600 font-semibold">VS2024/003</td>
+                        <td>สัญญาบริการ Cloud Infrastructure</td>
+                        <td>สัญญาบริการ</td>
+                        <td><span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-100 text-amber-700">รอหัวหน้างานอนุมัติ</span></td>
+                        <td>อนุชา วงศ์ดี</td>
+                    </tr>
+                    <tr class="lur-row" data-lur="VS2024/005" data-name="สัญญาประกันสุขภาพพนักงาน" data-type="สัญญาประกัน" data-status="เสร็จสิ้น" data-owner="มณีรัตน์ ทองคำ" onclick="selectMemoLUR(this)">
+                        <td><input type="radio" name="memoLur" class="accent-blue-600"></td>
+                        <td class="text-blue-600 font-semibold">VS2024/005</td>
+                        <td>สัญญาประกันสุขภาพพนักงาน</td>
+                        <td>สัญญาประกัน</td>
+                        <td><span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-green-100 text-green-700">เสร็จสิ้น</span></td>
+                        <td>มณีรัตน์ ทองคำ</td>
+                    </tr>
+                    <tr class="lur-row" data-lur="VS2024/006" data-name="สัญญาจ้างพัฒนาระบบ ERP Phase 2" data-type="สัญญาจ้างพัฒนา" data-status="รอจัดทำสัญญาฉบับสมบูรณ์" data-owner="เกรียงศักดิ์ พลเดช" onclick="selectMemoLUR(this)">
+                        <td><input type="radio" name="memoLur" class="accent-blue-600"></td>
+                        <td class="text-blue-600 font-semibold">VS2024/006</td>
+                        <td>สัญญาจ้างพัฒนาระบบ ERP Phase 2</td>
+                        <td>สัญญาจ้างพัฒนา</td>
+                        <td><span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-sky-100 text-sky-700">รอจัดทำสัญญาฉบับสมบูรณ์</span></td>
+                        <td>เกรียงศักดิ์ พลเดช</td>
+                    </tr>
+                    <tr class="lur-row" data-lur="VS2023/007" data-name="สัญญาเช่าพื้นที่ติดตั้งป้ายโฆษณา LED" data-type="สัญญาเช่า" data-status="เสร็จสิ้น" data-owner="ปรีชา มงคล" onclick="selectMemoLUR(this)">
+                        <td><input type="radio" name="memoLur" class="accent-blue-600"></td>
+                        <td class="text-blue-600 font-semibold">VS2023/007</td>
+                        <td>สัญญาเช่าพื้นที่ติดตั้งป้ายโฆษณา LED</td>
+                        <td>สัญญาเช่า</td>
+                        <td><span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-green-100 text-green-700">เสร็จสิ้น</span></td>
+                        <td>ปรีชา มงคล</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-200">
+            <button type="button" onclick="closeLURModal()" class="px-5 py-2.5 border border-slate-300 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50">ยกเลิก</button>
+            <button type="button" id="confirmLURBtn" disabled class="px-5 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors" onclick="confirmMemoLUR()">
+                <i data-lucide="check" class="w-4 h-4 inline -mt-px mr-1"></i> เลือกหนังสือสัญญา
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="shared-layout.js"></script>
+<script>
+    /* ── Memo Stepper ── */
+    const MEMO_STEPS = [
+        { num: 1, label: 'สร้างคำขอ', file: 'memo-step1-create.html' },
+        { num: 2, label: 'หัวหน้าอนุมัติ', file: 'memo-step2-boss-approve.html' },
+        { num: 3, label: 'กฎหมายอนุมัติ', file: 'memo-step3-legal-approve.html' },
+        { num: 4, label: 'กฎหมายดำเนินการ', file: 'memo-step4-legal-process.html' },
+    ];
+    const MEMO_CURRENT_STEP = 1;
+
+    function renderMemoStepper(current) {
+        let html = '<div class="stepper-wrapper"><div class="stepper" style="min-width:500px;">';
+        MEMO_STEPS.forEach((s, i) => {
+            const cls = s.num < current ? 'done' : s.num === current ? 'active' : 'pending';
+            const icon = s.num < current ? '<i data-lucide="check" class="w-4 h-4"></i>' : s.num;
+            html += `<div class="step ${cls}" onclick="window.location.href='${s.file}'"><div class="step-circle">${icon}</div><div class="step-label">${s.label}</div></div>`;
+            if (i < MEMO_STEPS.length - 1) html += `<div class="step-line ${s.num < current ? 'done' : ''}"></div>`;
+        });
+        html += '</div></div>';
+        return html;
+    }
+
+    /* ── Init Layout ── */
+    document.getElementById('topbar-container').innerHTML = renderTopbar();
+    document.getElementById('sidebar-container').innerHTML = renderSidebar();
+    document.getElementById('stepper-container').innerHTML = renderMemoStepper(MEMO_CURRENT_STEP);
+
+    // Highlight sidebar
+    document.querySelectorAll('.sidebar-item').forEach(el => {
+        el.classList.remove('active');
+        if (el.textContent.trim().includes('บันทึกข้อความ')) el.classList.add('active');
+    });
+
+    // Populate backdate year dropdown (current year - 5)
+    const yearSel = document.getElementById('backdateYear');
+    const currentYear = new Date().getFullYear();
+    for (let y = currentYear; y >= currentYear - 5; y--) {
+        const opt = document.createElement('option');
+        opt.value = y; opt.textContent = y;
+        yearSel.appendChild(opt);
+    }
+
+    /* ── Memo Type Selection ── */
+    let selectedMemoType = '';
+    function selectMemoType(type) {
+        selectedMemoType = type;
+
+        // Toggle conditional sections
+        toggle('otherDetail', type === 'other');
+        toggle('lurRefSection', ['withdraw','amend','cancel'].includes(type));
+        toggle('withdrawStatusSection', type === 'withdraw');
+        toggle('backdateCompanySection', type === 'backdate');
+        toggle('backdateYearSection', type === 'backdate');
+        toggle('backdateCountSection', type === 'backdate');
+        toggle('backdateOwnerSection', type === 'backdate');
+    }
+
+    /* ── Company Multi-Select ── */
+    function toggleCompanyDropdown() {
+        const trigger = document.querySelector('#companyMultiSelect .multi-select-trigger');
+        const dropdown = document.getElementById('companyDropdown');
+        trigger.classList.toggle('open');
+        dropdown.classList.toggle('open');
+    }
+
+    function toggleCompanyOption(el) {
+        el.classList.toggle('selected');
+        updateCompanyTags();
+    }
+
+    function updateCompanyTags() {
+        const trigger = document.querySelector('#companyMultiSelect .multi-select-trigger');
+        const placeholder = document.getElementById('companyPlaceholder');
+        const selected = document.querySelectorAll('#companyDropdown .ms-option.selected');
+
+        // Remove old tags
+        trigger.querySelectorAll('.ms-tag').forEach(t => t.remove());
+
+        if (selected.length === 0) {
+            placeholder.style.display = '';
+        } else {
+            placeholder.style.display = 'none';
+            selected.forEach(opt => {
+                const tag = document.createElement('span');
+                tag.className = 'ms-tag';
+                tag.innerHTML = opt.querySelector('span').textContent + ' <span class="ms-rm" onclick="event.stopPropagation(); removeCompanyTag(this, \'' + opt.dataset.value + '\')">&times;</span>';
+                trigger.insertBefore(tag, trigger.querySelector('.ms-chevron'));
+            });
+        }
+    }
+
+    function removeCompanyTag(rmBtn, val) {
+        const opt = document.querySelector('#companyDropdown .ms-option[data-value="' + val + '"]');
+        if (opt) opt.classList.remove('selected');
+        updateCompanyTags();
+    }
+
+    // Close dropdown on outside click
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('#companyMultiSelect')) {
+            const trigger = document.querySelector('#companyMultiSelect .multi-select-trigger');
+            const dropdown = document.getElementById('companyDropdown');
+            if (trigger) trigger.classList.remove('open');
+            if (dropdown) dropdown.classList.remove('open');
+        }
+    });
+
+    function toggle(id, show) {
+        const el = document.getElementById(id);
+        if (show) el.classList.remove('is-hidden');
+        else el.classList.add('is-hidden');
+    }
+
+    /* ── LUR Modal ── */
+    let selectedMemoLURData = null;
+
+    function openLURModal() {
+        document.getElementById('lurModal').classList.remove('is-hidden');
+        selectedMemoLURData = null;
+        document.getElementById('confirmLURBtn').disabled = true;
+        document.querySelectorAll('.lur-row').forEach(r => r.classList.remove('selected'));
+        document.querySelectorAll('input[name="memoLur"]').forEach(r => r.checked = false);
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function closeLURModal() {
+        document.getElementById('lurModal').classList.add('is-hidden');
+    }
+
+    function selectMemoLUR(row) {
+        document.querySelectorAll('.lur-row').forEach(r => r.classList.remove('selected'));
+        row.classList.add('selected');
+        row.querySelector('input[type="radio"]').checked = true;
+        selectedMemoLURData = {
+            lur: row.dataset.lur,
+            name: row.dataset.name,
+            type: row.dataset.type,
+            status: row.dataset.status,
+            owner: row.dataset.owner
+        };
+        document.getElementById('confirmLURBtn').disabled = false;
+    }
+
+    function confirmMemoLUR() {
+        if (!selectedMemoLURData) return;
+        closeLURModal();
+        document.getElementById('lurRefDisplay').value = selectedMemoLURData.lur + ' — ' + selectedMemoLURData.name;
+    }
+
+    function filterMemoLUR() {
+        const q = document.getElementById('memoLurSearch').value.toLowerCase();
+        document.querySelectorAll('.lur-row').forEach(r => {
+            r.style.display = r.textContent.toLowerCase().includes(q) ? '' : 'none';
+        });
+    }
+
+    /* ── Memo History Panel ── */
+    const MEMO_HISTORY = [
+        { step: 1, icon: 'send', color: 'blue', title: 'สร้างบันทึกข้อความ / แบบร่าง', date: '05/04/2026 10:30 น.', operator: 'นางสาววิภา สุขใจ', role: 'ผู้ใช้งานทั่วไป', roleIcon: 'user', desc: 'ประเภท: ขอถอยสัญญา — อ้างอิง VS2024/001' },
+    ];
+
+    function renderMemoHistory(currentStep) {
+        const items = MEMO_HISTORY.filter(h => h.step <= currentStep);
+        let timelineHtml = '';
+        items.forEach(h => {
+            const dotColor = h.step === currentStep ? 'blue' : 'green';
+            timelineHtml += `
+            <div class="timeline-item">
+                <div class="timeline-dot ${dotColor}"><i data-lucide="${h.icon}"></i></div>
+                <div class="flex-1">
+                    <div class="font-bold text-slate-800 text-[13px]">Step ${h.step}: ${h.title}</div>
+                    <div class="text-xs text-slate-400 mt-0.5"><i data-lucide="clock" class="w-3 h-3 inline -mt-px mr-1"></i>${h.date}</div>
+                    <div class="inline-flex items-center gap-1.5 mt-1.5 px-3 py-0.5 bg-slate-100 rounded-full text-xs text-slate-500 font-medium">
+                        <i data-lucide="${h.roleIcon}" class="w-3 h-3"></i> ${h.operator} <span class="text-slate-300 mx-1">|</span> ${h.role}
+                    </div>
+                    ${h.desc ? `<div class="text-xs text-slate-500 mt-1">${h.desc}</div>` : ''}
+                </div>
+            </div>`;
+        });
+
+        const panel = document.createElement('div');
+        panel.innerHTML = `
+        <button class="history-btn" onclick="toggleHistory()">
+            <i data-lucide="history" class="w-4 h-4"></i> History
+            <span class="bg-blue-600 text-white text-[11px] px-2 py-px rounded-lg font-bold">${items.length}</span>
+        </button>
+        <div class="history-overlay" id="historyOverlay" onclick="toggleHistory()"></div>
+        <div class="history-panel" id="historyPanel">
+            <div class="flex items-center justify-between px-6 py-5 border-b border-slate-200 bg-gradient-to-br from-[#1B3A6B] to-[#234E8E] text-white">
+                <h3 class="text-[17px] font-bold flex items-center gap-2.5"><i data-lucide="history" class="w-5 h-5"></i> ประวัติการดำเนินการ</h3>
+                <button class="bg-white/15 border-none text-white w-8 h-8 rounded-lg cursor-pointer flex items-center justify-center hover:bg-white/30 transition-colors" onclick="toggleHistory()"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-6">${timelineHtml}</div>
+        </div>`;
+        document.body.appendChild(panel);
+    }
+
+    function toggleHistory() {
+        document.getElementById('historyOverlay').classList.toggle('open');
+        document.getElementById('historyPanel').classList.toggle('open');
+    }
+
+    /* ── File Attachment ── */
+    let attachedFiles = [];
+    const FILE_ICONS = {
+        pdf: 'file-text', doc: 'file-text', docx: 'file-text',
+        xls: 'table', xlsx: 'table',
+        jpg: 'image', jpeg: 'image', png: 'image'
+    };
+    const FILE_COLORS = {
+        pdf: '#EF4444', doc: '#2563EB', docx: '#2563EB',
+        xls: '#16A34A', xlsx: '#16A34A',
+        jpg: '#F59E0B', jpeg: '#F59E0B', png: '#F59E0B'
+    };
+
+    function handleFiles(files) {
+        const maxSize = 10 * 1024 * 1024; // 10 MB
+        Array.from(files).forEach(file => {
+            if (file.size > maxSize) {
+                alert('ไฟล์ "' + file.name + '" มีขนาดเกิน 10 MB');
+                return;
+            }
+            attachedFiles.push({ name: file.name, size: file.size, id: Date.now() + Math.random() });
+            renderFileList();
+        });
+    }
+
+    function removeFile(id) {
+        attachedFiles = attachedFiles.filter(f => f.id !== id);
+        renderFileList();
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / 1048576).toFixed(1) + ' MB';
+    }
+
+    function renderFileList() {
+        const list = document.getElementById('fileList');
+        if (attachedFiles.length === 0) { list.innerHTML = ''; return; }
+        list.innerHTML = attachedFiles.map(f => {
+            const ext = f.name.split('.').pop().toLowerCase();
+            const icon = FILE_ICONS[ext] || 'file';
+            const color = FILE_COLORS[ext] || '#64748B';
+            return `<div class="flex items-center gap-3 px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg group">
+                <div class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style="background:${color}15;color:${color};">
+                    <i data-lucide="${icon}" class="w-4.5 h-4.5"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-sm font-semibold text-slate-700 truncate">${f.name}</div>
+                    <div class="text-xs text-slate-400 mt-0.5">${formatFileSize(f.size)}</div>
+                </div>
+                <button type="button" onclick="removeFile(${f.id})" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all shrink-0 opacity-0 group-hover:opacity-100" title="ลบไฟล์">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+            </div>`;
+        }).join('');
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    renderMemoHistory(MEMO_CURRENT_STEP);
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+</script>
+</body>
+</html>

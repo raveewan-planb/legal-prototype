@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal System - ขั้นตอนที่ 2: แจกงานให้ผู้ตรวจสอบ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+    @theme { --font-sans: 'Kanit', sans-serif; }
+    </style>
+    <link rel="stylesheet" href="shared-styles.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+<div id="topbar-container"></div>
+<div id="sidebar-container"></div>
+<div class="ml-[260px] mt-14 p-7 min-h-[calc(100vh-56px)] max-md:ml-0 max-md:p-4 max-[480px]:mt-[50px] max-[480px]:p-3">
+    <!-- Page Header -->
+    <div class="flex justify-between items-start mb-6 max-md:flex-col max-md:gap-3">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl">
+                <i data-lucide="shield-check" class="w-6 h-6 text-violet-600"></i> แจกงานให้กับผู้ตรวจสอบ
+            </h1>
+            <p class="text-slate-500 text-sm mt-1">ขั้นตอนที่ 2: ผู้จัดการฝ่ายกฎหมายมอบหมายงานให้ผู้ตรวจสอบ</p>
+        </div>
+    </div>
+    <div id="stepper-container"></div>
+    <div id="status-header"></div>
+
+    <div id="previous-steps"></div>
+
+    <!-- ACTIVE: แจกงาน -->
+    <div class="bg-white rounded-xl p-6 mb-5 shadow-sm border-2 border-blue-600 shadow-md max-md:p-4">
+        <div class="text-base font-bold text-[#1B3A6B] mb-4 pb-3 border-b-2 border-blue-50 flex items-center gap-2.5 flex-wrap">
+            <span class="bg-blue-600 text-white text-[11px] px-2.5 py-0.5 rounded-full font-semibold">2</span>
+            <i data-lucide="shield-check" class="w-[17px] h-[17px] text-blue-600"></i> แจกงานให้กับผู้ตรวจสอบ
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-semibold bg-pink-100 text-pink-700 ml-auto"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> ผู้จัดการฝ่ายกฎหมาย</span>
+        </div>
+        <div class="grid grid-cols-2 gap-x-6 gap-y-4 max-md:grid-cols-1">
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[13px] font-semibold text-slate-600">ระดับความเสี่ยง <span class="text-red-500">*</span></label>
+                <select class="px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 bg-white outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors">
+                    <option value="">-- เลือกระดับ --</option>
+                    <option>ต่ำ (Low)</option>
+                    <option>ปานกลาง (Medium)</option>
+                    <option>สูง (High)</option>
+                    <option>สูงมาก (Critical)</option>
+                </select>
+            </div>
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[13px] font-semibold text-slate-600">ผู้ตรวจสอบ <span class="text-red-500">*</span></label>
+                <select class="px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 bg-white outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors">
+                    <option value="">-- เลือกผู้ตรวจสอบ --</option>
+                    <option>คุณสมศรี ฝ่ายกฎหมาย</option>
+                    <option selected>คุณประสิทธิ์ ฝ่ายกฎหมาย</option>
+                    <option>คุณนภา ฝ่ายกฎหมาย</option>
+                </select>
+            </div>
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[13px] font-semibold text-slate-600">วันที่ Assign Task <span class="inline-block bg-indigo-100 text-indigo-700 text-[10px] px-2 py-px rounded-full font-semibold ml-1.5">อัตโนมัติ</span></label>
+                <div class="px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-600">26/03/2026</div>
+                <span class="text-xs text-slate-400">Default เป็นวันที่ปัจจุบัน</span>
+            </div>
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[13px] font-semibold text-slate-600">ความเห็น / ข้อเสนอแนะ</label>
+                <textarea class="px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 bg-white outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors resize-y min-h-[72px]" placeholder="ความเห็นจากผู้จัดการฝ่ายกฎหมาย (ถ้ามี)"></textarea>
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center gap-3 pt-5 mt-5 border-t border-slate-200 flex-wrap max-md:justify-center">
+            <a href="contract-repository.html" class="inline-flex items-center gap-2 px-5 py-2.5 border border-slate-300 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors no-underline">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> ย้อนกลับ
+            </a>
+            <div class="flex items-center gap-3">
+                <button class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm bg-white border border-slate-300 text-slate-500 hover:bg-slate-50 transition-colors cursor-pointer"><i data-lucide="arrow-left-right" class="w-4 h-4"></i> Reassign</button>
+                <a href="step3-legal-review.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#88D2F2] text-[#1B3A6B] hover:bg-[#6BBFE0] transition-colors no-underline"><i data-lucide="send" class="w-4 h-4"></i> มอบหมายงาน</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="shared-layout.js"></script>
+<script>initPage(2);</script>
+</body>
+</html>

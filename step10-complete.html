@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal System - ขั้นตอนที่ 10: เสร็จสิ้น</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">@theme { --font-sans: 'Kanit', sans-serif; }</style>
+    <link rel="stylesheet" href="shared-styles.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+<div id="topbar-container"></div>
+<div id="sidebar-container"></div>
+<div class="ml-[260px] mt-14 p-7 min-h-[calc(100vh-56px)] max-md:ml-0 max-md:p-4 max-[480px]:mt-[50px] max-[480px]:p-3">
+    <div class="flex justify-between items-start mb-6 max-md:flex-col max-md:gap-3">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl"><i data-lucide="check-check" class="w-6 h-6" style="color:#15803D;"></i> เสร็จสิ้น — จัดเก็บสัญญา</h1>
+            <p class="text-slate-500 text-sm mt-1">ขั้นตอนที่ 10: จัดเก็บสัญญาฉบับสมบูรณ์ และบันทึกข้อมูลหมายเลขตู้ในระบบ</p>
+        </div>
+    </div>
+    <div id="stepper-container"></div>
+    <div id="status-header"></div>
+
+    <!-- ═══ Complete Banner ═══ -->
+    <div class="bg-gradient-to-br from-green-50 to-green-100 border border-green-300 rounded-2xl p-10 text-center mb-6 max-md:p-7">
+        <i data-lucide="circle-check" class="w-14 h-14 text-green-500 mx-auto mb-4"></i>
+        <h2 class="text-2xl font-bold text-green-700 mb-2">สัญญาดำเนินการเสร็จสิ้น</h2>
+        <p class="text-green-800 text-[15px]">สัญญาจ้างพัฒนาระบบ ERP (PB2026/002) ได้ผ่านทุกขั้นตอนเรียบร้อยแล้ว</p>
+    </div>
+
+    <!-- ═══ Contract Summary ═══ -->
+    <div id="previous-steps"></div>
+
+    <!-- ═══ จัดเก็บสัญญา ═══ -->
+    <div class="bg-white rounded-xl p-6 mb-5 shadow-sm border-2 border-green-500 shadow-md max-md:p-4">
+        <div class="text-base font-bold text-[#1B3A6B] mb-4 pb-3 border-b-2 border-blue-50 flex items-center gap-2.5 flex-wrap">
+            <span class="bg-green-500 text-white text-[11px] px-2.5 py-0.5 rounded-full font-semibold">10</span>
+            <i data-lucide="archive" class="w-5 h-5" style="color:#22C55E;"></i> จัดเก็บสัญญาฉบับสมบูรณ์
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-semibold bg-pink-100 text-pink-700 ml-auto"><i data-lucide="settings" class="w-3 h-3"></i> ผู้ดูแลระบบฝ่ายกฎหมาย</span>
+        </div>
+
+        <!-- ยืนยันและจัดเก็บ -->
+        <div class="p-6 bg-green-50 rounded-xl border border-green-200">
+            <div class="font-bold text-green-700 mb-4 text-[15px] flex items-center gap-2"><i data-lucide="circle-check" class="w-4 h-4"></i> ยืนยันและจัดเก็บสัญญา</div>
+            <div class="grid grid-cols-2 gap-x-6 gap-y-4 max-md:grid-cols-1">
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-[13px] font-semibold text-slate-600">กรอกหมายเลขตู้เอกสาร <span class="text-red-500">*</span></label>
+                    <input type="text" placeholder="เช่น CAB-A01-001" value="CAB-A03-015" class="px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 bg-white outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors">
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center gap-3 pt-5 mt-5 border-t border-slate-200 flex-wrap max-md:justify-center">
+            <a href="contract-repository.html" class="inline-flex items-center gap-2 px-5 py-2.5 border border-slate-300 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors no-underline">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> ย้อนกลับ
+            </a>
+            <a href="contract-repository.html" class="inline-flex items-center gap-2 px-7 py-3 rounded-lg font-semibold text-base bg-[#6BDE9D] text-white hover:bg-[#5AC88B] transition-colors no-underline"><i data-lucide="check-check" class="w-5 h-5"></i> เสร็จสิ้น — จัดเก็บสัญญา</a>
+        </div>
+    </div>
+
+</div>
+<script src="shared-layout.js"></script>
+<script>
+    initPage(10);
+    lucide.createIcons();
+</script>
+</body>
+</html>

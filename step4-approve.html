@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal System - ขั้นตอนที่ 4: หัวหน้าฝ่ายตรวจสอบและอนุมัติ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">@theme { --font-sans: 'Kanit', sans-serif; }</style>
+    <link rel="stylesheet" href="shared-styles.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+<div id="topbar-container"></div>
+<div id="sidebar-container"></div>
+<div class="ml-[260px] mt-14 p-7 min-h-[calc(100vh-56px)] max-md:ml-0 max-md:p-4 max-[480px]:mt-[50px] max-[480px]:p-3">
+    <div class="flex justify-between items-start mb-6 max-md:flex-col max-md:gap-3">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl">
+                <i data-lucide="user-check" class="w-6 h-6" style="color:#A16207;"></i>
+                ตรวจสอบเอกสารสัญญา
+            </h1>
+            <p class="text-slate-500 text-sm mt-1">ขั้นตอนที่ 4: หัวหน้าฝ่ายของผู้ใช้งานตรวจสอบเอกสารสัญญาและอนุมัติ</p>
+        </div>
+    </div>
+    <div id="stepper-container"></div>
+    <div id="status-header"></div>
+
+    <div id="previous-steps"></div>
+
+    <!-- ═══ ACTIVE: หัวหน้าฝ่ายอนุมัติ ═══ -->
+    <div class="bg-white rounded-xl p-6 mb-5 shadow-sm border-2 border-blue-600 shadow-md max-md:p-4">
+        <div class="text-base font-bold text-[#1B3A6B] mb-4 pb-3 border-b-2 border-blue-50 flex items-center gap-2.5 flex-wrap">
+            <span class="bg-blue-600 text-white text-[11px] px-2.5 py-0.5 rounded-full font-semibold">4</span>
+            <i data-lucide="user-check" class="w-5 h-5" style="color:#2563EB;"></i>
+            ตรวจสอบเอกสารสัญญา
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700 ml-auto">
+                <i data-lucide="user" class="w-3.5 h-3.5"></i>
+                หัวหน้าฝ่ายของผู้ใช้งาน
+            </span>
+        </div>
+        <!-- ไฟล์แนบจาก Step ตรวจสอบร่างสัญญา -->
+        <div class="flex flex-col gap-3">
+            <label class="text-[13px] font-semibold text-slate-600 flex items-center gap-2">
+                <i data-lucide="paperclip" class="w-4 h-4 text-blue-600"></i> ไฟล์แนบจากขั้นตอนตรวจสอบร่างสัญญา
+            </label>
+            <div class="flex flex-col gap-2.5">
+                <div class="flex items-center gap-3 px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg">
+                    <i data-lucide="file-text" class="w-5 h-5 text-red-500 flex-shrink-0"></i>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-semibold text-slate-800 truncate">Draft_Contract_ERP_v2_reviewed.pdf</p>
+                        <p class="text-xs text-slate-400">PDF · 1.8 MB · แนบโดย คุณประสิทธิ์ ฝ่ายกฎหมาย · 27/03/2026</p>
+                    </div>
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                        <button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors cursor-pointer border-none">
+                            <i data-lucide="eye" class="w-3.5 h-3.5"></i> Preview
+                        </button>
+                        <button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-green-50 text-green-600 hover:bg-green-100 transition-colors cursor-pointer border-none">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i> Download
+                        </button>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg">
+                    <i data-lucide="file-spreadsheet" class="w-5 h-5 text-green-600 flex-shrink-0"></i>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-semibold text-slate-800 truncate">Appendix_A_SOW_ERP.xlsx</p>
+                        <p class="text-xs text-slate-400">Excel · 420 KB · แนบโดย คุณประสิทธิ์ ฝ่ายกฎหมาย · 27/03/2026</p>
+                    </div>
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                        <button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors cursor-pointer border-none">
+                            <i data-lucide="eye" class="w-3.5 h-3.5"></i> Preview
+                        </button>
+                        <button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-green-50 text-green-600 hover:bg-green-100 transition-colors cursor-pointer border-none">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i> Download
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ความเห็น + แนบไฟล์ -->
+        <div class="grid grid-cols-1 gap-y-4 mt-5">
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[13px] font-semibold text-slate-600">ความเห็น / ข้อเสนอแนะ</label>
+                <textarea class="px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 bg-white outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors resize-y min-h-[72px]" placeholder="ความเห็นจากหัวหน้าฝ่าย (ถ้ามี)"></textarea>
+            </div>
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[13px] font-semibold text-slate-600">แนบไฟล์ฉบับแก้ไข (ถ้ามี)</label>
+                <div class="border-2 border-dashed border-slate-300 rounded-xl p-5 text-center cursor-pointer hover:border-blue-600 hover:bg-blue-50 transition-all bg-slate-50/50" onclick="this.querySelector('input').click()">
+                    <input type="file" hidden multiple>
+                    <i data-lucide="cloud-upload" class="w-6 h-6 mx-auto text-slate-400 mb-2"></i>
+                    <p>ลากไฟล์มาวาง หรือ <span class="browse">เลือกไฟล์</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center gap-3 pt-5 mt-5 border-t border-slate-200 flex-wrap max-md:justify-center">
+            <a href="contract-repository.html" class="inline-flex items-center gap-2 px-5 py-2.5 border border-slate-300 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors no-underline">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> ย้อนกลับ
+            </a>
+            <div class="flex items-center gap-3">
+                <button class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#FF8888] text-white hover:bg-[#E07777] transition-colors cursor-pointer border-none">
+                    <i data-lucide="undo-2" class="w-4 h-4"></i>
+                    ส่งกลับแก้ไข
+                </button>
+                <a href="step5-risk.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#6BDE9D] text-white hover:bg-[#5AC88B] transition-colors no-underline">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                    อนุมัติ
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="shared-layout.js"></script>
+<script>
+    initPage(4);
+</script>
+</body>
+</html>

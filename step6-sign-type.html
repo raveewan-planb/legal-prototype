@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal System - ขั้นตอนที่ 6: เลือกประเภทการลงนาม</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">@theme { --font-sans: 'Kanit', sans-serif; }</style>
+    <link rel="stylesheet" href="shared-styles.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+<div id="topbar-container"></div>
+<div id="sidebar-container"></div>
+<div class="ml-[260px] mt-14 p-7 min-h-[calc(100vh-56px)] max-md:ml-0 max-md:p-4 max-[480px]:mt-[50px] max-[480px]:p-3">
+    <div class="flex justify-between items-start mb-6 max-md:flex-col max-md:gap-3">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl">
+                <i data-lucide="pen-tool" class="w-6 h-6" style="color:#059669;"></i>
+                เลือกประเภทการลงนาม
+            </h1>
+            <p class="text-slate-500 text-sm mt-1">ขั้นตอนที่ 6: ผู้ใช้งานเลือกประเภทการลงนามและระบุผู้ลงนาม</p>
+        </div>
+    </div>
+    <div id="stepper-container"></div>
+    <div id="status-header"></div>
+    <div id="previous-steps"></div>
+
+    <!-- ═══ ACTIVE: เลือกประเภทการลงนาม ═══ -->
+    <div class="bg-white rounded-xl p-6 mb-5 shadow-sm border-2 border-blue-600 shadow-md max-md:p-4">
+        <div class="text-base font-bold text-[#1B3A6B] mb-4 pb-3 border-b-2 border-blue-50 flex items-center gap-2.5 flex-wrap">
+            <span class="bg-blue-600 text-white text-[11px] px-2.5 py-0.5 rounded-full font-semibold">6</span>
+            <i data-lucide="pen-tool" class="w-5 h-5" style="color:#2563EB;"></i>
+            เลือกประเภทการลงนาม
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700 ml-auto">
+                <i data-lucide="user" class="w-3.5 h-3.5"></i>
+                ผู้ใช้งานทั่วไป
+            </span>
+        </div>
+
+        <!-- ประเภทการลงนาม -->
+        <div class="mb-6">
+            <label class="font-bold text-[#1B3A6B] text-[15px] block mb-3.5">ประเภทการลงนาม <span class="text-red-500">*</span></label>
+            <div class="grid grid-cols-3 gap-4 max-md:grid-cols-1">
+                <label class="flex items-start gap-3.5 p-5 border-2 border-slate-200 rounded-xl cursor-pointer transition-all hover:border-blue-600 hover:bg-blue-50" onclick="selectSign(this,'print')">
+                    <input type="radio" name="signType" value="print" class="mt-0.5" style="accent-color:#2563EB;">
+                    <div>
+                        <div class="font-bold text-slate-800 text-[15px]">ลงนามเอกสารจริง (Print Out)</div>
+                        <div class="text-[13px] text-slate-600 mt-1">แพลนบีลงนามก่อน จากนั้นคู่สัญญา Print สัญญาเอง</div>
+                    </div>
+                </label>
+                <label class="flex items-start gap-3.5 p-5 border-2 border-slate-200 rounded-xl cursor-pointer transition-all hover:border-blue-600 hover:bg-blue-50" onclick="selectSign(this,'esign')">
+                    <input type="radio" name="signType" value="esign" class="mt-0.5" style="accent-color:#2563EB;">
+                    <div>
+                        <div class="font-bold text-slate-800 text-[15px]">e-Signature</div>
+                        <div class="text-[13px] text-slate-600 mt-1">ลงนามอิเล็กทรอนิกส์ผ่านระบบ Adobe Sign</div>
+                    </div>
+                </label>
+                <label class="flex items-start gap-3.5 p-5 border-2 border-slate-200 rounded-xl cursor-pointer transition-all hover:border-blue-600 hover:bg-blue-50" onclick="selectSign(this,'partner')">
+                    <input type="radio" name="signType" value="partner" class="mt-0.5" style="accent-color:#2563EB;">
+                    <div>
+                        <div class="font-bold text-slate-800 text-[15px]">คู่สัญญาพิมพ์สัญญาเอง</div>
+                        <div class="text-[13px] text-slate-600 mt-1">คู่สัญญาจัดพิมพ์และลงนามเอกสารสัญญาเอง</div>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- ข้อความประทับเลข LUR -->
+        <div id="lurStampMsg" class="is-hidden mb-5"></div>
+
+        <!-- ผู้ลงนาม และพยาน (เฉพาะ e-Signature) -->
+        <div id="signerSection" class="border-t border-blue-100 pt-4.5 mb-4.5 is-hidden">
+            <div class="font-bold text-[#1B3A6B] mb-2.5">
+                <i data-lucide="users" class="inline w-5 h-5" style="color:#2563EB; margin-right:8px;"></i>
+                ผู้ลงนาม และพยาน <span class="text-red-500">*</span>
+            </div>
+            <table class="signer-table">
+                <thead><tr><th>#</th><th>ชื่อ-นามสกุล</th><th>บทบาท</th><th></th></tr></thead>
+                <tbody id="signBody">
+                    <tr>
+                        <td>1</td>
+                        <td><input type="text" class="px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 bg-white outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors" placeholder="ชื่อ-นามสกุล"></td>
+                        <td><select class="px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 bg-white outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors"><option>ผู้ลงนาม</option><option>พยาน</option></select></td>
+                        <td><button class="text-red-500 cursor-pointer bg-transparent border-none text-sm" onclick="this.closest('tr').remove()"><i data-lucide="x" class="w-4 h-4"></i></button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="text-blue-600 font-semibold text-[13px] cursor-pointer bg-transparent border-none mt-2 hover:underline" onclick="addSignRow()">
+                <i data-lucide="plus" class="inline w-4 h-4 mr-1"></i>
+                เพิ่มผู้ลงนาม
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 gap-y-4">
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[13px] font-semibold text-slate-600">ความเห็น / ข้อเสนอแนะ</label>
+                <textarea class="px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 bg-white outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors resize-y min-h-[72px]" placeholder="ความเห็นเพิ่มเติม (ถ้ามี)"></textarea>
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center gap-3 pt-5 mt-5 border-t border-slate-200 flex-wrap max-md:justify-center">
+            <a href="contract-repository.html" class="inline-flex items-center gap-2 px-5 py-2.5 border border-slate-300 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors no-underline">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> ย้อนกลับ
+            </a>
+            <a href="step7-prepare.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#88D2F2] text-[#1B3A6B] hover:bg-[#6BBFE0] transition-colors no-underline">
+                <i data-lucide="check" class="w-4 h-4"></i>
+                ยืนยัน — ส่งจัดทำสัญญา
+            </a>
+        </div>
+    </div>
+
+</div>
+<script src="shared-layout.js"></script>
+<script>
+    initPage(6);
+
+    function addSignRow() {
+        const body = document.getElementById('signBody');
+        const n = body.rows.length + 1;
+        const row = body.insertRow();
+        row.innerHTML = `<td>${n}</td><td><input type="text" class="px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 bg-white outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors" placeholder="ชื่อ-นามสกุล"></td><td><select class="px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 bg-white outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors"><option>ผู้ลงนาม</option><option>พยาน</option></select></td><td><button class="text-red-500 cursor-pointer bg-transparent border-none text-sm" onclick="this.closest('tr').remove()"><i data-lucide="x" class="w-4 h-4"></i></button></td>`;
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function selectSign(el, type) {
+        const cards = el.parentElement.children;
+        for (let c of cards) {
+            c.style.borderColor='#E2E8F0';
+            c.style.background='#fff';
+        }
+        el.style.borderColor='#2563EB';
+        el.style.background='#EFF6FF';
+
+        // ผู้ลงนาม/พยาน: แสดงเฉพาะ e-Signature
+        const signerSection = document.getElementById('signerSection');
+        if (type === 'esign') {
+            signerSection.classList.remove('is-hidden');
+        } else {
+            signerSection.classList.add('is-hidden');
+        }
+
+        // ข้อความประทับเลข LUR
+        const lurMsg = document.getElementById('lurStampMsg');
+        lurMsg.classList.remove('is-hidden');
+        if (type === 'print' || type === 'esign') {
+            lurMsg.innerHTML = '<div class="flex items-center gap-2.5 px-4 py-3 bg-blue-50 border border-blue-200 rounded-lg"><i data-lucide="stamp" class="w-5 h-5 text-blue-600 flex-shrink-0"></i><p class="text-blue-800 text-[13px] font-semibold">กฎหมายประทับเลข LUR</p></div>';
+        } else if (type === 'partner') {
+            lurMsg.innerHTML = '<div class="flex items-center gap-2.5 px-4 py-3 bg-amber-50 border border-amber-200 rounded-lg"><i data-lucide="stamp" class="w-5 h-5 text-amber-600 flex-shrink-0"></i><p class="text-amber-800 text-[13px] font-semibold">ผู้ใช้งานประทับเลข LUR</p></div>';
+        }
+
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal System - ต่ออายุสัญญา</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">@theme { --font-sans: 'Kanit', sans-serif; }</style>
+    <link rel="stylesheet" href="shared-styles.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <!-- Flatpickr Date Picker -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <style>
+        /* ══════════════════════════════════════
+           KANBAN BOARD & TABLE STYLES
+           ══════════════════════════════════════ */
+
+        /* ── Lane (Column) ── */
+        .lane {
+            min-width: 260px; max-width: 280px; flex-shrink: 0;
+            background: #F1F5F9; border-radius: 12px;
+            display: flex; flex-direction: column; max-height: calc(100vh - 230px);
+        }
+        .lane-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 16px 12px; border-bottom: 2px solid transparent;
+            position: sticky; top: 0; z-index: 1; background: #F1F5F9; border-radius: 12px 12px 0 0;
+        }
+        .lane-header-left { display: flex; align-items: center; gap: 8px; }
+        .lane-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .lane-title { font-size: 13px; font-weight: 700; color: #1E293B; }
+        .lane-count {
+            background: #fff; color: #64748B; font-size: 11px; font-weight: 700;
+            padding: 1px 8px; border-radius: 10px; border: 1px solid #E2E8F0;
+        }
+        .lane-body {
+            padding: 8px 10px 12px; flex: 1; overflow-y: auto;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+
+        /* Lane color themes — 5 renew statuses */
+        .lane-wait .lane-header { border-bottom-color: #F59E0B; }
+        .lane-wait .lane-dot { background: #F59E0B; }
+        .lane-wait .card { border-left: 3px solid #F59E0B; }
+        .lane-no .lane-header { border-bottom-color: #EF4444; }
+        .lane-no .lane-dot { background: #EF4444; }
+        .lane-no .card { border-left: 3px solid #EF4444; }
+        .lane-inprogress .lane-header { border-bottom-color: #3B82F6; }
+        .lane-inprogress .lane-dot { background: #3B82F6; }
+        .lane-inprogress .card { border-left: 3px solid #3B82F6; }
+        .lane-notyet .lane-header { border-bottom-color: #94A3B8; }
+        .lane-notyet .lane-dot { background: #94A3B8; }
+        .lane-notyet .card { border-left: 3px solid #94A3B8; }
+        .lane-done .lane-header { border-bottom-color: #22C55E; }
+        .lane-done .lane-dot { background: #22C55E; }
+        .lane-done .card { border-left: 3px solid #22C55E; }
+
+        /* ── Card ── */
+        .card {
+            background: #fff; border-radius: 10px; padding: 14px 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.06); border: 1px solid #E2E8F0;
+            cursor: pointer; transition: all .2s; position: relative;
+        }
+        .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.1); border-color: #CBD5E1; transform: translateY(-1px); }
+        .card-ref { font-size: 12px; font-weight: 700; color: #2563EB; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+        .card-title { font-size: 13px; font-weight: 600; color: #1E293B; margin-bottom: 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .card-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+        .card-tag { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 4px; }
+        .card-tag.type { background: #EFF6FF; color: #2563EB; }
+        .card-tag.company { background: #F1F5F9; color: #475569; }
+        .card-tag.dept { background: #F5F3FF; color: #7C3AED; }
+        .card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 8px; border-top: 1px solid #F1F5F9; }
+        .card-assignee { display: flex; align-items: center; gap: 6px; }
+        .card-assignee .avatar {
+            width: 24px; height: 24px; border-radius: 50%; font-size: 10px; font-weight: 700;
+            display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0;
+        }
+        .card-assignee .name { font-size: 12px; color: #64748B; font-weight: 500; }
+        .card-date { font-size: 11px; color: #94A3B8; display: flex; align-items: center; gap: 4px; }
+        .card-period { font-size: 11px; color: #64748B; margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
+
+        /* ── Card Actions (Board view) ── */
+        .card-actions {
+            display: flex; gap: 4px; position: absolute; top: 10px; right: 10px;
+        }
+        .card-actions .action-btn {
+            width: 26px; height: 26px; border-radius: 5px; border: none;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 12px; transition: all .15s; box-shadow: 0 1px 3px rgba(0,0,0,.1);
+        }
+
+        /* ── TABLE VIEW ── */
+        .table-view { display: none; }
+        .table-view.active { display: block; }
+        .board-wrapper.active { display: block; }
+        .table-card {
+            background: #fff; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,.06);
+        }
+        .table-wrapper { overflow-x: auto; overflow-y: auto; max-height: calc(100vh - 260px); }
+        table { width: 100%; border-collapse: collapse; }
+        thead th {
+            background: #1B3A6B; color: #fff; font-weight: 600; font-size: 13px;
+            padding: 14px 16px; text-align: left; white-space: nowrap;
+            position: sticky; top: 0; z-index: 2;
+        }
+        tbody tr { border-bottom: 1px solid #F1F5F9; transition: background .15s; }
+        tbody tr:hover { background: #F8FAFC; }
+        tbody td { padding: 14px 16px; font-size: 13px; color: #475569; white-space: nowrap; }
+
+        /* ── Status Badges ── */
+        .badge-status {
+            display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px;
+            font-size: 12px; font-weight: 600; white-space: nowrap;
+        }
+        .badge-status .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+        .badge-wait { background: #FEF3C7; color: #92400E; }
+        .badge-wait .dot { background: #F59E0B; }
+        .badge-no { background: #FEE2E2; color: #991B1B; }
+        .badge-no .dot { background: #EF4444; }
+        .badge-inprogress { background: #DBEAFE; color: #1D4ED8; }
+        .badge-inprogress .dot { background: #3B82F6; }
+        .badge-notyet { background: #F1F5F9; color: #64748B; }
+        .badge-notyet .dot { background: #94A3B8; }
+        .badge-done { background: #D1FAE5; color: #065F46; }
+        .badge-done .dot { background: #22C55E; }
+
+        /* ── Action Buttons ── */
+        .action-btns { display: flex; gap: 6px; }
+        .action-btn { width: 30px; height: 30px; border-radius: 6px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; }
+        .action-btn.view { background: #EFF6FF; color: #2563EB; }
+        .action-btn.view:hover { background: #DBEAFE; }
+        .action-btn.edit { background: #FFF7ED; color: #C2410C; }
+        .action-btn.edit:hover { background: #FFEDD5; }
+
+        /* ── Modal ── */
+        .renew-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 200;
+            display: flex; align-items: center; justify-content: center; padding: 20px;
+            opacity: 0; visibility: hidden; transition: all .25s;
+        }
+        .renew-overlay.is-active { opacity: 1; visibility: visible; }
+        .renew-modal-box {
+            background: #fff; border-radius: 16px; width: 100%; max-width: 680px;
+            max-height: 90vh; display: flex; flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0,0,0,.15);
+        }
+        .field-row { display: grid; grid-template-columns: 160px 1fr; align-items: start; gap: 8px; }
+        .field-label { font-size: 13px; font-weight: 600; color: #475569; padding-top: 10px; display: flex; align-items: center; gap: 4px; }
+        .field-label .req { color: #EF4444; font-size: 14px; }
+        .renew-info-box {
+            background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 14px 16px;
+        }
+        .renew-info-row { display: flex; gap: 8px; padding: 6px 0; font-size: 13px; }
+        .renew-info-row:not(:last-child) { border-bottom: 1px solid #F1F5F9; }
+        .renew-info-label { color: #64748B; min-width: 130px; flex-shrink: 0; font-weight: 500; }
+        .renew-info-value { color: #1E293B; font-weight: 600; }
+
+        /* Ref Search */
+        .rm-ref-search-box {
+            border: 1px solid #E2E8F0; border-radius: 10px; padding: 8px 12px;
+            display: flex; align-items: center; gap: 8px; min-height: 44px; transition: border-color .2s;
+        }
+        .rm-ref-search-box:focus-within { border-color: #88D2F2; box-shadow: 0 0 0 3px rgba(136,210,242,.2); }
+        .rm-ref-search-box input { border: none; outline: none; flex: 1; font-size: 13px; padding: 2px 0; font-family: inherit; }
+        .rm-ref-selected {
+            display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 12px;
+            background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 20px;
+            font-size: 12px; font-weight: 600; color: #047857; white-space: nowrap;
+        }
+        .rm-ref-selected button {
+            background: none; border: none; cursor: pointer; color: #6EE7B7;
+            font-size: 16px; line-height: 1; padding: 0 2px; transition: color .15s;
+        }
+        .rm-ref-selected button:hover { color: #EF4444; }
+        .rm-ref-dropdown {
+            position: absolute; top: 100%; left: 0; right: 0; z-index: 10;
+            background: #fff; border: 1px solid #E2E8F0; border-radius: 10px;
+            max-height: 200px; overflow-y: auto; margin-top: 4px;
+            box-shadow: 0 8px 24px rgba(0,0,0,.1);
+        }
+        .rm-ref-dropdown-item {
+            padding: 10px 14px; cursor: pointer; display: flex; align-items: center; gap: 10px;
+            font-size: 13px; transition: background .15s;
+        }
+        .rm-ref-dropdown-item:hover { background: #F1F5F9; }
+        .rm-ref-dropdown-item .rd-no { font-weight: 700; color: #334155; min-width: 110px; }
+        .rm-ref-dropdown-item .rd-name { color: #64748B; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* ── Pagination ── */
+        .pagination {
+            display: flex; justify-content: center; align-items: center; gap: 4px; padding: 20px;
+        }
+        .pagination button {
+            width: 36px; height: 36px; border-radius: 8px; border: 1px solid #E2E8F0;
+            background: #fff; color: #475569; font-size: 14px; font-weight: 500;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-family: inherit; transition: all .2s;
+        }
+        .pagination button:hover { background: #EFF6FF; border-color: #2563EB; color: #2563EB; }
+        .pagination button.pg-active { background: #2563EB; color: #fff; border-color: #2563EB; }
+        .pagination button.nav { font-size: 12px; }
+
+        /* ── Scrollbar ── */
+        .lane-body::-webkit-scrollbar { width: 4px; }
+        .lane-body::-webkit-scrollbar-track { background: transparent; }
+        .lane-body::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+        .board-wrapper::-webkit-scrollbar { height: 8px; }
+        .board-wrapper::-webkit-scrollbar-track { background: #E2E8F0; border-radius: 4px; }
+        .board-wrapper::-webkit-scrollbar-thumb { background: #94A3B8; border-radius: 4px; min-width: 60px; }
+        .board-wrapper::-webkit-scrollbar-thumb:hover { background: #64748B; }
+        .board-wrapper { scrollbar-width: thin; scrollbar-color: #94A3B8 #E2E8F0; }
+
+        .is-hidden { display: none !important; }
+
+        /* ── Date Picker Inputs ── */
+        .filter-date {
+            padding: 9px 12px; border: 1px solid #CBD5E1; border-radius: 8px;
+            font-size: 13px; font-family: inherit; color: #475569; background: #fff;
+            outline: none; transition: all .2s; width: 130px;
+        }
+        .filter-date:focus { border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+        .filter-date::placeholder { color: #94A3B8; }
+        .filter-date.has-icon { padding-left: 34px; cursor: pointer; }
+        .date-input-wrap {
+            position: relative; display: inline-flex; align-items: center;
+        }
+        .date-input-wrap .date-icon {
+            position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+            width: 14px; height: 14px; color: #94A3B8; pointer-events: none;
+        }
+        .date-range-group {
+            display: flex; align-items: center; gap: 6px;
+        }
+        .date-range-group .date-sep {
+            font-size: 13px; color: #94A3B8; font-weight: 500; white-space: nowrap;
+        }
+
+        /* ── Multi-Select Dropdown ── */
+        .multi-select-wrapper { position: relative; }
+        .multi-select-btn {
+            padding: 9px 32px 9px 12px; border: 1px solid #CBD5E1; border-radius: 8px;
+            font-size: 13px; font-family: inherit; color: #475569; background: #fff;
+            outline: none; cursor: pointer; transition: all .2s; white-space: nowrap;
+            min-width: 160px; text-align: left;
+            background-image: url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27%2364748B%27%20stroke-width=%272%27%3E%3Cpolyline%20points=%276%209%2012%2015%2018%209%27/%3E%3C/svg%3E');
+            background-repeat: no-repeat; background-position: right 10px center;
+        }
+        .multi-select-btn:focus, .multi-select-btn.is-open {
+            border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+        }
+        .multi-select-btn .ms-count {
+            display: inline-flex; align-items: center; justify-content: center;
+            background: #2563EB; color: #fff; font-size: 10px; font-weight: 700;
+            padding: 1px 6px; border-radius: 10px; margin-left: 6px;
+        }
+        .multi-select-dropdown {
+            position: absolute; top: calc(100% + 4px); left: 0; z-index: 100;
+            background: #fff; border: 1px solid #E2E8F0; border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0,0,0,.12); min-width: 240px;
+            padding: 8px 0; display: none;
+        }
+        .multi-select-dropdown.is-open { display: block; }
+        .multi-select-dropdown label {
+            display: flex; align-items: center; gap: 8px; padding: 8px 14px;
+            font-size: 13px; color: #475569; cursor: pointer; transition: background .15s;
+        }
+        .multi-select-dropdown label:hover { background: #F8FAFC; }
+        .multi-select-dropdown input[type="checkbox"] {
+            width: 16px; height: 16px; accent-color: #2563EB; cursor: pointer; flex-shrink: 0;
+        }
+
+        /* ── Flatpickr overrides ── */
+        .flatpickr-calendar { font-family: 'Kanit', sans-serif !important; }
+        .flatpickr-day.selected, .flatpickr-day.selected:hover {
+            background: #2563EB; border-color: #2563EB;
+        }
+
+        /* ── Filter Row 2 ── */
+        .filter-row-2 {
+            display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 1024px) { .lane { min-width: 230px; max-width: 250px; } }
+        @media (max-width: 768px) {
+            .lane { min-width: 220px; max-width: 240px; }
+            .lane-title { font-size: 12px; }
+            .card-title { font-size: 12px; }
+            .card-ref { font-size: 11px; }
+            .card-tag { font-size: 10px; }
+            .card-footer { flex-wrap: wrap; gap: 6px; }
+            .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            tbody td { font-size: 12px; padding: 10px 12px; }
+            thead th { font-size: 12px; padding: 10px 12px; }
+        }
+        @media (max-width: 480px) { .lane { min-width: 200px; max-width: 220px; } .card { padding: 10px 12px; } }
+    </style>
+</head>
+<body>
+
+<div id="topbar-container"></div>
+<div id="sidebar-container"></div>
+
+<div class="ml-[260px] mt-14 p-7 min-h-[calc(100vh-56px)] flex flex-col max-md:ml-0 max-md:p-4 max-[480px]:mt-[50px] max-[480px]:p-3">
+    <!-- Page Header -->
+    <div class="flex justify-between items-start mb-5 max-md:flex-col max-md:gap-3">
+        <div>
+            <h1 class="text-[26px] font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl max-[480px]:text-lg">
+                <i data-lucide="refresh-cw" class="w-5.5 h-5.5 text-[#2563EB]"></i>
+                <span>ต่ออายุสัญญา</span>
+            </h1>
+            <p class="text-slate-500 text-sm mt-1">จัดการและติดตามสถานะการต่ออายุสัญญาทั้งหมด — <strong>15</strong> รายการ</p>
+        </div>
+        <div class="flex gap-2.5 items-center shrink-0">
+            <button class="inline-flex items-center justify-center gap-2 px-4.5 py-2.5 rounded-lg text-sm font-medium bg-white border border-slate-300 text-slate-500 hover:bg-slate-50 hover:border-slate-400 transition-all cursor-pointer font-[inherit] whitespace-nowrap">
+                <i data-lucide="file-up" class="w-4 h-4"></i>
+                <span>ส่งออก</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar flex flex-col gap-3 mb-5">
+        <!-- Row 1: Search + ประเภทสัญญา + แผนก + View Toggle -->
+        <div class="flex gap-3 items-center flex-wrap max-md:flex-col max-md:items-stretch max-md:gap-2.5">
+            <div class="flex-1 min-w-[200px] relative max-md:w-full max-md:min-w-0">
+                <i data-lucide="search" class="icon w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="text" placeholder="ค้นหาเลขสัญญา, ชื่อสัญญา, คู่สัญญา..." class="w-full py-2.5 pl-9 pr-3.5 border border-slate-300 rounded-lg text-sm font-[inherit] text-slate-600 bg-white outline-none transition-all focus:border-blue-500 focus:ring-3 focus:ring-blue-500/10">
+            </div>
+            <div class="contents max-md:!flex max-md:gap-2.5 max-md:w-full">
+                <select class="filter-select py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27%2364748B%27%20stroke-width=%272%27%3E%3Cpolyline%20points=%276%209%2012%2015%2018%209%27/%3E%3C/svg%3E')] bg-no-repeat bg-[right_10px_center] max-md:flex-1 max-md:min-w-0">
+                    <option>ประเภทสัญญาทั้งหมด</option>
+                    <option>สัญญาจ้างบริการ</option>
+                    <option>สัญญาเช่า</option>
+                    <option>สัญญาจัดซื้อ</option>
+                    <option>สัญญาบริการ SaaS</option>
+                    <option>สัญญาผลิตงาน</option>
+                    <option>สัญญาจ้างที่ปรึกษา</option>
+                </select>
+                <select class="filter-select py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27%2364748B%27%20stroke-width=%272%27%3E%3Cpolyline%20points=%276%209%2012%2015%2018%209%27/%3E%3C/svg%3E')] bg-no-repeat bg-[right_10px_center] max-md:flex-1 max-md:min-w-0">
+                    <option>แผนกทั้งหมด</option>
+                    <option>ฝ่ายกฎหมาย</option>
+                    <option>ฝ่ายการตลาด</option>
+                    <option>ฝ่ายเทคโนโลยีสารสนเทศ</option>
+                    <option>ฝ่ายปฏิบัติการ</option>
+                    <option>ฝ่ายทรัพยากรบุคคล</option>
+                    <option>ฝ่ายบัญชีและการเงิน</option>
+                </select>
+                <div class="view-toggle flex bg-slate-200 rounded-lg p-[3px] shrink-0 max-md:ml-auto">
+                    <button class="active" onclick="switchView('kanban')" id="btnKanban" style="padding:7px 16px;border:none;background:#fff;border-radius:6px;font-size:13px;font-weight:600;color:#2563EB;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.1);">
+                        <i data-lucide="columns-3" class="w-3.5 h-3.5"></i>
+                        <span>Board</span>
+                    </button>
+                    <button onclick="switchView('table')" id="btnTable" style="padding:7px 16px;border:none;background:transparent;border-radius:6px;font-size:13px;font-weight:600;color:#64748B;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:all .2s;">
+                        <i data-lucide="table" class="w-3.5 h-3.5"></i>
+                        <span>Table</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Row 2: สถานะ + ระยะเวลาสัญญา + คู่สัญญา + ประเภทคู่สัญญา + บริษัทผู้ทำสัญญา + สถานะการต่อสัญญา -->
+        <div class="filter-row-2">
+            <!-- สถานะ -->
+            <select class="filter-select py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27%2364748B%27%20stroke-width=%272%27%3E%3Cpolyline%20points=%276%209%2012%2015%2018%209%27/%3E%3C/svg%3E')] bg-no-repeat bg-[right_10px_center]">
+                <option>สถานะทั้งหมด</option>
+                <option>แบบร่าง</option>
+                <option>ส่งกลับเพื่อแก้ไข</option>
+                <option>รอกฎหมายจ่ายงาน</option>
+                <option>รอกฎหมายตรวจสอบ/ร่าง</option>
+                <option>รอหัวหน้างานอนุมัติ</option>
+                <option>รอกฎหมายสรุปความเสี่ยง</option>
+                <option>เลือกการลงนาม</option>
+                <option>รอจัดทำสัญญาฉบับสมบูรณ์</option>
+                <option>แนบสัญญาฉบับสมบูรณ์</option>
+                <option>รอกฎหมายตรวจสอบ</option>
+                <option>เสร็จสิ้น</option>
+            </select>
+            <!-- ระยะเวลาสัญญา (Date Range) -->
+            <div class="date-range-group">
+                <div class="date-input-wrap">
+                    <i data-lucide="calendar" class="date-icon"></i>
+                    <input type="text" class="filter-date has-icon" placeholder="วันเริ่มต้นสัญญา" id="filterDateStart" readonly>
+                </div>
+                <span class="date-sep">—</span>
+                <div class="date-input-wrap">
+                    <i data-lucide="calendar" class="date-icon"></i>
+                    <input type="text" class="filter-date has-icon" placeholder="วันสิ้นสุดสัญญา" id="filterDateEnd" readonly>
+                </div>
+            </div>
+            <!-- คู่สัญญา -->
+            <select class="filter-select py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27%2364748B%27%20stroke-width=%272%27%3E%3Cpolyline%20points=%276%209%2012%2015%2018%209%27/%3E%3C/svg%3E')] bg-no-repeat bg-[right_10px_center]">
+                <option>คู่สัญญาทั้งหมด</option>
+                <option>บริษัท เทคโนโลยี จำกัด</option>
+                <option>นายสมศักดิ์ พรหมมา</option>
+                <option>AWS Thailand</option>
+                <option>บริษัท การ์ด ซิเคียวริตี้</option>
+                <option>บริษัท โลจิสติกส์ จำกัด</option>
+                <option>บริษัท แอลอีดี ไทย จำกัด</option>
+                <option>นายประสิทธิ์ แสงทอง</option>
+                <option>บริษัท ไบร์ท ไซน์ จำกัด</option>
+                <option>บริษัท คลีน จำกัด</option>
+                <option>นายวิชัย เจริญสุข</option>
+                <option>บริษัท ออฟฟิศเมท จำกัด</option>
+                <option>TRUE Corp.</option>
+                <option>INET Thailand</option>
+            </select>
+            <!-- ประเภทคู่สัญญา -->
+            <select class="filter-select py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27%2364748B%27%20stroke-width=%272%27%3E%3Cpolyline%20points=%276%209%2012%2015%2018%209%27/%3E%3C/svg%3E')] bg-no-repeat bg-[right_10px_center]">
+                <option>ประเภทคู่สัญญาทั้งหมด</option>
+                <option>นิติบุคคล</option>
+                <option>บุคคลธรรมดา</option>
+                <option>หน่วยงานราชการ</option>
+            </select>
+            <!-- บริษัทผู้ทำสัญญา (Multiple Select) -->
+            <div class="multi-select-wrapper" id="companyMultiSelect">
+                <button type="button" class="multi-select-btn" id="companySelectBtn" onclick="toggleMultiSelect()">
+                    บริษัทผู้ทำสัญญาทั้งหมด
+                </button>
+                <div class="multi-select-dropdown" id="companyDropdown">
+                    <label><input type="checkbox" value="บริษัท แพลนบี มีเดีย จำกัด (มหาชน)" onchange="updateCompanySelect()"> บริษัท แพลนบี มีเดีย จำกัด (มหาชน)</label>
+                    <label><input type="checkbox" value="บริษัท แพลนบี ดิเลเว่น จำกัด" onchange="updateCompanySelect()"> บริษัท แพลนบี ดิเลเว่น จำกัด</label>
+                    <label><input type="checkbox" value="บริษัท แพลนบี อีโวลูชั่น จำกัด" onchange="updateCompanySelect()"> บริษัท แพลนบี อีโวลูชั่น จำกัด</label>
+                    <label><input type="checkbox" value="บริษัท มาสเตอร์ แอด จำกัด (มหาชน)" onchange="updateCompanySelect()"> บริษัท มาสเตอร์ แอด จำกัด (มหาชน)</label>
+                    <label><input type="checkbox" value="บริษัท พลัส อินฟลูเอนเซอร์ จำกัด" onchange="updateCompanySelect()"> บริษัท พลัส อินฟลูเอนเซอร์ จำกัด</label>
+                </div>
+            </div>
+            <!-- สถานะการต่อสัญญา -->
+            <select class="filter-select py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27%2364748B%27%20stroke-width=%272%27%3E%3Cpolyline%20points=%276%209%2012%2015%2018%209%27/%3E%3C/svg%3E')] bg-no-repeat bg-[right_10px_center]">
+                <option>สถานะการต่อสัญญาทั้งหมด</option>
+                <option>รอต่อสัญญา</option>
+                <option>ไม่ต่อสัญญา</option>
+                <option>อยู่ระหว่างดำเนินการ</option>
+                <option>ยังไม่ได้ดำเนินการ</option>
+                <option>ต่อสัญญาแล้ว</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- ══════════ KANBAN BOARD — 5 Lanes ══════════ -->
+    <div class="board-wrapper" id="kanbanView" style="flex:1;overflow-x:auto;padding-bottom:16px;scroll-behavior:smooth;">
+        <div class="board" style="display:flex;gap:16px;min-height:calc(100vh - 230px);align-items:flex-start;">
+
+            <!-- 1. รอต่อสัญญา -->
+            <div class="lane lane-wait">
+                <div class="lane-header"><div class="lane-header-left"><div class="lane-dot"></div><div class="lane-title">รอต่อสัญญา</div></div><div class="lane-count">4</div></div>
+                <div class="lane-body">
+                    <div class="card" data-contract="PB2026/002" data-name="สัญญาจ้างพัฒนาระบบ ERP" data-partner="บ. เทคโนโลยี" data-company="บ. เทคโนโลยี" data-period="15/04/2025 - 14/04/2026">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">PB2026/002</div>
+                        <div class="card-title">สัญญาจ้างพัฒนาระบบ ERP</div>
+                        <div class="card-meta"><span class="card-tag type">จ้างบริการ</span><span class="card-tag company">บ. เทคโนโลยี</span></div>
+                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 15/04/2025 - 14/04/2026</div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#8B5CF6;">จร</div><div class="name">Jiraporn S.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> IT Dept</div></div>
+                    </div>
+                    <div class="card" data-contract="PB2026/005" data-name="สัญญาเช่าพื้นที่โฆษณา ถ.สุขุมวิท" data-partner="นายสมศักดิ์" data-company="นายสมศักดิ์" data-period="01/06/2025 - 31/05/2026">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">PB2026/005</div>
+                        <div class="card-title">สัญญาเช่าพื้นที่โฆษณา ถ.สุขุมวิท</div>
+                        <div class="card-meta"><span class="card-tag type">เช่า</span><span class="card-tag company">นายสมศักดิ์</span></div>
+                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 01/06/2025 - 31/05/2026</div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#F59E0B;">นพ</div><div class="name">Nattapong W.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> Marketing</div></div>
+                    </div>
+                    <div class="card" data-contract="PB2026/011" data-name="สัญญาบริการ Cloud Computing" data-partner="AWS Thailand" data-company="AWS Thailand" data-period="01/05/2025 - 30/04/2026">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">PB2026/011</div>
+                        <div class="card-title">สัญญาบริการ Cloud Computing</div>
+                        <div class="card-meta"><span class="card-tag type">SaaS</span><span class="card-tag company">AWS Thailand</span></div>
+                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 01/05/2025 - 30/04/2026</div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#EC4899;">วช</div><div class="name">Wichai R.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> IT Dept</div></div>
+                    </div>
+                    <div class="card" data-contract="PB2026/018" data-name="สัญญาจ้างบริการรักษาความปลอดภัย" data-partner="บ. การ์ด ซิเคียวริตี้" data-company="บ. การ์ด ซิเคียวริตี้" data-period="01/03/2025 - 28/02/2026">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">PB2026/018</div>
+                        <div class="card-title">สัญญาจ้างบริการรักษาความปลอดภัย</div>
+                        <div class="card-meta"><span class="card-tag type">จ้างบริการ</span><span class="card-tag company">บ. การ์ด ซิเคียวริตี้</span></div>
+                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 01/03/2025 - 28/02/2026</div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#8B5CF6;">จร</div><div class="name">Jiraporn S.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> Operations</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. ไม่ต่อสัญญา -->
+            <div class="lane lane-no">
+                <div class="lane-header"><div class="lane-header-left"><div class="lane-dot"></div><div class="lane-title">ไม่ต่อสัญญา</div></div><div class="lane-count">2</div></div>
+                <div class="lane-body">
+                    <div class="card" data-contract="PB2026/007" data-name="สัญญาบริการขนส่งสินค้า" data-partner="บ. โลจิสติกส์" data-company="บ. โลจิสติกส์" data-period="01/01/2025 - 31/12/2025">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">PB2026/007</div>
+                        <div class="card-title">สัญญาบริการขนส่งสินค้า</div>
+                        <div class="card-meta"><span class="card-tag type">จ้างบริการ</span><span class="card-tag company">บ. โลจิสติกส์</span></div>
+                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 01/01/2025 - 31/12/2025</div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#F59E0B;">นพ</div><div class="name">Nattapong W.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> Operations</div></div>
+                    </div>
+                    <div class="card" data-contract="PB2026/009" data-name="สัญญาจ้างทำป้ายโฆษณา LED" data-partner="บ. แอลอีดี ไทย" data-company="บ. แอลอีดี ไทย" data-period="15/02/2025 - 14/02/2026">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">PB2026/009</div>
+                        <div class="card-title">สัญญาจ้างทำป้ายโฆษณา LED</div>
+                        <div class="card-meta"><span class="card-tag type">ผลิตงาน</span><span class="card-tag company">บ. แอลอีดี ไทย</span></div>
+                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 15/02/2025 - 14/02/2026</div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#EC4899;">ศร</div><div class="name">Siriporn C.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> Marketing</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. อยู่ระหว่างดำเนินการ -->
+            <div class="lane lane-inprogress">
+                <div class="lane-header"><div class="lane-header-left"><div class="lane-dot"></div><div class="lane-title">อยู่ระหว่างดำเนินการ</div></div><div class="lane-count">3</div></div>
+                <div class="lane-body">
+                    <div class="card" data-contract="PB2026/001" data-name="สัญญาเช่าพื้นที่โฆษณา ถ.พหลโยธิน" data-partner="นายประสิทธิ์" data-company="นายประสิทธิ์" data-period="01/07/2025 - 30/06/2026">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">PB2026/001</div>
+                        <div class="card-title">สัญญาเช่าพื้นที่โฆษณา ถ.พหลโยธิน</div>
+                        <div class="card-meta"><span class="card-tag type">เช่า</span><span class="card-tag company">นายประสิทธิ์</span></div>
+                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 01/07/2025 - 30/06/2026</div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#8B5CF6;">จร</div><div class="name">Jiraporn S.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> Marketing</div></div>
+                    </div>
+                    <div class="card" data-contract="PB2026/006" data-name="สัญญาผลิตงานป้าย Billboard" data-partner="บ. ไบร์ท ไซน์" data-company="บ. ไบร์ท ไซน์" data-period="01/04/2025 - 31/03/2026">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">PB2026/006</div>
+                        <div class="card-title">สัญญาผลิตงานป้าย Billboard</div>
+                        <div class="card-meta"><span class="card-tag type">ผลิตงาน</span><span class="card-tag company">บ. ไบร์ท ไซน์</span></div>
+                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 01/04/2025 - 31/03/2026</div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#EC4899;">ชต</div><div class="name">Chotika K.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> Marketing</div></div>
+                    </div>
+                    <div class="card" data-contract="PB2026/015" data-name="สัญญาจ้างบริการทำความสะอาด" data-partner="บ. คลีน" data-company="บ. คลีน" data-period="01/02/2025 - 31/01/2026">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">PB2026/015</div>
+                        <div class="card-title">สัญญาจ้างบริการทำความสะอาด</div>
+                        <div class="card-meta"><span class="card-tag type">จ้างบริการ</span><span class="card-tag company">บ. คลีน</span></div>
+                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 01/02/2025 - 31/01/2026</div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#F59E0B;">กม</div><div class="name">Kamonwan P.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> Operations</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. ยังไม่ได้ดำเนินการ -->
+            <div class="lane lane-notyet">
+                <div class="lane-header"><div class="lane-header-left"><div class="lane-dot"></div><div class="lane-title">ยังไม่ได้ดำเนินการ</div></div><div class="lane-count">3</div></div>
+                <div class="lane-body">
+                    <div class="card" data-contract="PB2026/020" data-name="สัญญาเช่าที่ดินเปล่า ลาดพร้าว" data-partner="นายวิชัย" data-company="นายวิชัย" data-period="01/08/2025 - 31/07/2026">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">PB2026/020</div>
+                        <div class="card-title">สัญญาเช่าที่ดินเปล่า ลาดพร้าว</div>
+                        <div class="card-meta"><span class="card-tag type">เช่า</span><span class="card-tag company">นายวิชัย</span></div>
+                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 01/08/2025 - 31/07/2026</div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#EC4899;">พว</div><div class="name">Piyawat S.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> Finance</div></div>
+                    </div>
+                    <div class="card" data-contract="PB2026/022" data-name="สัญญาจัดซื้ออุปกรณ์สำนักงาน" data-partner="บ. ออฟฟิศเมท" data-company="บ. ออฟฟิศเมท" data-period="01/09/2025 - 31/08/2026">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">PB2026/022</div>
+                        <div class="card-title">สัญญาจัดซื้ออุปกรณ์สำนักงาน</div>
+                        <div class="card-meta"><span class="card-tag type">จัดซื้อ</span><span class="card-tag company">บ. ออฟฟิศเมท</span></div>
+                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 01/09/2025 - 31/08/2026</div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#8B5CF6;">ธน</div><div class="name">Thanaporn S.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> Operations</div></div>
+                    </div>
+                    <div class="card" data-contract="PB2026/025" data-name="สัญญาบริการ Internet Leased Line" data-partner="TRUE Corp." data-company="TRUE Corp." data-period="01/10/2025 - 30/09/2026">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">PB2026/025</div>
+                        <div class="card-title">สัญญาบริการ Internet Leased Line</div>
+                        <div class="card-meta"><span class="card-tag type">SaaS</span><span class="card-tag company">TRUE Corp.</span></div>
+                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 01/10/2025 - 30/09/2026</div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#F59E0B;">วช</div><div class="name">Wichai R.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> IT Dept</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. ต่อสัญญาแล้ว -->
+            <div class="lane lane-done">
+                <div class="lane-header"><div class="lane-header-left"><div class="lane-dot"></div><div class="lane-title">ต่อสัญญาแล้ว</div></div><div class="lane-count">3</div></div>
+                <div class="lane-body">
+                    <div class="card" data-contract="PB2026/003" data-name="สัญญาจ้างบริการทำความสะอาด (ต่อ)" data-partner="บ. คลีน" data-company="บ. คลีน" data-period="01/02/2026 - 31/01/2027">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">PB2026/003</div>
+                        <div class="card-title">สัญญาจ้างบริการทำความสะอาด (ต่อ)</div>
+                        <div class="card-meta"><span class="card-tag type">จ้างบริการ</span><span class="card-tag company">บ. คลีน</span></div>
+                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 01/02/2026 - 31/01/2027</div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#F59E0B;">กม</div><div class="name">Kamonwan P.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> Operations</div></div>
+                    </div>
+                    <div class="card" data-contract="PB2026/004" data-name="สัญญาเช่าที่ดินเปล่า ลาดพร้าว (ต่อ)" data-partner="นายวิชัย" data-company="นายวิชัย" data-period="01/08/2026 - 31/07/2027">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">PB2026/004</div>
+                        <div class="card-title">สัญญาเช่าที่ดินเปล่า ลาดพร้าว (ต่อ)</div>
+                        <div class="card-meta"><span class="card-tag type">เช่า</span><span class="card-tag company">นายวิชัย</span></div>
+                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 01/08/2026 - 31/07/2027</div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#EC4899;">พว</div><div class="name">Piyawat S.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> Finance</div></div>
+                    </div>
+                    <div class="card" data-contract="PB2025/301" data-name="สัญญาบริการ Data Center (ต่อ)" data-partner="INET Thailand" data-company="INET Thailand" data-period="01/03/2026 - 28/02/2027">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">PB2025/301</div>
+                        <div class="card-title">สัญญาบริการ Data Center (ต่อ)</div>
+                        <div class="card-meta"><span class="card-tag type">SaaS</span><span class="card-tag company">INET Thailand</span></div>
+                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 01/03/2026 - 28/02/2027</div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#EC4899;">สช</div><div class="name">Somchai C.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> IT Dept</div></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ══════════ TABLE VIEW ══════════ -->
+    <div class="table-view" id="tableView">
+        <div class="table-card">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>จัดการ</th>
+                            <th>เลขสัญญา</th>
+                            <th>ชื่อสัญญา</th>
+                            <th>ประเภทสัญญา</th>
+                            <th>คู่สัญญา</th>
+                            <th>บริษัท</th>
+                            <th>ระยะเวลาสัญญา</th>
+                            <th>สถานะการต่อสัญญา</th>
+                            <th>วันที่ปรับสถานะ</th>
+                            <th>แผนก</th>
+                            <th>ผู้รับผิดชอบ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- รอต่อสัญญา (4) -->
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">PB2026/002</td>
+                            <td>สัญญาจ้างพัฒนาระบบ ERP</td>
+                            <td>สัญญาจ้างบริการ</td>
+                            <td>บริษัท เทคโนโลยี จำกัด</td>
+                            <td>แพลนบี มีเดีย</td>
+                            <td>15/04/2025 - 14/04/2026</td>
+                            <td><span class="badge-status badge-wait"><span class="dot"></span> รอต่อสัญญา</span></td>
+                            <td>01/04/2026</td>
+                            <td>IT Department</td>
+                            <td>Jiraporn S.</td>
+                        </tr>
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">PB2026/005</td>
+                            <td>สัญญาเช่าพื้นที่โฆษณา ถ.สุขุมวิท</td>
+                            <td>สัญญาเช่า</td>
+                            <td>นายสมศักดิ์ พรหมมา</td>
+                            <td>แพลนบี มีเดีย</td>
+                            <td>01/06/2025 - 31/05/2026</td>
+                            <td><span class="badge-status badge-wait"><span class="dot"></span> รอต่อสัญญา</span></td>
+                            <td>28/03/2026</td>
+                            <td>Marketing</td>
+                            <td>Nattapong W.</td>
+                        </tr>
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">PB2026/011</td>
+                            <td>สัญญาบริการ Cloud Computing</td>
+                            <td>สัญญาบริการ SaaS</td>
+                            <td>AWS Thailand</td>
+                            <td>แพลนบี ดิเลเว่น</td>
+                            <td>01/05/2025 - 30/04/2026</td>
+                            <td><span class="badge-status badge-wait"><span class="dot"></span> รอต่อสัญญา</span></td>
+                            <td>05/04/2026</td>
+                            <td>IT Department</td>
+                            <td>Wichai R.</td>
+                        </tr>
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">PB2026/018</td>
+                            <td>สัญญาจ้างบริการรักษาความปลอดภัย</td>
+                            <td>สัญญาจ้างบริการ</td>
+                            <td>บริษัท การ์ด ซิเคียวริตี้</td>
+                            <td>แพลนบี มีเดีย</td>
+                            <td>01/03/2025 - 28/02/2026</td>
+                            <td><span class="badge-status badge-wait"><span class="dot"></span> รอต่อสัญญา</span></td>
+                            <td>25/02/2026</td>
+                            <td>Operations</td>
+                            <td>Jiraporn S.</td>
+                        </tr>
+
+                        <!-- ไม่ต่อสัญญา (2) -->
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">PB2026/007</td>
+                            <td>สัญญาบริการขนส่งสินค้า</td>
+                            <td>สัญญาจ้างบริการ</td>
+                            <td>บริษัท โลจิสติกส์ จำกัด</td>
+                            <td>แพลนบี อิมแพค</td>
+                            <td>01/01/2025 - 31/12/2025</td>
+                            <td><span class="badge-status badge-no"><span class="dot"></span> ไม่ต่อสัญญา</span></td>
+                            <td>22/12/2025</td>
+                            <td>Operations</td>
+                            <td>Nattapong W.</td>
+                        </tr>
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">PB2026/009</td>
+                            <td>สัญญาจ้างทำป้ายโฆษณา LED</td>
+                            <td>สัญญาผลิตงาน</td>
+                            <td>บริษัท แอลอีดี ไทย จำกัด</td>
+                            <td>แพลนบี มีเดีย</td>
+                            <td>15/02/2025 - 14/02/2026</td>
+                            <td><span class="badge-status badge-no"><span class="dot"></span> ไม่ต่อสัญญา</span></td>
+                            <td>10/02/2026</td>
+                            <td>Marketing</td>
+                            <td>Siriporn C.</td>
+                        </tr>
+
+                        <!-- อยู่ระหว่างดำเนินการ (3) -->
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">PB2026/001</td>
+                            <td>สัญญาเช่าพื้นที่โฆษณา ถ.พหลโยธิน</td>
+                            <td>สัญญาเช่า</td>
+                            <td>นายประสิทธิ์ แสงทอง</td>
+                            <td>แพลนบี มีเดีย</td>
+                            <td>01/07/2025 - 30/06/2026</td>
+                            <td><span class="badge-status badge-inprogress"><span class="dot"></span> อยู่ระหว่างดำเนินการ</span></td>
+                            <td>15/03/2026</td>
+                            <td>Marketing</td>
+                            <td>Jiraporn S.</td>
+                        </tr>
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">PB2026/006</td>
+                            <td>สัญญาผลิตงานป้าย Billboard</td>
+                            <td>สัญญาผลิตงาน</td>
+                            <td>บริษัท ไบร์ท ไซน์ จำกัด</td>
+                            <td>แพลนบี มีเดีย</td>
+                            <td>01/04/2025 - 31/03/2026</td>
+                            <td><span class="badge-status badge-inprogress"><span class="dot"></span> อยู่ระหว่างดำเนินการ</span></td>
+                            <td>20/03/2026</td>
+                            <td>Marketing</td>
+                            <td>Chotika K.</td>
+                        </tr>
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">PB2026/015</td>
+                            <td>สัญญาจ้างบริการทำความสะอาด</td>
+                            <td>สัญญาจ้างบริการ</td>
+                            <td>บริษัท คลีน จำกัด</td>
+                            <td>แพลนบี เจวี</td>
+                            <td>01/02/2025 - 31/01/2026</td>
+                            <td><span class="badge-status badge-inprogress"><span class="dot"></span> อยู่ระหว่างดำเนินการ</span></td>
+                            <td>18/01/2026</td>
+                            <td>Operations</td>
+                            <td>Kamonwan P.</td>
+                        </tr>
+
+                        <!-- ยังไม่ได้ดำเนินการ (3) -->
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">PB2026/020</td>
+                            <td>สัญญาเช่าที่ดินเปล่า ลาดพร้าว</td>
+                            <td>สัญญาเช่า</td>
+                            <td>นายวิชัย เจริญสุข</td>
+                            <td>มาสเตอร์ แอด</td>
+                            <td>01/08/2025 - 31/07/2026</td>
+                            <td><span class="badge-status badge-notyet"><span class="dot"></span> ยังไม่ได้ดำเนินการ</span></td>
+                            <td>-</td>
+                            <td>Finance</td>
+                            <td>Piyawat S.</td>
+                        </tr>
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">PB2026/022</td>
+                            <td>สัญญาจัดซื้ออุปกรณ์สำนักงาน</td>
+                            <td>สัญญาจัดซื้อ</td>
+                            <td>บริษัท ออฟฟิศเมท จำกัด</td>
+                            <td>แพลนบี มีเดีย</td>
+                            <td>01/09/2025 - 31/08/2026</td>
+                            <td><span class="badge-status badge-notyet"><span class="dot"></span> ยังไม่ได้ดำเนินการ</span></td>
+                            <td>-</td>
+                            <td>Operations</td>
+                            <td>Thanaporn S.</td>
+                        </tr>
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">PB2026/025</td>
+                            <td>สัญญาบริการ Internet Leased Line</td>
+                            <td>สัญญาบริการ SaaS</td>
+                            <td>TRUE Corp.</td>
+                            <td>แพลนบี มีเดีย</td>
+                            <td>01/10/2025 - 30/09/2026</td>
+                            <td><span class="badge-status badge-notyet"><span class="dot"></span> ยังไม่ได้ดำเนินการ</span></td>
+                            <td>-</td>
+                            <td>IT Department</td>
+                            <td>Wichai R.</td>
+                        </tr>
+
+                        <!-- ต่อสัญญาแล้ว (3) -->
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">PB2026/003</td>
+                            <td>สัญญาจ้างบริการทำความสะอาด (ต่อ)</td>
+                            <td>สัญญาจ้างบริการ</td>
+                            <td>บริษัท คลีน จำกัด</td>
+                            <td>แพลนบี เจวี</td>
+                            <td>01/02/2026 - 31/01/2027</td>
+                            <td><span class="badge-status badge-done"><span class="dot"></span> ต่อสัญญาแล้ว</span></td>
+                            <td>28/01/2026</td>
+                            <td>Operations</td>
+                            <td>Kamonwan P.</td>
+                        </tr>
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">PB2026/004</td>
+                            <td>สัญญาเช่าที่ดินเปล่า ลาดพร้าว (ต่อ)</td>
+                            <td>สัญญาเช่า</td>
+                            <td>นายวิชัย เจริญสุข</td>
+                            <td>มาสเตอร์ แอด</td>
+                            <td>01/08/2026 - 31/07/2027</td>
+                            <td><span class="badge-status badge-done"><span class="dot"></span> ต่อสัญญาแล้ว</span></td>
+                            <td>25/07/2026</td>
+                            <td>Finance</td>
+                            <td>Piyawat S.</td>
+                        </tr>
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">PB2025/301</td>
+                            <td>สัญญาบริการ Data Center (ต่อ)</td>
+                            <td>สัญญาบริการ SaaS</td>
+                            <td>INET Thailand</td>
+                            <td>แพลนบี มีเดีย</td>
+                            <td>01/03/2026 - 28/02/2027</td>
+                            <td><span class="badge-status badge-done"><span class="dot"></span> ต่อสัญญาแล้ว</span></td>
+                            <td>20/02/2026</td>
+                            <td>IT Department</td>
+                            <td>Somchai C.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">
+                <button class="nav"><i data-lucide="chevron-left" class="w-3 h-3"></i></button>
+                <button class="pg-active">1</button>
+                <button>2</button>
+                <button class="nav"><i data-lucide="chevron-right" class="w-3 h-3"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── Renew Status Modal ── -->
+<div class="renew-overlay" id="renewModal" onclick="if(event.target===this)closeRenewModal()">
+    <div class="renew-modal-box">
+        <!-- Header -->
+        <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center">
+                    <i data-lucide="refresh-cw" class="w-5 h-5 text-amber-600"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800">ปรับสถานะการต่อสัญญา</h3>
+                    <p class="text-xs text-slate-400 mt-0.5" id="renewModalSubtitle">เลือกสถานะการต่อสัญญา</p>
+                </div>
+            </div>
+            <button onclick="closeRenewModal()" class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-slate-100 transition-colors text-slate-400 hover:text-slate-600">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+        <!-- Body -->
+        <div class="px-6 py-5 space-y-5 overflow-y-auto flex-1">
+            <!-- Contract Info -->
+            <div class="renew-info-box">
+                <div class="renew-info-row"><span class="renew-info-label">เลขสัญญา</span><span class="renew-info-value" id="rmContractNo">-</span></div>
+                <div class="renew-info-row"><span class="renew-info-label">ชื่อสัญญา</span><span class="renew-info-value" id="rmContractName">-</span></div>
+                <div class="renew-info-row"><span class="renew-info-label">คู่สัญญา</span><span class="renew-info-value" id="rmPartner">-</span></div>
+                <div class="renew-info-row"><span class="renew-info-label">บริษัท</span><span class="renew-info-value" id="rmCompany">-</span></div>
+                <div class="renew-info-row"><span class="renew-info-label">ระยะเวลาสัญญา</span><span class="renew-info-value" id="rmDateRange">-</span></div>
+            </div>
+
+            <!-- สถานะ -->
+            <div class="field-row">
+                <label class="field-label">สถานะ <span class="req">*</span></label>
+                <select id="rmSelStatus" onchange="onRenewStatusChange()" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#88D2F2] focus:ring-2 focus:ring-[#88D2F2]/20 transition-all font-[inherit]">
+                    <option value="">-- เลือกสถานะ --</option>
+                    <option value="ยังไม่ได้ดำเนินการ">ยังไม่ได้ดำเนินการ</option>
+                    <option value="รอการตรวจสอบ">รอการตรวจสอบ (รอตัดสินใจว่าจะต่อหรือไม่)</option>
+                    <option value="อยู่ระหว่างเจรจาสัญญา">อยู่ระหว่างเจรจาสัญญา</option>
+                    <option value="ต่อสัญญา">ต่อสัญญา</option>
+                    <option value="ไม่ต่อสัญญา">ไม่ต่อสัญญา</option>
+                </select>
+            </div>
+
+            <!-- หมายเหตุ -->
+            <div class="field-row">
+                <label class="field-label">หมายเหตุ</label>
+                <textarea id="rmRemark" rows="3" placeholder="กรอกหมายเหตุเพิ่มเติม (ถ้ามี)..." class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#88D2F2] focus:ring-2 focus:ring-[#88D2F2]/20 transition-all resize-none font-[inherit]"></textarea>
+            </div>
+        </div>
+        <!-- Footer -->
+        <div class="px-6 py-4 border-t border-slate-200 flex items-center justify-end gap-3">
+            <button onclick="closeRenewModal()" class="px-5 py-2.5 rounded-lg font-semibold text-sm bg-white border border-slate-300 text-slate-600 hover:bg-slate-50 transition-colors font-[inherit] cursor-pointer">ยกเลิก</button>
+            <button onclick="saveRenewStatus()" class="px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#88D2F2] text-[#1B3A6B] hover:bg-[#6BBFE0] transition-colors inline-flex items-center gap-2 font-[inherit] cursor-pointer border-none">
+                <i data-lucide="save" class="w-4 h-4"></i> บันทึก
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="shared-layout.js"></script>
+<script>
+    document.getElementById('topbar-container').innerHTML = renderTopbar();
+    document.getElementById('sidebar-container').innerHTML = renderSidebar();
+    document.querySelectorAll('.sidebar-item').forEach(item => {
+        item.classList.remove('active');
+        if (item.textContent.trim().includes('ต่ออายุสัญญา')) item.classList.add('active');
+    });
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+
+    function switchView(mode) {
+        const board = document.getElementById('kanbanView');
+        const table = document.getElementById('tableView');
+        const btnK = document.getElementById('btnKanban');
+        const btnT = document.getElementById('btnTable');
+        if (mode === 'table') {
+            board.style.display = 'none';
+            table.style.display = 'block';
+            btnK.classList.remove('active');
+            btnT.classList.add('active');
+            btnT.style.background = '#fff'; btnT.style.color = '#2563EB'; btnT.style.boxShadow = '0 1px 3px rgba(0,0,0,.1)';
+            btnK.style.background = 'transparent'; btnK.style.color = '#64748B'; btnK.style.boxShadow = 'none';
+        } else {
+            board.style.display = '';
+            table.style.display = 'none';
+            btnT.classList.remove('active');
+            btnK.classList.add('active');
+            btnK.style.background = '#fff'; btnK.style.color = '#2563EB'; btnK.style.boxShadow = '0 1px 3px rgba(0,0,0,.1)';
+            btnT.style.background = 'transparent'; btnT.style.color = '#64748B'; btnT.style.boxShadow = 'none';
+        }
+    }
+
+    document.querySelectorAll('.pagination button:not(.nav)').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.pagination button').forEach(b => b.classList.remove('pg-active'));
+            this.classList.add('pg-active');
+        });
+    });
+
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+
+    // ── Renew Status Modal ──
+    function openRenewModal(btn) {
+        const row = btn.closest('tr');
+        const card = btn.closest('.card');
+        let cNo='', cName='', cPartner='', cCompany='', cPeriod='';
+        if (row) {
+            const cells = row.querySelectorAll('td');
+            // Table columns: 0=จัดการ, 1=เลขสัญญา, 2=ชื่อสัญญา, 3=ประเภทสัญญา, 4=คู่สัญญา, 5=บริษัท, 6=ระยะเวลาสัญญา, 7=สถานะการต่อสัญญา, 8=วันที่ปรับสถานะ, 9=แผนก, 10=ผู้รับผิดชอบ
+            cNo = cells[1].textContent.trim();
+            cName = cells[2].textContent.trim();
+            cPartner = cells[4].textContent.trim();
+            cCompany = cells[5].textContent.trim();
+            cPeriod = cells[6].textContent.trim();
+        } else if (card) {
+            cNo = card.getAttribute('data-contract') || '';
+            cName = card.getAttribute('data-name') || '';
+            cPartner = card.getAttribute('data-partner') || '';
+            cCompany = card.getAttribute('data-company') || '';
+            cPeriod = card.getAttribute('data-period') || '';
+        }
+        document.getElementById('rmContractNo').textContent = cNo;
+        document.getElementById('rmContractName').textContent = cName;
+        document.getElementById('rmPartner').textContent = cPartner;
+        document.getElementById('rmCompany').textContent = cCompany;
+        document.getElementById('rmDateRange').textContent = cPeriod;
+        document.getElementById('renewModalSubtitle').textContent = cNo + ' — ' + cName;
+
+        // Reset form
+        document.getElementById('rmSelStatus').value = '';
+        document.getElementById('rmRemark').value = '';
+
+        document.getElementById('renewModal').classList.add('is-active');
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function closeRenewModal() {
+        document.getElementById('renewModal').classList.remove('is-active');
+    }
+
+    function onRenewStatusChange() {
+        // reserved for future conditional logic
+    }
+
+
+    function saveRenewStatus() {
+        const status = document.getElementById('rmSelStatus').value;
+        if (!status) { alert('กรุณาเลือกสถานะ'); return; }
+        alert('บันทึกการปรับสถานะเรียบร้อยแล้ว');
+        closeRenewModal();
+    }
+
+    // ── Flatpickr Date Picker: dd/mm/yyyy ──
+    flatpickr('#filterDateStart', {
+        dateFormat: 'd/m/Y',
+        allowInput: false,
+        disableMobile: true,
+        locale: { firstDayOfWeek: 1 },
+        onReady: function(selectedDates, dateStr, instance) {
+            instance.calendarContainer.style.fontFamily = "'Kanit', sans-serif";
+        }
+    });
+    flatpickr('#filterDateEnd', {
+        dateFormat: 'd/m/Y',
+        allowInput: false,
+        disableMobile: true,
+        locale: { firstDayOfWeek: 1 },
+        onReady: function(selectedDates, dateStr, instance) {
+            instance.calendarContainer.style.fontFamily = "'Kanit', sans-serif";
+        }
+    });
+
+    // ── Multi-Select: บริษัทผู้ทำสัญญา ──
+    function toggleMultiSelect() {
+        const dropdown = document.getElementById('companyDropdown');
+        const btn = document.getElementById('companySelectBtn');
+        dropdown.classList.toggle('is-open');
+        btn.classList.toggle('is-open');
+    }
+
+    function updateCompanySelect() {
+        const checkboxes = document.querySelectorAll('#companyDropdown input[type="checkbox"]');
+        const btn = document.getElementById('companySelectBtn');
+        const checked = Array.from(checkboxes).filter(cb => cb.checked);
+        if (checked.length === 0) {
+            btn.innerHTML = 'บริษัทผู้ทำสัญญาทั้งหมด';
+        } else {
+            btn.innerHTML = 'บริษัทผู้ทำสัญญา <span class="ms-count">' + checked.length + '</span>';
+        }
+    }
+
+    // Close multi-select when clicking outside
+    document.addEventListener('click', function(e) {
+        const wrapper = document.getElementById('companyMultiSelect');
+        if (wrapper && !wrapper.contains(e.target)) {
+            document.getElementById('companyDropdown').classList.remove('is-open');
+            document.getElementById('companySelectBtn').classList.remove('is-open');
+        }
+    });
+</script>
+</body>
+</html>

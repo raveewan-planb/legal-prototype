@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal System - อนุมัติสัญญา</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">@theme { --font-sans: 'Kanit', sans-serif; }</style>
+    <link rel="stylesheet" href="shared-styles.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* ── Table ── */
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table thead th {
+            background: #1B3A6B; color: #fff; font-weight: 600; font-size: 13px;
+            padding: 14px 16px; text-align: left; white-space: nowrap;
+        }
+        .data-table tbody td {
+            padding: 14px 16px; font-size: 13px; border-bottom: 1px solid #F1F5F9; vertical-align: middle;
+        }
+        .data-table tbody tr { transition: background .15s; }
+        .data-table tbody tr:hover { background: #F8FAFC; }
+
+        /* ── Status Badge Filters ── */
+        .filter-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+        .filter-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 16px; border-radius: 20px; font-size: 13px; font-weight: 600;
+            cursor: pointer; border: none; transition: all .2s;
+            background: #F1F5F9; color: #64748B;
+        }
+        .filter-badge:hover { background: #E2E8F0; }
+        .filter-badge.active { border-color: transparent; }
+        .filter-badge[data-filter="all"].active { background: #88D2F2; color: #1B3A6B; }
+        .filter-badge[data-filter="pending"].active { background: #FEF3C7; color: #92400E; }
+        .filter-badge[data-filter="approved"].active { background: #D1FAE5; color: #065F46; }
+        .filter-badge[data-filter="rejected"].active { background: #FEE2E2; color: #991B1B; }
+        .filter-badge .badge-count {
+            background: rgba(0,0,0,.08); padding: 1px 8px; border-radius: 10px;
+            font-size: 11px; font-weight: 700;
+        }
+        .filter-badge.active .badge-count { background: rgba(0,0,0,.1); color: inherit; }
+
+        /* ── Row Status Badges ── */
+        .status-pending { background: #FEF3C7; color: #92400E; }
+        .status-approved { background: #D1FAE5; color: #065F46; }
+        .status-rejected { background: #FEE2E2; color: #991B1B; }
+
+        /* ── Action Buttons ── */
+        .action-btns { display: flex; gap: 6px; justify-content: center; }
+        .action-btn { width: 30px; height: 30px; border-radius: 6px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; }
+        .action-btn.view { background: #EFF6FF; color: #2563EB; }
+        .action-btn.view:hover { background: #DBEAFE; }
+        .action-btn.edit { background: #FFF7ED; color: #C2410C; }
+        .action-btn.edit:hover { background: #FFEDD5; }
+
+        .is-hidden { display: none !important; }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen font-sans">
+
+<div id="topbar"></div>
+<div id="sidebar"></div>
+
+<div class="ml-[260px] mt-14 p-7 min-h-[calc(100vh-56px)] flex flex-col max-md:ml-0 max-md:p-4 max-[480px]:mt-[50px] max-[480px]:p-3">
+    <!-- Page Header -->
+    <div class="flex justify-between items-start mb-5 max-md:flex-col max-md:gap-3">
+        <div>
+            <h1 class="text-[26px] font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl max-[480px]:text-lg">
+                <i data-lucide="circle-check-big" class="w-5.5 h-5.5 text-[#2563EB]"></i>
+                <span>อนุมัติสัญญา</span>
+            </h1>
+            <p class="text-slate-500 text-sm mt-1">รายการสัญญาที่รอการอนุมัติจากหัวหน้าฝ่าย</p>
+        </div>
+    </div>
+
+    <!-- Filter Badge Bar -->
+    <div class="flex items-center justify-between gap-4 mb-5 flex-wrap">
+        <div class="filter-badges">
+            <button class="filter-badge" data-filter="all" onclick="filterByStatus('all')">
+                <i data-lucide="layers" class="w-4 h-4"></i> ทั้งหมด <span class="badge-count">12</span>
+            </button>
+            <button class="filter-badge active" data-filter="pending" onclick="filterByStatus('pending')">
+                <i data-lucide="clock" class="w-4 h-4"></i> รออนุมัติ <span class="badge-count">5</span>
+            </button>
+            <button class="filter-badge" data-filter="approved" onclick="filterByStatus('approved')">
+                <i data-lucide="check-circle" class="w-4 h-4"></i> อนุมัติ <span class="badge-count">4</span>
+            </button>
+            <button class="filter-badge" data-filter="rejected" onclick="filterByStatus('rejected')">
+                <i data-lucide="rotate-ccw" class="w-4 h-4"></i> ส่งกลับแก้ไข <span class="badge-count">3</span>
+            </button>
+        </div>
+        <div class="relative min-w-[200px] max-w-[320px] max-md:w-full max-md:max-w-none">
+            <i data-lucide="search" class="icon w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" id="searchTable" oninput="searchFilter()" placeholder="ค้นหาเลขสัญญา, ชื่อสัญญา..." class="w-full py-2.5 pl-9 pr-3.5 border border-slate-300 rounded-lg text-sm font-[inherit] text-slate-600 bg-white outline-none transition-all focus:border-blue-500 focus:ring-3 focus:ring-blue-500/10">
+        </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-1">
+        <div class="overflow-x-auto">
+            <table class="data-table" id="dataTable">
+                <thead>
+                    <tr>
+                        <th style="width:70px">จัดการ</th>
+                        <th>เลขสัญญา</th>
+                        <th>สถานะ</th>
+                        <th>ชื่อสัญญา</th>
+                        <th>ประเภทสัญญา</th>
+                        <th>คู่สัญญา</th>
+                        <th>บริษัท</th>
+                        <th>ระยะเวลาสัญญา</th>
+                        <th>สถานะสัญญา</th>
+                        <th>วันที่สร้างคำขอ</th>
+                        <th>ผู้รับผิดชอบ</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- รออนุมัติ (5) -->
+                    <tr data-status="pending">
+                        <td><div class="action-btns"><a href="contract-approve-detail.html" class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></a><a href="contract-approve-detail.html" class="action-btn edit btn-edit-pending" title="แก้ไข"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></a></div></td>
+                        <td><span class="font-semibold text-blue-700">PB2026/002</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold status-pending">รออนุมัติ</span></td>
+                        <td class="text-slate-700 max-w-[200px] truncate">สัญญาจ้างพัฒนาระบบ ERP</td>
+                        <td class="text-slate-600">สัญญาจ้างบริการ</td>
+                        <td class="text-slate-600">บริษัท เทคโนโลยี จำกัด</td>
+                        <td class="text-slate-500 text-xs">แพลนบี มีเดีย</td>
+                        <td class="text-slate-500 text-xs">15/04/2025 - 14/04/2026</td>
+                        <td class="text-slate-600 text-xs">รอหัวหน้างานอนุมัติ</td>
+                        <td class="text-slate-500">2026-03-26</td>
+                        <td class="text-slate-600">Jiraporn S.</td>
+                    </tr>
+                    <tr data-status="pending">
+                        <td><div class="action-btns"><a href="contract-approve-detail.html" class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></a><a href="contract-approve-detail.html" class="action-btn edit btn-edit-pending" title="แก้ไข"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></a></div></td>
+                        <td><span class="font-semibold text-blue-700">PB2026/005</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold status-pending">รออนุมัติ</span></td>
+                        <td class="text-slate-700 max-w-[200px] truncate">สัญญาเช่าพื้นที่โฆษณา ถ.สุขุมวิท</td>
+                        <td class="text-slate-600">สัญญาเช่า</td>
+                        <td class="text-slate-600">นายสมศักดิ์ พรหมมา</td>
+                        <td class="text-slate-500 text-xs">แพลนบี มีเดีย</td>
+                        <td class="text-slate-500 text-xs">01/05/2025 - 30/04/2026</td>
+                        <td class="text-slate-600 text-xs">รอหัวหน้างานอนุมัติ</td>
+                        <td class="text-slate-500">2026-04-01</td>
+                        <td class="text-slate-600">Nattapong W.</td>
+                    </tr>
+                    <tr data-status="pending">
+                        <td><div class="action-btns"><a href="contract-approve-detail.html" class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></a><a href="contract-approve-detail.html" class="action-btn edit btn-edit-pending" title="แก้ไข"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></a></div></td>
+                        <td><span class="font-semibold text-blue-700">PB2026/008</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold status-pending">รออนุมัติ</span></td>
+                        <td class="text-slate-700 max-w-[200px] truncate">สัญญาจ้างที่ปรึกษาด้านกฎหมาย</td>
+                        <td class="text-slate-600">สัญญาจ้างที่ปรึกษา</td>
+                        <td class="text-slate-600">บริษัท ลอว์แอนด์ จำกัด</td>
+                        <td class="text-slate-500 text-xs">แพลนบี อิมแพค</td>
+                        <td class="text-slate-500 text-xs">01/06/2025 - 31/05/2026</td>
+                        <td class="text-slate-600 text-xs">รอหัวหน้างานอนุมัติ</td>
+                        <td class="text-slate-500">2026-04-03</td>
+                        <td class="text-slate-600">Siriporn C.</td>
+                    </tr>
+                    <tr data-status="pending">
+                        <td><div class="action-btns"><a href="contract-approve-detail.html" class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></a><a href="contract-approve-detail.html" class="action-btn edit btn-edit-pending" title="แก้ไข"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></a></div></td>
+                        <td><span class="font-semibold text-blue-700">PB2026/011</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold status-pending">รออนุมัติ</span></td>
+                        <td class="text-slate-700 max-w-[200px] truncate">สัญญาบริการ Cloud Computing</td>
+                        <td class="text-slate-600">สัญญาบริการ SaaS</td>
+                        <td class="text-slate-600">AWS Thailand</td>
+                        <td class="text-slate-500 text-xs">แพลนบี ดิเลเว่น</td>
+                        <td class="text-slate-500 text-xs">01/01/2026 - 31/12/2026</td>
+                        <td class="text-slate-600 text-xs">รอหัวหน้างานอนุมัติ</td>
+                        <td class="text-slate-500">2026-04-05</td>
+                        <td class="text-slate-600">Wichai R.</td>
+                    </tr>
+                    <tr data-status="pending">
+                        <td><div class="action-btns"><a href="contract-approve-detail.html" class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></a><a href="contract-approve-detail.html" class="action-btn edit btn-edit-pending" title="แก้ไข"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></a></div></td>
+                        <td><span class="font-semibold text-blue-700">PB2026/012</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold status-pending">รออนุมัติ</span></td>
+                        <td class="text-slate-700 max-w-[200px] truncate">สัญญาจัดซื้ออุปกรณ์สำนักงาน</td>
+                        <td class="text-slate-600">สัญญาจัดซื้อ</td>
+                        <td class="text-slate-600">บริษัท ออฟฟิศเมท จำกัด</td>
+                        <td class="text-slate-500 text-xs">แพลนบี มีเดีย</td>
+                        <td class="text-slate-500 text-xs">01/03/2026 - 28/02/2027</td>
+                        <td class="text-slate-600 text-xs">รอหัวหน้างานอนุมัติ</td>
+                        <td class="text-slate-500">2026-04-07</td>
+                        <td class="text-slate-600">Thanaporn S.</td>
+                    </tr>
+
+                    <!-- อนุมัติ (4) -->
+                    <tr data-status="approved" style="display:none">
+                        <td><div class="action-btns"><a href="contract-approve-detail.html" class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></a></div></td>
+                        <td><span class="font-semibold text-blue-700">PB2026/001</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold status-approved">อนุมัติ</span></td>
+                        <td class="text-slate-700 max-w-[200px] truncate">สัญญาเช่าพื้นที่โฆษณา ถ.พหลโยธิน</td>
+                        <td class="text-slate-600">สัญญาเช่า</td>
+                        <td class="text-slate-600">นายประสิทธิ์ แสงทอง</td>
+                        <td class="text-slate-500 text-xs">แพลนบี มีเดีย</td>
+                        <td class="text-slate-500 text-xs">01/04/2025 - 31/03/2026</td>
+                        <td class="text-slate-600 text-xs">รอกฎหมายสรุปความเสี่ยง</td>
+                        <td class="text-slate-500">2026-03-10</td>
+                        <td class="text-slate-600">Jiraporn S.</td>
+                    </tr>
+                    <tr data-status="approved" style="display:none">
+                        <td><div class="action-btns"><a href="contract-approve-detail.html" class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></a></div></td>
+                        <td><span class="font-semibold text-blue-700">PB2026/003</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold status-approved">อนุมัติ</span></td>
+                        <td class="text-slate-700 max-w-[200px] truncate">สัญญาจ้างบริการทำความสะอาด</td>
+                        <td class="text-slate-600">สัญญาจ้างบริการ</td>
+                        <td class="text-slate-600">บริษัท คลีน จำกัด</td>
+                        <td class="text-slate-500 text-xs">แพลนบี เจวี</td>
+                        <td class="text-slate-500 text-xs">01/07/2025 - 30/06/2026</td>
+                        <td class="text-slate-600 text-xs">เลือกการลงนาม</td>
+                        <td class="text-slate-500">2026-03-15</td>
+                        <td class="text-slate-600">Kamonwan P.</td>
+                    </tr>
+                    <tr data-status="approved" style="display:none">
+                        <td><div class="action-btns"><a href="contract-approve-detail.html" class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></a></div></td>
+                        <td><span class="font-semibold text-blue-700">PB2026/004</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold status-approved">อนุมัติ</span></td>
+                        <td class="text-slate-700 max-w-[200px] truncate">สัญญาเช่าที่ดินเปล่า ลาดพร้าว</td>
+                        <td class="text-slate-600">สัญญาเช่า</td>
+                        <td class="text-slate-600">นายวิชัย เจริญสุข</td>
+                        <td class="text-slate-500 text-xs">มาสเตอร์ แอด</td>
+                        <td class="text-slate-500 text-xs">01/09/2025 - 31/08/2026</td>
+                        <td class="text-slate-600 text-xs">รอจัดทำสัญญาฉบับสมบูรณ์</td>
+                        <td class="text-slate-500">2026-03-18</td>
+                        <td class="text-slate-600">Piyawat S.</td>
+                    </tr>
+                    <tr data-status="approved" style="display:none">
+                        <td><div class="action-btns"><a href="contract-approve-detail.html" class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></a></div></td>
+                        <td><span class="font-semibold text-blue-700">PB2026/006</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold status-approved">อนุมัติ</span></td>
+                        <td class="text-slate-700 max-w-[200px] truncate">สัญญาผลิตงานป้าย Billboard</td>
+                        <td class="text-slate-600">สัญญาผลิตงาน</td>
+                        <td class="text-slate-600">บริษัท ไบร์ท ไซน์ จำกัด</td>
+                        <td class="text-slate-500 text-xs">แพลนบี มีเดีย</td>
+                        <td class="text-slate-500 text-xs">01/02/2026 - 31/01/2027</td>
+                        <td class="text-slate-600 text-xs">เลือกการลงนาม</td>
+                        <td class="text-slate-500">2026-03-20</td>
+                        <td class="text-slate-600">Chotika K.</td>
+                    </tr>
+
+                    <!-- ส่งกลับแก้ไข (3) -->
+                    <tr data-status="rejected" style="display:none">
+                        <td><div class="action-btns"><a href="contract-approve-detail.html" class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></a></div></td>
+                        <td><span class="font-semibold text-blue-700">PB2026/007</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold status-rejected">ส่งกลับแก้ไข</span></td>
+                        <td class="text-slate-700 max-w-[200px] truncate">สัญญาบริการขนส่งสินค้า</td>
+                        <td class="text-slate-600">สัญญาจ้างบริการ</td>
+                        <td class="text-slate-600">บริษัท โลจิสติกส์ จำกัด</td>
+                        <td class="text-slate-500 text-xs">แพลนบี อิมแพค</td>
+                        <td class="text-slate-500 text-xs">01/08/2025 - 31/07/2026</td>
+                        <td class="text-slate-600 text-xs">ส่งกลับเพื่อแก้ไข</td>
+                        <td class="text-slate-500">2026-03-22</td>
+                        <td class="text-slate-600">Nattapong W.</td>
+                    </tr>
+                    <tr data-status="rejected" style="display:none">
+                        <td><div class="action-btns"><a href="contract-approve-detail.html" class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></a></div></td>
+                        <td><span class="font-semibold text-blue-700">PB2026/009</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold status-rejected">ส่งกลับแก้ไข</span></td>
+                        <td class="text-slate-700 max-w-[200px] truncate">สัญญาจ้างทำป้ายโฆษณา LED</td>
+                        <td class="text-slate-600">สัญญาผลิตงาน</td>
+                        <td class="text-slate-600">บริษัท แอลอีดี ไทย จำกัด</td>
+                        <td class="text-slate-500 text-xs">แพลนบี มีเดีย</td>
+                        <td class="text-slate-500 text-xs">01/10/2025 - 30/09/2026</td>
+                        <td class="text-slate-600 text-xs">ส่งกลับเพื่อแก้ไข</td>
+                        <td class="text-slate-500">2026-03-28</td>
+                        <td class="text-slate-600">Siriporn C.</td>
+                    </tr>
+                    <tr data-status="rejected" style="display:none">
+                        <td><div class="action-btns"><a href="contract-approve-detail.html" class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></a></div></td>
+                        <td><span class="font-semibold text-blue-700">PB2026/010</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold status-rejected">ส่งกลับแก้ไข</span></td>
+                        <td class="text-slate-700 max-w-[200px] truncate">สัญญาเช่าอุปกรณ์สำนักงาน</td>
+                        <td class="text-slate-600">สัญญาเช่า</td>
+                        <td class="text-slate-600">บริษัท ออฟฟิศ พลัส จำกัด</td>
+                        <td class="text-slate-500 text-xs">แพลนบี เจวี</td>
+                        <td class="text-slate-500 text-xs">01/11/2025 - 31/10/2026</td>
+                        <td class="text-slate-600 text-xs">ส่งกลับเพื่อแก้ไข</td>
+                        <td class="text-slate-500">2026-04-02</td>
+                        <td class="text-slate-600">Wichai R.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Table Footer -->
+        <div class="px-5 py-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+            <span id="footerCount">แสดง 5 จาก 12 รายการ</span>
+            <div class="flex items-center gap-1">
+                <button class="px-2.5 py-1 rounded bg-[#88D2F2] text-[#1B3A6B] font-semibold">1</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="shared-layout.js"></script>
+<script>
+    document.getElementById('topbar').innerHTML = renderTopbar();
+    document.getElementById('sidebar').innerHTML = renderSidebar();
+    document.querySelectorAll('.sidebar-item').forEach(el => {
+        el.classList.remove('active');
+        if (el.textContent.trim().includes('อนุมัติสัญญา')) el.classList.add('active');
+    });
+    lucide.createIcons();
+
+    // Hide edit button for non-pending rows
+    document.querySelectorAll('#tableBody tr').forEach(row => {
+        if (row.getAttribute('data-status') !== 'pending') {
+            const editBtn = row.querySelector('.btn-edit-pending');
+            if (editBtn) editBtn.style.display = 'none';
+        }
+    });
+
+    let currentFilter = 'pending';
+
+    function filterByStatus(status) {
+        currentFilter = status;
+        // Update badge active states
+        document.querySelectorAll('.filter-badge').forEach(b => b.classList.remove('active'));
+        document.querySelector(`.filter-badge[data-filter="${status}"]`).classList.add('active');
+
+        // Filter rows
+        const rows = document.querySelectorAll('#tableBody tr');
+        let count = 0;
+        rows.forEach(row => {
+            const rowStatus = row.getAttribute('data-status');
+            const show = (status === 'all') || (rowStatus === status);
+            row.style.display = show ? '' : 'none';
+            if (show) count++;
+        });
+        document.getElementById('footerCount').textContent = `แสดง ${count} จาก 12 รายการ`;
+
+        // Re-apply search
+        searchFilter();
+    }
+
+    function searchFilter() {
+        const q = document.getElementById('searchTable').value.toLowerCase();
+        const rows = document.querySelectorAll('#tableBody tr');
+        let count = 0;
+        rows.forEach(row => {
+            const rowStatus = row.getAttribute('data-status');
+            const matchesFilter = (currentFilter === 'all') || (rowStatus === currentFilter);
+            const matchesSearch = !q || row.textContent.toLowerCase().includes(q);
+            const show = matchesFilter && matchesSearch;
+            row.style.display = show ? '' : 'none';
+            if (show) count++;
+        });
+        document.getElementById('footerCount').textContent = `แสดง ${count} จาก 12 รายการ`;
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal System - บันทึกข้อความ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+        @theme {
+            --font-sans: 'Kanit', sans-serif;
+        }
+    </style>
+    <link rel="stylesheet" href="shared-styles.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* ══════════════════════════════════════
+           KANBAN BOARD & TABLE STYLES (MEMO)
+           ══════════════════════════════════════ */
+
+        /* ── Lane (Column) ── */
+        .lane {
+            min-width: 260px; max-width: 280px; flex-shrink: 0;
+            background: #F1F5F9; border-radius: 12px;
+            display: flex; flex-direction: column; max-height: calc(100vh - 230px);
+        }
+        .lane-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 16px 12px; border-bottom: 2px solid transparent;
+            position: sticky; top: 0; z-index: 1; background: #F1F5F9; border-radius: 12px 12px 0 0;
+        }
+        .lane-header-left { display: flex; align-items: center; gap: 8px; }
+        .lane-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .lane-title { font-size: 13px; font-weight: 700; color: #1E293B; }
+        .lane-count {
+            background: #fff; color: #64748B; font-size: 11px; font-weight: 700;
+            padding: 1px 8px; border-radius: 10px; border: 1px solid #E2E8F0;
+        }
+        .lane-body {
+            padding: 8px 10px 12px; flex: 1; overflow-y: auto;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+
+        /* Lane color themes — memo statuses */
+        .lane-draft .lane-header { border-bottom-color: #94A3B8; }
+        .lane-draft .lane-dot { background: #94A3B8; }
+        .lane-return .lane-header { border-bottom-color: #F97316; }
+        .lane-return .lane-dot { background: #F97316; }
+        .lane-boss-approve .lane-header { border-bottom-color: #F59E0B; }
+        .lane-boss-approve .lane-dot { background: #F59E0B; }
+        .lane-legal-approve .lane-header { border-bottom-color: #8B5CF6; }
+        .lane-legal-approve .lane-dot { background: #8B5CF6; }
+        .lane-legal-process .lane-header { border-bottom-color: #3B82F6; }
+        .lane-legal-process .lane-dot { background: #3B82F6; }
+        .lane-complete .lane-header { border-bottom-color: #22C55E; }
+        .lane-complete .lane-dot { background: #22C55E; }
+
+        /* ── Card ── */
+        .card {
+            background: #fff; border-radius: 10px; padding: 14px 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.06); border: 1px solid #E2E8F0;
+            cursor: pointer; transition: all .2s; position: relative;
+        }
+        .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.1); border-color: #CBD5E1; transform: translateY(-1px); }
+        .card-ref { font-size: 12px; font-weight: 700; color: #2563EB; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+        .card-title { font-size: 13px; font-weight: 600; color: #1E293B; margin-bottom: 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .card-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+        .card-tag { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 4px; }
+        .card-tag.type { background: #EFF6FF; color: #2563EB; }
+        .card-tag.ref { background: #F1F5F9; color: #475569; }
+        .card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 8px; border-top: 1px solid #F1F5F9; }
+        .card-assignee { display: flex; align-items: center; gap: 6px; }
+        .card-assignee .avatar {
+            width: 24px; height: 24px; border-radius: 50%; font-size: 10px; font-weight: 700;
+            display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0;
+        }
+        .card-assignee .name { font-size: 12px; color: #64748B; font-weight: 500; }
+        .card-date { font-size: 11px; color: #94A3B8; display: flex; align-items: center; gap: 4px; }
+
+        /* ── Card Actions (Board view) ── */
+        .card-actions {
+            display: flex; gap: 4px; position: absolute; top: 10px; right: 10px;
+        }
+        .card-actions .action-btn {
+            width: 26px; height: 26px; border-radius: 5px; border: none;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 12px; transition: all .15s; box-shadow: 0 1px 3px rgba(0,0,0,.1);
+        }
+
+        /* Card left border accent */
+        .lane-draft .card { border-left: 3px solid #94A3B8; }
+        .lane-return .card { border-left: 3px solid #F97316; }
+        .lane-boss-approve .card { border-left: 3px solid #F59E0B; }
+        .lane-legal-approve .card { border-left: 3px solid #8B5CF6; }
+        .lane-legal-process .card { border-left: 3px solid #3B82F6; }
+        .lane-complete .card { border-left: 3px solid #22C55E; }
+
+        /* ── TABLE VIEW ── */
+        .table-view { display: none; }
+        .table-view.active { display: block; }
+        .board-wrapper.active { display: block; }
+        .table-card {
+            background: #fff; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,.06);
+        }
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        thead th {
+            background: #1B3A6B; color: #fff; font-weight: 600; font-size: 13px;
+            padding: 14px 16px; text-align: left; white-space: nowrap;
+        }
+        tbody tr { border-bottom: 1px solid #F1F5F9; transition: background .15s; cursor: pointer; }
+        tbody tr:hover { background: #F8FAFC; }
+        tbody td { padding: 14px 16px; font-size: 13px; color: #475569; white-space: nowrap; }
+        .badge-status {
+            display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px;
+            font-size: 12px; font-weight: 600; white-space: nowrap;
+        }
+        .badge-status .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+        .badge-draft { background: #F1F5F9; color: #64748B; }
+        .badge-draft .dot { background: #94A3B8; }
+        .badge-return { background: #FFF7ED; color: #C2410C; }
+        .badge-return .dot { background: #F97316; }
+        .badge-boss-approve { background: #FFFBEB; color: #A16207; }
+        .badge-boss-approve .dot { background: #F59E0B; }
+        .badge-legal-approve { background: #F5F3FF; color: #7C3AED; }
+        .badge-legal-approve .dot { background: #8B5CF6; }
+        .badge-legal-process { background: #EFF6FF; color: #2563EB; }
+        .badge-legal-process .dot { background: #3B82F6; }
+        .badge-complete { background: #F0FDF4; color: #15803D; }
+        .badge-complete .dot { background: #22C55E; }
+
+        .action-btns { display: flex; gap: 6px; }
+        .action-btn { width: 30px; height: 30px; border-radius: 6px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; transition: all .2s; }
+        .action-btn.view { background: #EFF6FF; color: #2563EB; }
+        .action-btn.view:hover { background: #DBEAFE; }
+        .action-btn.edit { background: #FFF7ED; color: #C2410C; }
+        .action-btn.edit:hover { background: #FFEDD5; }
+        .action-btn.delete { background: #FEF2F2; color: #DC2626; }
+        .action-btn.delete:hover { background: #FEE2E2; }
+        .pagination {
+            display: flex; justify-content: center; align-items: center; gap: 4px; padding: 20px;
+        }
+        .pagination button {
+            width: 36px; height: 36px; border-radius: 8px; border: 1px solid #E2E8F0;
+            background: #fff; color: #475569; font-size: 14px; font-weight: 500;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-family: inherit; transition: all .2s;
+        }
+        .pagination button:hover { background: #EFF6FF; border-color: #2563EB; color: #2563EB; }
+        .pagination button.pg-active { background: #2563EB; color: #fff; border-color: #2563EB; }
+        .pagination button.nav { font-size: 12px; }
+
+        /* ── Scrollbar ── */
+        .lane-body::-webkit-scrollbar { width: 4px; }
+        .lane-body::-webkit-scrollbar-track { background: transparent; }
+        .lane-body::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+        .board-wrapper::-webkit-scrollbar { height: 6px; }
+        .board-wrapper::-webkit-scrollbar-track { background: transparent; }
+        .board-wrapper::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 6px; }
+
+        /* ══════════════════════════════════════
+           RESPONSIVE
+           ══════════════════════════════════════ */
+        @media (max-width: 1024px) {
+            .lane { min-width: 230px; max-width: 250px; }
+        }
+
+        @media (max-width: 768px) {
+            .lane { min-width: 220px; max-width: 240px; }
+            .lane-title { font-size: 12px; }
+            .card-title { font-size: 12px; }
+            .card-ref { font-size: 11px; }
+            .card-tag { font-size: 10px; }
+            .card-footer { flex-wrap: wrap; gap: 6px; }
+            .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            tbody td { font-size: 12px; padding: 10px 12px; }
+            thead th { font-size: 12px; padding: 10px 12px; }
+            .pagination button { width: 32px; height: 32px; font-size: 12px; }
+        }
+
+        @media (max-width: 480px) {
+            .filter-bar select { font-size: 12px; }
+            .lane { min-width: 200px; max-width: 220px; }
+            .card { padding: 10px 12px; }
+            .result-count { font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="topbar-container"></div>
+<div id="sidebar-container"></div>
+
+<!-- Main Content -->
+<div class="ml-[260px] mt-14 p-7 min-h-[calc(100vh-56px)] flex flex-col max-md:ml-0 max-md:p-4 max-[480px]:mt-[50px] max-[480px]:p-3">
+    <!-- Page Header -->
+    <div class="flex justify-between items-start mb-5 max-md:flex-col max-md:gap-3">
+        <div>
+            <h1 class="text-[26px] font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl max-[480px]:text-lg">
+                <i data-lucide="notebook-pen" class="w-5.5 h-5.5 text-[#2563EB]"></i>
+                <span>บันทึกข้อความ</span>
+            </h1>
+            <p class="text-slate-500 text-sm mt-1">จัดการบันทึกข้อความทั้งหมดในระบบ — <strong>12</strong> รายการ</p>
+        </div>
+        <div class="flex gap-2.5 items-center shrink-0">
+            <button class="inline-flex items-center justify-center gap-2 px-4.5 py-2.5 rounded-lg text-sm font-medium bg-white border border-slate-300 text-slate-500 hover:bg-slate-50 hover:border-slate-400 transition-all cursor-pointer font-[inherit] whitespace-nowrap">
+                <i data-lucide="file-up" class="w-4 h-4"></i>
+                <span>ส่งออก</span>
+            </button>
+            <a href="memo-step1-create.html" class="inline-flex items-center justify-center gap-2 px-5.5 py-2.5 rounded-lg text-sm font-semibold bg-[#88D2F2] text-[#1B3A6B] hover:bg-[#6BBFE0] transition-all no-underline whitespace-nowrap">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                <span>สร้างบันทึก</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar flex gap-3 items-center mb-5 flex-wrap max-md:flex-col max-md:items-stretch max-md:gap-2.5">
+        <!-- Row 1: Search — full width on mobile -->
+        <div class="flex-1 min-w-[200px] relative max-md:w-full max-md:min-w-0">
+            <i data-lucide="search" class="icon w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" placeholder="ค้นหาเลขบันทึก, เลขอ้างอิง, ผู้รับผิดชอบ..." class="w-full py-2.5 pl-9 pr-3.5 border border-slate-300 rounded-lg text-sm font-[inherit] text-slate-600 bg-white outline-none transition-all focus:border-blue-500 focus:ring-3 focus:ring-blue-500/10">
+        </div>
+        <!-- Row 2 on mobile: filters + view toggle side by side -->
+        <div class="contents max-md:!flex max-md:gap-2.5 max-md:w-full">
+            <select class="filter-select py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27%2364748B%27%20stroke-width=%272%27%3E%3Cpolyline%20points=%276%209%2012%2015%2018%209%27/%3E%3C/svg%3E')] bg-no-repeat bg-[right_10px_center] max-md:flex-1 max-md:min-w-0">
+                <option>ประเภทบันทึกทั้งหมด</option>
+                <option>ขอถอยสัญญา</option>
+                <option>การแก้สัญญาฉบับสมบูรณ์</option>
+                <option>ขอยกเลิกสัญญา</option>
+                <option>ขอทำสัญญาย้อนหลัง</option>
+                <option>อื่นๆ</option>
+            </select>
+            <select class="filter-select py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27%2364748B%27%20stroke-width=%272%27%3E%3Cpolyline%20points=%276%209%2012%2015%2018%209%27/%3E%3C/svg%3E')] bg-no-repeat bg-[right_10px_center] max-md:flex-1 max-md:min-w-0">
+                <option>แผนกทั้งหมด</option>
+                <option>ฝ่ายจัดซื้อ</option>
+                <option>ฝ่ายการตลาด</option>
+                <option>ฝ่ายเทคโนโลยีสารสนเทศ</option>
+                <option>ฝ่ายปฏิบัติการ</option>
+                <option>ฝ่ายทรัพยากรบุคคล</option>
+                <option>ฝ่ายบัญชีและการเงิน</option>
+            </select>
+            <select class="filter-select py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27%2364748B%27%20stroke-width=%272%27%3E%3Cpolyline%20points=%276%209%2012%2015%2018%209%27/%3E%3C/svg%3E')] bg-no-repeat bg-[right_10px_center] max-md:flex-1 max-md:min-w-0">
+                <option>สถานะทั้งหมด</option>
+                <option>สร้างคำขอ (แบบร่าง)</option>
+                <option>ส่งกลับเพื่อแก้ไข</option>
+                <option>รอหัวหน้างานอนุมัติ</option>
+                <option>รอกฎหมายอนุมัติ</option>
+                <option>รอกฎหมายดำเนินการ</option>
+                <option>เสร็จสิ้น</option>
+            </select>
+            <div class="view-toggle flex bg-slate-200 rounded-lg p-[3px] shrink-0 max-md:ml-auto">
+                <button class="active" onclick="switchView('kanban')" id="btnKanban" style="padding:7px 16px;border:none;background:transparent;border-radius:6px;font-size:13px;font-weight:600;color:#64748B;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:all .2s;">
+                    <i data-lucide="columns-3" class="w-3.5 h-3.5"></i>
+                    <span>Board</span>
+                </button>
+                <button onclick="switchView('table')" id="btnTable" style="padding:7px 16px;border:none;background:transparent;border-radius:6px;font-size:13px;font-weight:600;color:#64748B;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:all .2s;">
+                    <i data-lucide="table" class="w-3.5 h-3.5"></i>
+                    <span>Table</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════ KANBAN BOARD — 6 Lanes ══════════ -->
+    <div class="board-wrapper" id="kanbanView" style="flex:1;overflow-x:auto;padding-bottom:16px;">
+        <div class="board" style="display:flex;gap:16px;min-height:calc(100vh - 230px);align-items:flex-start;">
+
+            <!-- 1. สร้างคำขอ (แบบร่าง) -->
+            <div class="lane lane-draft">
+                <div class="lane-header"><div class="lane-header-left"><div class="lane-dot"></div><div class="lane-title">สร้างคำขอ (แบบร่าง)</div></div><div class="lane-count">2</div></div>
+                <div class="lane-body">
+                    <div class="card" data-memo="MEMO-202604001">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation()"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                            <button class="action-btn delete" title="ลบ" onclick="event.stopPropagation()"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">MEMO-202604001</div>
+                        <div class="card-title">ขออนุมัติจัดซื้อเครื่องคอมพิวเตอร์</div>
+                        <div class="card-meta"><span class="card-tag type">ขอถอยสัญญา</span><span class="card-tag ref">REF: PB2026/002</span></div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#8B5CF6;">วภ</div><div class="name">วิภา สุขใจ</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> 28 มี.ค. 2026</div></div>
+                    </div>
+                    <div class="card" data-memo="MEMO-202604002">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation()"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                            <button class="action-btn delete" title="ลบ" onclick="event.stopPropagation()"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">MEMO-202604002</div>
+                        <div class="card-title">ขออนุมัติงบประมาณจ้างที่ปรึกษา</div>
+                        <div class="card-meta"><span class="card-tag type">ขอยกเลิกสัญญา</span><span class="card-tag ref">REF: PB2026/055</span></div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#EC4899;">สช</div><div class="name">สมชาย โชดี</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> 27 มี.ค. 2026</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. ส่งกลับเพื่อแก้ไข -->
+            <div class="lane lane-return">
+                <div class="lane-header"><div class="lane-header-left"><div class="lane-dot"></div><div class="lane-title">ส่งกลับเพื่อแก้ไข</div></div><div class="lane-count">2</div></div>
+                <div class="lane-body">
+                    <div class="card" data-memo="MEMO-202604003">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation()"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">MEMO-202604003</div>
+                        <div class="card-title">แจ้งเปลี่ยนแปลงเงื่อนไขสัญญา</div>
+                        <div class="card-meta"><span class="card-tag type">การแก้สัญญาฉบับสมบูรณ์</span><span class="card-tag ref">REF: SD2026/001</span></div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#F59E0B;">วช</div><div class="name">วิชัย เจริญสุข</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> 26 มี.ค. 2026</div></div>
+                    </div>
+                    <div class="card" data-memo="MEMO-202604004">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation()"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">MEMO-202604004</div>
+                        <div class="card-title">ขอความเห็นเรื่องข้อกำหนด NDA</div>
+                        <div class="card-meta"><span class="card-tag type">ขอทำสัญญาย้อนหลัง</span><span class="card-tag ref">REF: PB2026/028</span></div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#8B5CF6;">วภ</div><div class="name">วิภา สุขใจ</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> 25 มี.ค. 2026</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. รอหัวหน้างานอนุมัติ -->
+            <div class="lane lane-boss-approve">
+                <div class="lane-header"><div class="lane-header-left"><div class="lane-dot"></div><div class="lane-title">รอหัวหน้างานอนุมัติ</div></div><div class="lane-count">2</div></div>
+                <div class="lane-body">
+                    <div class="card" data-memo="MEMO-202603005">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">MEMO-202603005</div>
+                        <div class="card-title">ขออนุมัติต่อสัญญาเช่าพื้นที่</div>
+                        <div class="card-meta"><span class="card-tag type">ขอถอยสัญญา</span><span class="card-tag ref">REF: SD2026/015</span></div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#EC4899;">สช</div><div class="name">สมชาย โชดี</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> 24 มี.ค. 2026</div></div>
+                    </div>
+                    <div class="card" data-memo="MEMO-202603006">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">MEMO-202603006</div>
+                        <div class="card-title">ขออนุมัติจ้างพัฒนาระบบ CRM</div>
+                        <div class="card-meta"><span class="card-tag type">ขอทำสัญญาย้อนหลัง</span><span class="card-tag ref">REF: PB2026/076</span></div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#F59E0B;">วช</div><div class="name">วิชัย เจริญสุข</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> 23 มี.ค. 2026</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. รอกฎหมายอนุมัติ -->
+            <div class="lane lane-legal-approve">
+                <div class="lane-header"><div class="lane-header-left"><div class="lane-dot"></div><div class="lane-title">รอกฎหมายอนุมัติ</div></div><div class="lane-count">2</div></div>
+                <div class="lane-body">
+                    <div class="card" data-memo="MEMO-202603007">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">MEMO-202603007</div>
+                        <div class="card-title">แจ้งกำหนดการประชุมทบทวนสัญญา</div>
+                        <div class="card-meta"><span class="card-tag type">ขอยกเลิกสัญญา</span><span class="card-tag ref">REF: RA2026/013</span></div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#8B5CF6;">วภ</div><div class="name">วิภา สุขใจ</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> 22 มี.ค. 2026</div></div>
+                    </div>
+                    <div class="card" data-memo="MEMO-202603008">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">MEMO-202603008</div>
+                        <div class="card-title">ขอความเห็นเรื่องค่าปรับตามสัญญา</div>
+                        <div class="card-meta"><span class="card-tag type">การแก้สัญญาฉบับสมบูรณ์</span><span class="card-tag ref">REF: PB2026/045</span></div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#EC4899;">สช</div><div class="name">สมชาย โชดี</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> 21 มี.ค. 2026</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. รอกฎหมายดำเนินการ -->
+            <div class="lane lane-legal-process">
+                <div class="lane-header"><div class="lane-header-left"><div class="lane-dot"></div><div class="lane-title">รอกฎหมายดำเนินการ</div></div><div class="lane-count">2</div></div>
+                <div class="lane-body">
+                    <div class="card" data-memo="MEMO-202602009">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">MEMO-202602009</div>
+                        <div class="card-title">ขออนุมัติจัดซื้อ License Software</div>
+                        <div class="card-meta"><span class="card-tag type">อื่นๆ</span><span class="card-tag ref">REF: PB2026/098</span></div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#F59E0B;">วช</div><div class="name">วิชัย เจริญสุข</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> 20 มี.ค. 2026</div></div>
+                    </div>
+                    <div class="card" data-memo="MEMO-202602010">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">MEMO-202602010</div>
+                        <div class="card-title">ขออนุมัติงบประมาณจ้างพิมพ์สิ่งพิมพ์</div>
+                        <div class="card-meta"><span class="card-tag type">ขอถอยสัญญา</span><span class="card-tag ref">REF: PB2026/051</span></div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#8B5CF6;">วภ</div><div class="name">วิภา สุขใจ</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> 19 มี.ค. 2026</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. เสร็จสิ้น -->
+            <div class="lane lane-complete">
+                <div class="lane-header"><div class="lane-header-left"><div class="lane-dot"></div><div class="lane-title">เสร็จสิ้น</div></div><div class="lane-count">2</div></div>
+                <div class="lane-body">
+                    <div class="card" data-memo="MEMO-202601011">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">MEMO-202601011</div>
+                        <div class="card-title">ขออนุมัติจ้างบริการ Data Center</div>
+                        <div class="card-meta"><span class="card-tag type">การแก้สัญญาฉบับสมบูรณ์</span><span class="card-tag ref">REF: PB2025/301</span></div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#EC4899;">สช</div><div class="name">สมชาย โชดี</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> 15 มี.ค. 2026</div></div>
+                    </div>
+                    <div class="card" data-memo="MEMO-202601012">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">MEMO-202601012</div>
+                        <div class="card-title">ขออนุมัติจ้างบริการ Cybersecurity เพิ่มเติม</div>
+                        <div class="card-meta"><span class="card-tag type">ขอยกเลิกสัญญา</span><span class="card-tag ref">REF: PB2026/033</span></div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#F59E0B;">วช</div><div class="name">วิชัย เจริญสุข</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> 18 มี.ค. 2026</div></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ══════════ TABLE VIEW ══════════ -->
+    <div class="table-view" id="tableView">
+        <div class="table-card">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>จัดการ</th>
+                            <th>เลขบันทึก</th>
+                            <th>ประเภทบันทึก</th>
+                            <th>เรื่อง</th>
+                            <th>เลขอ้างอิง</th>
+                            <th>สถานะ</th>
+                            <th>วันที่สร้างคำขอ</th>
+                            <th>ผู้รับผิดชอบ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button><button class="action-btn delete" title="ลบ"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">MEMO-202604001</td>
+                            <td>ขอถอยสัญญา</td>
+                            <td>ขออนุมัติจัดซื้อเครื่องคอมพิวเตอร์</td>
+                            <td style="font-weight:600;color:#475569;">PB2026/002</td>
+                            <td><span class="badge-status badge-draft"><span class="dot"></span> แบบร่าง</span></td>
+                            <td>28/03/2026</td>
+                            <td>นางสาววิภา สุขใจ</td>
+                        </tr>
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button><button class="action-btn delete" title="ลบ"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">MEMO-202604002</td>
+                            <td>ขอยกเลิกสัญญา</td>
+                            <td>ขออนุมัติงบประมาณจ้างที่ปรึกษา</td>
+                            <td style="font-weight:600;color:#475569;">PB2026/055</td>
+                            <td><span class="badge-status badge-draft"><span class="dot"></span> แบบร่าง</span></td>
+                            <td>27/03/2026</td>
+                            <td>นายสมชาย โชดี</td>
+                        </tr>
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">MEMO-202604003</td>
+                            <td>การแก้สัญญาฉบับสมบูรณ์</td>
+                            <td>แจ้งเปลี่ยนแปลงเงื่อนไขสัญญา</td>
+                            <td style="font-weight:600;color:#475569;">SD2026/001</td>
+                            <td><span class="badge-status badge-return"><span class="dot"></span> ส่งกลับแก้ไข</span></td>
+                            <td>26/03/2026</td>
+                            <td>นายวิชัย เจริญสุข</td>
+                        </tr>
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">MEMO-202604004</td>
+                            <td>ขอทำสัญญาย้อนหลัง</td>
+                            <td>ขอความเห็นเรื่องข้อกำหนด NDA</td>
+                            <td style="font-weight:600;color:#475569;">PB2026/028</td>
+                            <td><span class="badge-status badge-return"><span class="dot"></span> ส่งกลับแก้ไข</span></td>
+                            <td>25/03/2026</td>
+                            <td>นางสาววิภา สุขใจ</td>
+                        </tr>
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">MEMO-202603005</td>
+                            <td>ขอถอยสัญญา</td>
+                            <td>ขออนุมัติต่อสัญญาเช่าพื้นที่</td>
+                            <td style="font-weight:600;color:#475569;">SD2026/015</td>
+                            <td><span class="badge-status badge-boss-approve"><span class="dot"></span> รอหัวหน้าอนุมัติ</span></td>
+                            <td>24/03/2026</td>
+                            <td>นายสมชาย โชดี</td>
+                        </tr>
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">MEMO-202603006</td>
+                            <td>ขอทำสัญญาย้อนหลัง</td>
+                            <td>ขออนุมัติจ้างพัฒนาระบบ CRM</td>
+                            <td style="font-weight:600;color:#475569;">PB2026/076</td>
+                            <td><span class="badge-status badge-boss-approve"><span class="dot"></span> รอหัวหน้าอนุมัติ</span></td>
+                            <td>23/03/2026</td>
+                            <td>นายวิชัย เจริญสุข</td>
+                        </tr>
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">MEMO-202603007</td>
+                            <td>ขอยกเลิกสัญญา</td>
+                            <td>แจ้งกำหนดการประชุมทบทวนสัญญา</td>
+                            <td style="font-weight:600;color:#475569;">RA2026/013</td>
+                            <td><span class="badge-status badge-legal-approve"><span class="dot"></span> รอกฎหมายอนุมัติ</span></td>
+                            <td>22/03/2026</td>
+                            <td>นางสาววิภา สุขใจ</td>
+                        </tr>
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">MEMO-202603008</td>
+                            <td>การแก้สัญญาฉบับสมบูรณ์</td>
+                            <td>ขอความเห็นเรื่องค่าปรับตามสัญญา</td>
+                            <td style="font-weight:600;color:#475569;">PB2026/045</td>
+                            <td><span class="badge-status badge-legal-approve"><span class="dot"></span> รอกฎหมายอนุมัติ</span></td>
+                            <td>21/03/2026</td>
+                            <td>นายสมชาย โชดี</td>
+                        </tr>
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">MEMO-202602009</td>
+                            <td>อื่นๆ</td>
+                            <td>ขออนุมัติจัดซื้อ License Software</td>
+                            <td style="font-weight:600;color:#475569;">PB2026/098</td>
+                            <td><span class="badge-status badge-legal-process"><span class="dot"></span> รอกฎหมายดำเนินการ</span></td>
+                            <td>20/03/2026</td>
+                            <td>นายวิชัย เจริญสุข</td>
+                        </tr>
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">MEMO-202602010</td>
+                            <td>ขอถอยสัญญา</td>
+                            <td>ขออนุมัติงบประมาณจ้างพิมพ์สิ่งพิมพ์</td>
+                            <td style="font-weight:600;color:#475569;">PB2026/051</td>
+                            <td><span class="badge-status badge-legal-process"><span class="dot"></span> รอกฎหมายดำเนินการ</span></td>
+                            <td>19/03/2026</td>
+                            <td>นางสาววิภา สุขใจ</td>
+                        </tr>
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">MEMO-202601011</td>
+                            <td>การแก้สัญญาฉบับสมบูรณ์</td>
+                            <td>ขออนุมัติจ้างบริการ Data Center</td>
+                            <td style="font-weight:600;color:#475569;">PB2025/301</td>
+                            <td><span class="badge-status badge-complete"><span class="dot"></span> เสร็จสิ้น</span></td>
+                            <td>15/03/2026</td>
+                            <td>นายสมชาย โชดี</td>
+                        </tr>
+                        <tr>
+                            <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button></div></td>
+                            <td style="font-weight:700;color:#2563EB;">MEMO-202601012</td>
+                            <td>ขอยกเลิกสัญญา</td>
+                            <td>ขออนุมัติจ้างบริการ Cybersecurity เพิ่มเติม</td>
+                            <td style="font-weight:600;color:#475569;">PB2026/033</td>
+                            <td><span class="badge-status badge-complete"><span class="dot"></span> เสร็จสิ้น</span></td>
+                            <td>18/03/2026</td>
+                            <td>นายวิชัย เจริญสุข</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination">
+                <button class="nav"><i data-lucide="chevron-left" class="w-3 h-3"></i></button>
+                <button class="pg-active">1</button>
+                <button>2</button>
+                <button class="nav"><i data-lucide="chevron-right" class="w-3 h-3"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="shared-layout.js"></script>
+<script>
+    // Render shared topbar & sidebar
+    document.getElementById('topbar-container').innerHTML = renderTopbar();
+    document.getElementById('sidebar-container').innerHTML = renderSidebar();
+    // Highlight บันทึกข้อความ as active
+    document.querySelectorAll('.sidebar-item').forEach(item => {
+        item.classList.remove('active');
+        if (item.textContent.trim().includes('บันทึกข้อความ')) item.classList.add('active');
+    });
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+
+    // View toggle between Kanban and Table
+    function switchView(mode) {
+        const board = document.getElementById('kanbanView');
+        const table = document.getElementById('tableView');
+        const btnK = document.getElementById('btnKanban');
+        const btnT = document.getElementById('btnTable');
+        if (mode === 'table') {
+            board.style.display = 'none';
+            table.style.display = 'block';
+            btnK.classList.remove('active');
+            btnT.classList.add('active');
+            btnT.style.background = '#fff';
+            btnT.style.color = '#2563EB';
+            btnT.style.boxShadow = '0 1px 3px rgba(0,0,0,.1)';
+            btnK.style.background = 'transparent';
+            btnK.style.color = '#64748B';
+            btnK.style.boxShadow = 'none';
+        } else {
+            board.style.display = '';
+            table.style.display = 'none';
+            btnT.classList.remove('active');
+            btnK.classList.add('active');
+            btnK.style.background = '#fff';
+            btnK.style.color = '#2563EB';
+            btnK.style.boxShadow = '0 1px 3px rgba(0,0,0,.1)';
+            btnT.style.background = 'transparent';
+            btnT.style.color = '#64748B';
+            btnT.style.boxShadow = 'none';
+        }
+    }
+
+    // Pagination
+    document.querySelectorAll('.pagination button:not(.nav)').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.pagination button').forEach(b => b.classList.remove('pg-active'));
+            this.classList.add('pg-active');
+        });
+    });
+
+    // Initialize Kanban default active style
+    (function() {
+        const btnK = document.getElementById('btnKanban');
+        if (btnK) {
+            btnK.style.background = '#fff';
+            btnK.style.color = '#2563EB';
+            btnK.style.boxShadow = '0 1px 3px rgba(0,0,0,.1)';
+        }
+    })();
+</script>
+</body>
+</html>

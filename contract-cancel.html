@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal System - ยกเลิกสัญญา</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+        @theme {
+            --font-sans: 'Kanit', sans-serif;
+        }
+    </style>
+    <link rel="stylesheet" href="shared-styles.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* ── TABLE ── */
+        .table-card {
+            background: #fff; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,.06);
+        }
+        .table-wrapper { overflow-x: auto; overflow-y: auto; max-height: calc(100vh - 260px); }
+        table { width: 100%; border-collapse: collapse; }
+        thead th {
+            background: #1B3A6B; color: #fff; font-weight: 600; font-size: 13px;
+            padding: 14px 16px; text-align: left; white-space: nowrap;
+            position: sticky; top: 0; z-index: 2;
+        }
+        tbody tr { border-bottom: 1px solid #F1F5F9; transition: background .15s; }
+        tbody tr:hover { background: #F8FAFC; }
+        tbody td { padding: 14px 16px; font-size: 13px; color: #475569; white-space: nowrap; }
+
+        /* ── Badges ── */
+        .badge-status {
+            display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px;
+            font-size: 12px; font-weight: 600; white-space: nowrap;
+        }
+        .badge-status .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+        .badge-pending { background: #FEF3C7; color: #92400E; }
+        .badge-pending .dot { background: #F59E0B; }
+        .badge-done { background: #D1FAE5; color: #065F46; }
+        .badge-done .dot { background: #22C55E; }
+
+        /* Contract status badge */
+        .badge-contract {
+            display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 6px;
+            font-size: 11px; font-weight: 600; white-space: nowrap;
+        }
+        .badge-contract.draft { background: #F1F5F9; color: #64748B; }
+        .badge-contract.return { background: #FFF7ED; color: #C2410C; }
+        .badge-contract.legal { background: #F5F3FF; color: #7C3AED; }
+        .badge-contract.review { background: #EFF6FF; color: #2563EB; }
+        .badge-contract.approve { background: #FFFBEB; color: #A16207; }
+        .badge-contract.risk { background: #FEF2F2; color: #991B1B; }
+        .badge-contract.sign { background: #ECFDF5; color: #047857; }
+        .badge-contract.prepare { background: #E0F2FE; color: #0369A1; }
+        .badge-contract.signing { background: #FDF2F8; color: #BE185D; }
+
+        /* ── Action Buttons ── */
+        .action-btns { display: flex; gap: 6px; }
+        .action-btn {
+            width: 30px; height: 30px; border-radius: 6px; border: none;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 13px; transition: all .2s;
+        }
+        .action-btn.cancel { background: #FEF2F2; color: #DC2626; }
+        .action-btn.cancel:hover { background: #FEE2E2; }
+
+        /* ── Modal ── */
+        .cn-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 200;
+            display: flex; align-items: center; justify-content: center; padding: 20px;
+            opacity: 0; visibility: hidden; transition: all .25s;
+        }
+        .cn-overlay.is-active { opacity: 1; visibility: visible; }
+        .cn-modal {
+            background: #fff; border-radius: 16px; width: 100%; max-width: 600px;
+            max-height: 85vh; display: flex; flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0,0,0,.15);
+        }
+        .cn-modal-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 20px 24px; border-bottom: 1px solid #F1F5F9;
+        }
+        .cn-modal-header h3 { font-size: 16px; font-weight: 700; color: #1E293B; display: flex; align-items: center; gap: 8px; }
+        .cn-modal-header .close-btn {
+            width: 32px; height: 32px; border-radius: 8px; border: none; background: #F1F5F9;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; color: #64748B; transition: all .15s;
+        }
+        .cn-modal-header .close-btn:hover { background: #E2E8F0; color: #1E293B; }
+        .cn-modal-body { padding: 20px 24px; overflow-y: auto; flex: 1; }
+        .cn-modal-footer {
+            padding: 16px 24px; border-top: 1px solid #F1F5F9;
+            display: flex; justify-content: flex-end; gap: 10px;
+        }
+        .cn-info-box {
+            background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 14px 16px; margin-bottom: 16px;
+        }
+        .cn-info-row { display: flex; gap: 8px; padding: 7px 0; font-size: 13px; }
+        .cn-info-row:not(:last-child) { border-bottom: 1px solid #F1F5F9; }
+        .cn-info-label { color: #64748B; min-width: 150px; flex-shrink: 0; font-weight: 500; }
+        .cn-info-value { color: #1E293B; font-weight: 600; }
+
+        /* Warning box */
+        .cn-warning {
+            display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px;
+            background: #FEF2F2; border: 1px solid #FECACA; border-radius: 10px;
+        }
+        .cn-warning-icon {
+            width: 36px; height: 36px; border-radius: 50%; background: #FEE2E2;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .cn-warning-text { font-size: 13px; color: #991B1B; line-height: 1.5; }
+        .cn-warning-text strong { font-weight: 700; }
+
+        /* ── Buttons ── */
+        .btn-cancel-dismiss {
+            padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 600;
+            border: 1px solid #E2E8F0; background: #fff; color: #64748B;
+            cursor: pointer; font-family: inherit; transition: all .15s;
+        }
+        .btn-cancel-dismiss:hover { background: #F8FAFC; border-color: #CBD5E1; }
+        .btn-cancel-confirm {
+            padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 600;
+            border: none; background: #DC2626; color: #fff;
+            cursor: pointer; font-family: inherit; transition: all .15s;
+        }
+        .btn-cancel-confirm:hover { background: #B91C1C; }
+
+        /* ── Success ── */
+        .cn-success-msg { display: none; text-align: center; padding: 24px; }
+        .cn-success-msg.show { display: block; }
+        .cn-success-msg .check-icon {
+            width: 56px; height: 56px; border-radius: 50%; background: #FEE2E2;
+            display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px;
+        }
+
+        /* ── Pagination ── */
+        .pagination {
+            display: flex; justify-content: center; align-items: center; gap: 4px; padding: 20px;
+        }
+        .pagination button {
+            width: 36px; height: 36px; border-radius: 8px; border: 1px solid #E2E8F0;
+            background: #fff; color: #475569; font-size: 14px; font-weight: 500;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-family: inherit; transition: all .2s;
+        }
+        .pagination button:hover { background: #EFF6FF; border-color: #2563EB; color: #2563EB; }
+        .pagination button.pg-active { background: #2563EB; color: #fff; border-color: #2563EB; }
+
+        @media (max-width: 768px) {
+            .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            tbody td { font-size: 12px; padding: 10px 12px; }
+            thead th { font-size: 12px; padding: 10px 12px; }
+            .cn-modal { max-width: 95vw; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="topbar-container"></div>
+<div id="sidebar-container"></div>
+
+<!-- Main Content -->
+<div class="ml-[260px] mt-14 p-7 min-h-[calc(100vh-56px)] flex flex-col max-md:ml-0 max-md:p-4 max-[480px]:mt-[50px] max-[480px]:p-3">
+    <!-- Breadcrumb -->
+    <div class="flex items-center gap-2 text-sm text-slate-400 mb-4">
+        <a href="contract-status-edit.html" class="hover:text-slate-600 transition-colors no-underline text-slate-400">การจัดการสัญญา</a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+        <span class="text-slate-700 font-medium">ยกเลิกสัญญา</span>
+    </div>
+
+    <!-- Page Header -->
+    <div class="flex justify-between items-start mb-5 max-md:flex-col max-md:gap-3">
+        <div>
+            <h1 class="text-[26px] font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl max-[480px]:text-lg">
+                <i data-lucide="file-x-2" class="w-5.5 h-5.5 text-[#DC2626]"></i>
+                <span>ยกเลิกสัญญา</span>
+            </h1>
+            <p class="text-slate-500 text-sm mt-1">ยกเลิกสัญญาที่อยู่ระหว่างดำเนินการ — <strong>10</strong> รายการ</p>
+        </div>
+        <div class="flex gap-2.5 items-center shrink-0">
+            <a href="contract-status-edit.html" class="inline-flex items-center justify-center gap-2 px-4.5 py-2.5 rounded-lg text-sm font-medium bg-white border border-slate-300 text-slate-500 hover:bg-slate-50 hover:border-slate-400 transition-all no-underline whitespace-nowrap cursor-pointer font-[inherit]">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                <span>กลับ</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="flex gap-3 items-center mb-5 flex-wrap max-md:flex-col max-md:items-stretch max-md:gap-2.5">
+        <div class="flex-1 min-w-[200px] relative max-md:w-full max-md:min-w-0">
+            <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" placeholder="ค้นหาเลขสัญญา, ชื่อสัญญา, บริษัท..." class="w-full py-2.5 pl-9 pr-3.5 border border-slate-300 rounded-lg text-sm font-[inherit] text-slate-600 bg-white outline-none transition-all focus:border-blue-500 focus:ring-3 focus:ring-blue-500/10">
+        </div>
+        <select class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27%2364748B%27%20stroke-width=%272%27%3E%3Cpolyline%20points=%276%209%2012%2015%2018%209%27/%3E%3C/svg%3E')] bg-no-repeat bg-[right_10px_center] max-md:flex-1">
+            <option>สถานะทั้งหมด</option>
+            <option>รอดำเนินการ</option>
+            <option>ดำเนินการแล้ว</option>
+        </select>
+    </div>
+
+    <!-- Table -->
+    <div class="table-card">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>การจัดการ</th>
+                        <th>เลขสัญญา</th>
+                        <th>สถานะ</th>
+                        <th>ชื่อสัญญา</th>
+                        <th>ประเภทสัญญา</th>
+                        <th>บริษัทผู้ทำสัญญา</th>
+                        <th>สถานะสัญญา</th>
+                        <th>ผู้รับผิดชอบสัญญา</th>
+                        <th>แผนก</th>
+                        <th>วันที่สร้างคำขอ</th>
+                        <th>วันที่ดำเนินการ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Row 0 -->
+                    <tr>
+                        <td><div class="action-btns"><button class="action-btn cancel" title="ยกเลิกสัญญา" onclick="event.stopPropagation();openCancelModal(0)"><i data-lucide="file-x-2" class="w-3.5 h-3.5"></i></button></div></td>
+                        <td style="font-weight:700;color:#2563EB;">PB2026/002</td>
+                        <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
+                        <td>สัญญาจ้างพัฒนาระบบ ERP</td>
+                        <td>สัญญาจ้างบริการ</td>
+                        <td style="font-weight:600;color:#1E293B;">บ. เทคโนโลยี</td>
+                        <td><span class="badge-contract draft">สร้างคำขอ (แบบร่าง)</span></td>
+                        <td>นางสาววิภา สุขใจ</td>
+                        <td>IT Department</td>
+                        <td>26/03/2026</td>
+                        <td style="color:#94A3B8;">—</td>
+                    </tr>
+                    <!-- Row 1 -->
+                    <tr>
+                        <td><div class="action-btns"><button class="action-btn cancel" title="ยกเลิกสัญญา" onclick="event.stopPropagation();openCancelModal(1)"><i data-lucide="file-x-2" class="w-3.5 h-3.5"></i></button></div></td>
+                        <td style="font-weight:700;color:#2563EB;">SD2026/001</td>
+                        <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
+                        <td>สัญญาเช่าพื้นที่สำนักงาน</td>
+                        <td>สัญญาเช่า</td>
+                        <td style="font-weight:600;color:#1E293B;">บ. พร็อพเพอร์ตี้</td>
+                        <td><span class="badge-contract return">ส่งกลับเพื่อแก้ไข</span></td>
+                        <td>นายวิชัย เจริญสุข</td>
+                        <td>ฝ่ายกฎหมาย</td>
+                        <td>24/03/2026</td>
+                        <td style="color:#94A3B8;">—</td>
+                    </tr>
+                    <!-- Row 2 -->
+                    <tr>
+                        <td><div class="action-btns"><button class="action-btn cancel" title="ยกเลิกสัญญา" onclick="event.stopPropagation();openCancelModal(2)"><i data-lucide="file-x-2" class="w-3.5 h-3.5"></i></button></div></td>
+                        <td style="font-weight:700;color:#2563EB;">RA2026/004</td>
+                        <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
+                        <td>สัญญาผลิตสื่อโฆษณา OOH</td>
+                        <td>สัญญาผลิตงาน</td>
+                        <td style="font-weight:600;color:#1E293B;">บ. แพลนบี มีเดีย</td>
+                        <td><span class="badge-contract legal">รอกฎหมายจ่ายงาน</span></td>
+                        <td>นายสมชาย โชดี</td>
+                        <td>Marketing</td>
+                        <td>25/03/2026</td>
+                        <td style="color:#94A3B8;">—</td>
+                    </tr>
+                    <!-- Row 3 -->
+                    <tr>
+                        <td><div class="action-btns"><button class="action-btn cancel" title="ยกเลิกสัญญา" onclick="event.stopPropagation();openCancelModal(3)"><i data-lucide="file-x-2" class="w-3.5 h-3.5"></i></button></div></td>
+                        <td style="font-weight:700;color:#2563EB;">PB2026/028</td>
+                        <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
+                        <td>สัญญาจัดซื้ออุปกรณ์สำนักงาน</td>
+                        <td>สัญญาจัดซื้อ</td>
+                        <td style="font-weight:600;color:#1E293B;">บ. ออฟฟิศ ซัพพลาย</td>
+                        <td><span class="badge-contract review">รอกฎหมายตรวจสอบ/ร่าง</span></td>
+                        <td>นายวิชัย เจริญสุข</td>
+                        <td>Operations</td>
+                        <td>22/03/2026</td>
+                        <td style="color:#94A3B8;">—</td>
+                    </tr>
+                    <!-- Row 4 -->
+                    <tr>
+                        <td><div class="action-btns"><button class="action-btn cancel" title="ยกเลิกสัญญา" onclick="event.stopPropagation();openCancelModal(4)"><i data-lucide="file-x-2" class="w-3.5 h-3.5"></i></button></div></td>
+                        <td style="font-weight:700;color:#2563EB;">PB2026/067</td>
+                        <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
+                        <td>สัญญาจ้างบริการรักษาความปลอดภัย</td>
+                        <td>สัญญาจ้างบริการ</td>
+                        <td style="font-weight:600;color:#1E293B;">บ. การ์ด ซิเคียวริตี้</td>
+                        <td><span class="badge-contract approve">รอหัวหน้างานอนุมัติ</span></td>
+                        <td>นางสาววิภา สุขใจ</td>
+                        <td>Operations</td>
+                        <td>22/03/2026</td>
+                        <td style="color:#94A3B8;">—</td>
+                    </tr>
+                    <!-- Row 5 -->
+                    <tr>
+                        <td><div class="action-btns"><button class="action-btn cancel" title="ยกเลิกสัญญา" onclick="event.stopPropagation();openCancelModal(5)"><i data-lucide="file-x-2" class="w-3.5 h-3.5"></i></button></div></td>
+                        <td style="font-weight:700;color:#2563EB;">PB2026/055</td>
+                        <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
+                        <td>สัญญาจ้างวิจัยตลาด OOH</td>
+                        <td>สัญญาจ้างที่ปรึกษา</td>
+                        <td style="font-weight:600;color:#1E293B;">บ. รีเสิร์ชโปร</td>
+                        <td><span class="badge-contract risk">รอกฎหมายสรุปความเสี่ยง</span></td>
+                        <td>นายสมชาย โชดี</td>
+                        <td>Marketing</td>
+                        <td>21/03/2026</td>
+                        <td style="color:#94A3B8;">—</td>
+                    </tr>
+                    <!-- Row 6 -->
+                    <tr>
+                        <td><div class="action-btns"><button class="action-btn cancel" title="ยกเลิกสัญญา" onclick="event.stopPropagation();openCancelModal(6)"><i data-lucide="file-x-2" class="w-3.5 h-3.5"></i></button></div></td>
+                        <td style="font-weight:700;color:#2563EB;">PB2026/045</td>
+                        <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
+                        <td>สัญญาให้บริการ Cloud Hosting</td>
+                        <td>สัญญาบริการ SaaS</td>
+                        <td style="font-weight:600;color:#1E293B;">AWS Thailand</td>
+                        <td><span class="badge-contract signing">แนบสัญญาฉบับสมบูรณ์</span></td>
+                        <td>นายสมชาย โชดี</td>
+                        <td>IT Department</td>
+                        <td>20/03/2026</td>
+                        <td style="color:#94A3B8;">—</td>
+                    </tr>
+                    <!-- Row 7 - ดำเนินการแล้ว -->
+                    <tr>
+                        <td><div class="action-btns"></div></td>
+                        <td style="font-weight:700;color:#2563EB;">PB2026/112</td>
+                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
+                        <td>สัญญาจ้างพัฒนาแอปมือถือ</td>
+                        <td>สัญญาจ้างบริการ</td>
+                        <td style="font-weight:600;color:#1E293B;">บ. โมบายเทค</td>
+                        <td><span class="badge-contract" style="background:#FEE2E2;color:#991B1B;">ยกเลิก</span></td>
+                        <td>นางสาววิภา สุขใจ</td>
+                        <td>IT Department</td>
+                        <td>23/03/2026</td>
+                        <td>10/04/2026</td>
+                    </tr>
+                    <!-- Row 8 - ดำเนินการแล้ว -->
+                    <tr>
+                        <td><div class="action-btns"></div></td>
+                        <td style="font-weight:700;color:#2563EB;">PB2026/098</td>
+                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
+                        <td>สัญญาบริการ Internet Leased Line</td>
+                        <td>สัญญาบริการ SaaS</td>
+                        <td style="font-weight:600;color:#1E293B;">TRUE Corp.</td>
+                        <td><span class="badge-contract" style="background:#FEE2E2;color:#991B1B;">ยกเลิก</span></td>
+                        <td>นายวิชัย เจริญสุข</td>
+                        <td>IT Department</td>
+                        <td>24/03/2026</td>
+                        <td>08/04/2026</td>
+                    </tr>
+                    <!-- Row 9 - ดำเนินการแล้ว -->
+                    <tr>
+                        <td><div class="action-btns"></div></td>
+                        <td style="font-weight:700;color:#2563EB;">PB2026/089</td>
+                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
+                        <td>สัญญาจ้างทำความสะอาดอาคาร</td>
+                        <td>สัญญาจ้างบริการ</td>
+                        <td style="font-weight:600;color:#1E293B;">บ. คลีนเซอร์วิส</td>
+                        <td><span class="badge-contract" style="background:#FEE2E2;color:#991B1B;">ยกเลิก</span></td>
+                        <td>นายสมชาย โชดี</td>
+                        <td>Operations</td>
+                        <td>25/03/2026</td>
+                        <td>05/04/2026</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Pagination -->
+        <div class="pagination">
+            <button class="nav" title="ก่อนหน้า"><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i></button>
+            <button class="pg-active">1</button>
+            <button>2</button>
+            <button class="nav" title="ถัดไป"><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></button>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════ MODAL: ยกเลิกสัญญา ══════════ -->
+<div class="cn-overlay" id="cancelModal">
+    <div class="cn-modal">
+        <div class="cn-modal-header">
+            <h3><i data-lucide="file-x-2" class="w-5 h-5" style="color:#DC2626;"></i> ยืนยันการยกเลิกสัญญา</h3>
+            <button class="close-btn" onclick="closeCancelModal()"><i data-lucide="x" class="w-4 h-4"></i></button>
+        </div>
+        <div class="cn-modal-body" id="cnModalBody">
+            <!-- Warning -->
+            <div class="cn-warning" style="margin-bottom:16px;">
+                <div class="cn-warning-icon"><i data-lucide="alert-triangle" class="w-5 h-5" style="color:#DC2626;"></i></div>
+                <div class="cn-warning-text"><strong>คำเตือน:</strong> การยกเลิกสัญญาจะทำให้สัญญานี้ไม่สามารถดำเนินการต่อได้ กรุณาตรวจสอบข้อมูลก่อนยืนยัน</div>
+            </div>
+            <!-- Info Box -->
+            <div class="cn-info-box">
+                <div class="cn-info-row"><div class="cn-info-label">เลขสัญญา</div><div class="cn-info-value" id="cnContractNo">—</div></div>
+                <div class="cn-info-row"><div class="cn-info-label">ชื่อสัญญา</div><div class="cn-info-value" id="cnContractName">—</div></div>
+                <div class="cn-info-row"><div class="cn-info-label">ประเภทสัญญา</div><div class="cn-info-value" id="cnContractType">—</div></div>
+                <div class="cn-info-row"><div class="cn-info-label">บริษัทผู้ทำสัญญา</div><div class="cn-info-value" id="cnCompany">—</div></div>
+                <div class="cn-info-row"><div class="cn-info-label">สถานะสัญญาปัจจุบัน</div><div class="cn-info-value" id="cnCurrentStatus">—</div></div>
+                <div class="cn-info-row"><div class="cn-info-label">ผู้รับผิดชอบ</div><div class="cn-info-value" id="cnOwner">—</div></div>
+                <div class="cn-info-row"><div class="cn-info-label">แผนก</div><div class="cn-info-value" id="cnDept">—</div></div>
+            </div>
+
+            <!-- ความเห็น / ข้อเสนอแนะ -->
+            <div style="margin-top:16px;">
+                <label style="display:block;font-size:13px;font-weight:600;color:#475569;margin-bottom:6px;">ความเห็น / ข้อเสนอแนะ</label>
+                <textarea id="cnComment" placeholder="กรอกความเห็นหรือข้อเสนอแนะเพิ่มเติม (ถ้ามี)" style="width:100%;min-height:80px;border:1px solid #CBD5E1;border-radius:10px;padding:12px;font-size:14px;font-family:inherit;resize:vertical;outline:none;transition:border .2s;box-sizing:border-box;" onfocus="this.style.borderColor='#DC2626';this.style.boxShadow='0 0 0 3px rgba(220,38,38,.12)'" onblur="this.style.borderColor='#CBD5E1';this.style.boxShadow='none'"></textarea>
+            </div>
+        </div>
+
+        <!-- Success message -->
+        <div class="cn-success-msg" id="cnSuccessMsg">
+            <div class="check-icon"><i data-lucide="check" class="w-7 h-7" style="color:#DC2626;"></i></div>
+            <div style="font-size:16px;font-weight:700;color:#1E293B;margin-bottom:4px;">ยกเลิกสัญญาสำเร็จ</div>
+            <div style="font-size:13px;color:#64748B;" id="cnSuccessText">ปรับสถานะสัญญาเป็นยกเลิกเรียบร้อย</div>
+        </div>
+
+        <div class="cn-modal-footer" id="cnModalFooter">
+            <button class="btn-cancel-dismiss" onclick="closeCancelModal()">ยกเลิก</button>
+            <button class="btn-cancel-confirm" onclick="confirmCancel()"><i data-lucide="check" class="w-4 h-4" style="margin-right:4px;"></i> ยืนยันยกเลิกสัญญา</button>
+        </div>
+    </div>
+</div>
+
+<script src="shared-layout.js"></script>
+<script>
+    document.getElementById('topbar-container').innerHTML = renderTopbar();
+    document.getElementById('sidebar-container').innerHTML = renderSidebar();
+
+    // Set active sidebar item
+    document.querySelectorAll('.sidebar-item').forEach(el => {
+        el.classList.remove('active');
+        if (el.textContent.trim().includes('การจัดการสัญญา')) el.classList.add('active');
+    });
+
+    // ── Mock data ──
+    const cancelData = [
+        { no: 'PB2026/002', name: 'สัญญาจ้างพัฒนาระบบ ERP', type: 'สัญญาจ้างบริการ', company: 'บ. เทคโนโลยี', status: 'สร้างคำขอ (แบบร่าง)', owner: 'นางสาววิภา สุขใจ', dept: 'IT Department' },
+        { no: 'SD2026/001', name: 'สัญญาเช่าพื้นที่สำนักงาน', type: 'สัญญาเช่า', company: 'บ. พร็อพเพอร์ตี้', status: 'ส่งกลับเพื่อแก้ไข', owner: 'นายวิชัย เจริญสุข', dept: 'ฝ่ายกฎหมาย' },
+        { no: 'RA2026/004', name: 'สัญญาผลิตสื่อโฆษณา OOH', type: 'สัญญาผลิตงาน', company: 'บ. แพลนบี มีเดีย', status: 'รอกฎหมายจ่ายงาน', owner: 'นายสมชาย โชดี', dept: 'Marketing' },
+        { no: 'PB2026/028', name: 'สัญญาจัดซื้ออุปกรณ์สำนักงาน', type: 'สัญญาจัดซื้อ', company: 'บ. ออฟฟิศ ซัพพลาย', status: 'รอกฎหมายตรวจสอบ/ร่าง', owner: 'นายวิชัย เจริญสุข', dept: 'Operations' },
+        { no: 'PB2026/067', name: 'สัญญาจ้างบริการรักษาความปลอดภัย', type: 'สัญญาจ้างบริการ', company: 'บ. การ์ด ซิเคียวริตี้', status: 'รอหัวหน้างานอนุมัติ', owner: 'นางสาววิภา สุขใจ', dept: 'Operations' },
+        { no: 'PB2026/055', name: 'สัญญาจ้างวิจัยตลาด OOH', type: 'สัญญาจ้างที่ปรึกษา', company: 'บ. รีเสิร์ชโปร', status: 'รอกฎหมายสรุปความเสี่ยง', owner: 'นายสมชาย โชดี', dept: 'Marketing' },
+        { no: 'PB2026/045', name: 'สัญญาให้บริการ Cloud Hosting', type: 'สัญญาบริการ SaaS', company: 'AWS Thailand', status: 'แนบสัญญาฉบับสมบูรณ์', owner: 'นายสมชาย โชดี', dept: 'IT Department' },
+    ];
+
+    let currentCancelIdx = null;
+
+    function openCancelModal(idx) {
+        currentCancelIdx = idx;
+        const d = cancelData[idx];
+        if (!d) return;
+
+        document.getElementById('cnContractNo').textContent = d.no;
+        document.getElementById('cnContractName').textContent = d.name;
+        document.getElementById('cnContractType').textContent = d.type;
+        document.getElementById('cnCompany').textContent = d.company;
+        document.getElementById('cnCurrentStatus').textContent = d.status;
+        document.getElementById('cnOwner').textContent = d.owner;
+        document.getElementById('cnDept').textContent = d.dept;
+
+        // Reset state
+        document.getElementById('cnModalBody').style.display = '';
+        document.getElementById('cnSuccessMsg').classList.remove('show');
+        document.getElementById('cnModalFooter').innerHTML =
+            '<button class="btn-cancel-dismiss" onclick="closeCancelModal()">ยกเลิก</button>' +
+            '<button class="btn-cancel-confirm" onclick="confirmCancel()"><i data-lucide="check" class="w-4 h-4" style="margin-right:4px;"></i> ยืนยันยกเลิกสัญญา</button>';
+
+        document.getElementById('cancelModal').classList.add('is-active');
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function closeCancelModal() {
+        document.getElementById('cancelModal').classList.remove('is-active');
+    }
+
+    function confirmCancel() {
+        const d = cancelData[currentCancelIdx];
+        if (!d) return;
+
+        // Get today's date as dd/mm/yyyy
+        const now = new Date();
+        const todayStr = String(now.getDate()).padStart(2,'0') + '/' + String(now.getMonth()+1).padStart(2,'0') + '/' + now.getFullYear();
+
+        // Show success
+        document.getElementById('cnModalBody').style.display = 'none';
+        document.getElementById('cnSuccessMsg').classList.add('show');
+        document.getElementById('cnSuccessText').textContent =
+            'สัญญา ' + d.no + ' (' + d.name + ') ถูกยกเลิกเรียบร้อยแล้ว';
+        document.getElementById('cnModalFooter').innerHTML =
+            '<button class="btn-cancel-confirm" onclick="closeCancelModal()" style="background:#475569;"><i data-lucide="check" class="w-4 h-4" style="margin-right:4px;"></i> ปิด</button>';
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+
+        // Update table row
+        const rows = document.querySelectorAll('tbody tr');
+        const row = rows[currentCancelIdx];
+        if (row) {
+            const cells = row.querySelectorAll('td');
+            // Remove action icon
+            cells[0].innerHTML = '<div class="action-btns"></div>';
+            // Update status to done
+            cells[2].innerHTML = '<span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span>';
+            // Update contract status to ยกเลิก
+            cells[6].innerHTML = '<span class="badge-contract" style="background:#FEE2E2;color:#991B1B;">ยกเลิก</span>';
+            // Update วันที่ดำเนินการ
+            cells[10].style.color = '#475569';
+            cells[10].textContent = todayStr;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+    }
+
+    // Close on overlay click
+    document.getElementById('cancelModal').addEventListener('click', function(e) {
+        if (e.target === this) closeCancelModal();
+    });
+
+    // Pagination
+    document.querySelectorAll('.pagination button').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.pagination button').forEach(b => b.classList.remove('pg-active'));
+            if (!this.classList.contains('nav')) this.classList.add('pg-active');
+        });
+    });
+
+    // Init Lucide
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+</script>
+</body>
+</html>

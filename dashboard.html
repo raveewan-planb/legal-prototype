@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Legal System - Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+<style type="text/tailwindcss">@theme { --font-sans: 'Kanit', sans-serif; }</style>
+<link rel="stylesheet" href="shared-styles.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+.section-card{background:#fff;border-radius:14px;padding:20px 22px;box-shadow:0 1px 3px rgba(15,23,42,.05);border:1px solid #F1F5F9}
+.section-title{font-size:15px;font-weight:600;color:#1B3A6B;display:flex;align-items:center;gap:8px}
+.summary-card{background:#fff;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;
+box-shadow:0 1px 3px rgba(15,23,42,.05);border:1px solid #F1F5F9;transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .22s ease;
+opacity:0;animation:fadeUp .5s ease forwards}
+.summary-card:hover{transform:translateY(-3px);box-shadow:0 10px 22px rgba(15,23,42,.08)}
+.summary-card:nth-child(1){animation-delay:.05s}
+.summary-card:nth-child(2){animation-delay:.12s}
+.summary-card:nth-child(3){animation-delay:.19s}
+.summary-card:nth-child(4){animation-delay:.26s}
+.summary-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.summary-icon i{width:22px;height:22px}
+.summary-label{font-size:12.5px;color:#64748B;font-weight:500;margin-bottom:2px}
+.summary-value{font-size:22px;font-weight:700;color:#1B3A6B;line-height:1.1}
+.summary-value small{font-size:14px;color:#64748B;font-weight:500;margin-left:3px}
+.filter-pill{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #E2E8F0;border-radius:10px;
+padding:8px 12px;font-size:13px;color:#334155;cursor:pointer;font-family:inherit;transition:border-color .2s,background .2s}
+.filter-pill:hover{border-color:#6fc5ea;background:#F8FAFC}
+.filter-pill i{width:14px;height:14px;color:#64748B}
+.icon-btn{width:36px;height:36px;border-radius:10px;background:#fff;border:1px solid #E2E8F0;display:flex;align-items:center;
+justify-content:center;cursor:pointer;color:#64748B;transition:all .2s;font-family:inherit}
+.icon-btn:hover{background:#F8FAFC;border-color:#6fc5ea;color:#1B3A6B;transform:rotate(45deg)}
+.icon-btn i{width:16px;height:16px}
+.bank-card{background:#fff;border-radius:14px;padding:18px 20px 20px;box-shadow:0 1px 3px rgba(15,23,42,.05);
+border:1px solid #F1F5F9;transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .22s ease;
+display:flex;flex-direction:column;gap:14px;opacity:0;animation:fadeUp .5s ease forwards}
+.bank-card:hover{transform:translateY(-4px);box-shadow:0 14px 28px rgba(15,23,42,.1)}
+.bank-card:nth-child(1){animation-delay:.4s}
+.bank-card:nth-child(2){animation-delay:.46s}
+.bank-card:nth-child(3){animation-delay:.52s}
+.bank-card:nth-child(4){animation-delay:.58s}
+.bank-card:nth-child(5){animation-delay:.64s}
+.bank-name{font-size:14px;font-weight:600;color:#1B3A6B;text-align:center;padding-bottom:12px;border-bottom:1px dashed #E2E8F0}
+.status-row{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-radius:10px;
+font-size:13px;font-weight:600;transition:transform .18s ease}
+.status-row:hover{transform:translateX(3px)}
+.status-active{background:#D1FAE5;color:#065F46}
+.status-returned{background:#DBEAFE;color:#1E40AF}
+.status-expire{background:#FEF3C7;color:#92400E}
+.status-expired{background:#FEE2E2;color:#991B1B}
+.status-count{background:#fff;color:inherit;padding:2px 10px;border-radius:20px;font-size:13px;font-weight:700;min-width:32px;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.metric{display:flex;justify-content:space-between;align-items:center;font-size:12.5px}
+.metric-label{color:#64748B}
+.metric-value{color:#1B3A6B;font-weight:700;font-size:14px}
+.metric-value.danger{color:#DC2626}
+.metric-value.warning{color:#D97706}
+.chart-card{opacity:0;animation:fadeUp .5s ease forwards}
+.chart-card:nth-child(1){animation-delay:.3s}
+.chart-card:nth-child(2){animation-delay:.36s}
+.bank-section{opacity:0;animation:fadeUp .5s ease forwards;animation-delay:.36s}
+.tab-bar{display:inline-flex;background:#fff;border:1px solid #E2E8F0;border-radius:14px;padding:5px;gap:3px;
+box-shadow:0 1px 3px rgba(15,23,42,.04);opacity:0;animation:fadeUp .5s ease forwards;animation-delay:.05s}
+.tab-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border:none;border-radius:10px;
+font-family:inherit;font-size:13.5px;font-weight:600;color:#64748B;background:transparent;cursor:pointer;
+transition:all .25s cubic-bezier(.16,1,.3,1);position:relative;white-space:nowrap}
+.tab-btn:hover:not(.active){background:#F1F5F9;color:#1B3A6B}
+.tab-btn i{width:15px;height:15px}
+.tab-btn.active{background:linear-gradient(120deg,#1B3A6B,#2f5da0);color:#fff;box-shadow:0 4px 12px rgba(27,58,107,.28)}
+.tab-btn .tab-count{background:rgba(255,255,255,.22);color:#fff;padding:1px 8px;border-radius:20px;font-size:11px;font-weight:700}
+.tab-btn:not(.active) .tab-count{background:#EEF2FF;color:#1B3A6B}
+.tab-panel{display:none;flex-direction:column;gap:20px}
+.tab-panel.active{display:flex;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.empty-state{background:#fff;border-radius:14px;padding:60px 20px;text-align:center;border:1px dashed #CBD5E1}
+.empty-state i{width:56px;height:56px;color:#94A3B8;margin-bottom:14px}
+.empty-state h3{font-size:16px;font-weight:600;color:#1B3A6B;margin:0 0 6px}
+.empty-state p{font-size:13.5px;color:#64748B;margin:0}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.legend-list{display:flex;flex-direction:column;gap:9px}
+.legend-item{display:flex;align-items:center;gap:9px;font-size:13px;color:#334155;cursor:pointer;transition:opacity .2s}
+.legend-item:hover{opacity:.7}
+.legend-dot{width:11px;height:11px;border-radius:50%;flex:0 0 auto}
+.chart-wrap{position:relative;height:280px}
+.donut-center{position:absolute;top:50%;left:38%;transform:translate(-50%,-50%);text-align:center;pointer-events:none}
+.donut-center b{display:block;font-size:26px;font-weight:700;color:#1B3A6B;line-height:1}
+.donut-center span{font-size:11px;color:#64748B;font-weight:500}
+@media (max-width:768px){
+.chart-wrap{height:240px}
+.donut-center{left:50%}
+}
+</style>
+</head>
+<body class="font-sans bg-[#F0F4F8] m-0">
+<div id="topbar-container"></div>
+<div id="sidebar-container"></div>
+
+<div class="ml-[260px] mt-14 p-7 min-h-[calc(100vh-56px)] flex flex-col gap-5 max-md:ml-0 max-md:p-4 max-[480px]:mt-[50px] max-[480px]:p-3">
+    <!-- Page Header -->
+    <div class="flex justify-between items-start mb-1 max-md:flex-col max-md:gap-3" style="opacity:0;animation:fadeUp .5s ease forwards">
+        <div>
+            <h1 class="text-[26px] font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl max-[480px]:text-lg">
+                <i data-lucide="layout-dashboard" class="w-5.5 h-5.5 text-[#2563EB]"></i>
+                <span>Dashboard</span>
+            </h1>
+            <p class="text-slate-500 text-sm mt-1">ภาพรวมข้อมูลทั้งหมดในระบบ Legal System</p>
+        </div>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="tab-bar" id="tabBar">
+        <button class="tab-btn active" data-tab="lg"><i data-lucide="landmark"></i>หนังสือค้ำประกัน</button>
+        <button class="tab-btn" data-tab="contract"><i data-lucide="file-text"></i>เอกสารสัญญา</button>
+        <button class="tab-btn" data-tab="policy"><i data-lucide="shield-check"></i>กรมธรรม์</button>
+    </div>
+
+    <!-- Contract Tab (empty state placeholder) -->
+    <div class="tab-panel" id="panel-contract">
+        <div class="empty-state">
+            <i data-lucide="file-text"></i>
+            <h3>Dashboard เอกสารสัญญา</h3>
+            <p>ส่วนแสดงผลของเอกสารสัญญาจะแสดงที่นี่ในเวอร์ชันถัดไป</p>
+        </div>
+    </div>
+
+    <!-- Policy Tab (empty state placeholder) -->
+    <div class="tab-panel" id="panel-policy">
+        <div class="empty-state">
+            <i data-lucide="shield-check"></i>
+            <h3>Dashboard กรมธรรม์</h3>
+            <p>ส่วนแสดงผลของกรมธรรม์จะแสดงที่นี่ในเวอร์ชันถัดไป</p>
+        </div>
+    </div>
+
+    <!-- LG Tab (active) -->
+    <div class="tab-panel active" id="panel-lg">
+    <!-- Summary Cards Section -->
+    <div class="section-card">
+        <div class="flex items-center justify-between mb-4">
+            <div class="section-title"><i data-lucide="layers" class="w-4 h-4"></i>Summary Cards</div>
+            <div class="flex items-center gap-2">
+                <button class="filter-pill"><i data-lucide="calendar-days"></i>All Time<i data-lucide="chevron-down"></i></button>
+                <button class="icon-btn" onclick="refreshData()"><i data-lucide="refresh-cw"></i></button>
+            </div>
+        </div>
+        <div class="grid grid-cols-4 gap-4 max-md:grid-cols-2 max-[480px]:grid-cols-1">
+            <div class="summary-card">
+                <div class="summary-icon" style="background:#DBEAFE"><i data-lucide="file-text" style="color:#2563EB"></i></div>
+                <div>
+                    <div class="summary-label">LG ที่ใช้งานอยู่</div>
+                    <div class="summary-value">9<small>ฉบับ</small></div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon" style="background:#DBEAFE"><i data-lucide="banknote" style="color:#2563EB"></i></div>
+                <div>
+                    <div class="summary-label">มูลค่า LG รวม</div>
+                    <div class="summary-value">3,011,000<small>฿</small></div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon" style="background:#FEE2E2"><i data-lucide="corner-down-left" style="color:#DC2626"></i></div>
+                <div>
+                    <div class="summary-label">LG ที่คืนเข้ามา</div>
+                    <div class="summary-value">7<small>ฉบับ</small></div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon" style="background:#FEE2E2"><i data-lucide="calendar-clock" style="color:#DC2626"></i></div>
+                <div>
+                    <div class="summary-label">ค่าธรรมเนียมค้างสะสม</div>
+                    <div class="summary-value">9,943<small>฿</small></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="grid grid-cols-2 gap-5 max-md:grid-cols-1">
+        <div class="section-card chart-card">
+            <div class="section-title mb-3"><i data-lucide="pie-chart" class="w-4 h-4"></i>ภาพรวมสถานะหนังสือค้ำประกัน (LG)</div>
+            <div class="grid grid-cols-2 gap-4 items-center max-[480px]:grid-cols-1">
+                <div class="chart-wrap"><canvas id="donutChart"></canvas><div class="donut-center"><b>42</b><span>LG ทั้งหมด</span></div></div>
+                <div class="legend-list" id="donutLegend"></div>
+            </div>
+        </div>
+        <div class="section-card chart-card">
+            <div class="section-title mb-3"><i data-lucide="trending-up" class="w-4 h-4"></i>แนวโน้มการหมดอายุรายเดือน</div>
+            <div class="chart-wrap"><canvas id="lineChart"></canvas></div>
+        </div>
+    </div>
+
+    <!-- Bank Cards Section -->
+    <div class="section-card bank-section">
+        <div class="section-title mb-4"><i data-lucide="landmark" class="w-4 h-4"></i>สถานะ LG แยกตามธนาคาร</div>
+        <div class="grid grid-cols-3 gap-4 max-md:grid-cols-2 max-[480px]:grid-cols-1" id="bankGrid"></div>
+    </div>
+    </div>
+</div>
+
+<script src="shared-layout.js"></script>
+<script>
+document.getElementById('topbar-container').innerHTML = renderTopbar();
+document.getElementById('sidebar-container').innerHTML = renderSidebar();
+document.querySelectorAll('.sidebar-item').forEach(item => {
+    item.classList.remove('active');
+    if (item.textContent.trim() === 'Dashboard') item.classList.add('active');
+});
+
+const donutData = [
+    { label: 'ส่งคำขอแล้ว',           value: 4, color: '#60A5FA' },
+    { label: 'รอกฎหมายตรวจสอบ',       value: 3, color: '#22D3EE' },
+    { label: 'กฎหมายขออนุมัติ',       value: 5, color: '#10B981' },
+    { label: 'กฎหมายไม่อนุมัติ',      value: 8, color: '#F87171' },
+    { label: 'รอผู้จัดการอนุมัติ',    value: 4, color: '#A78BFA' },
+    { label: 'ธนาคารดำเนินการ',       value: 2, color: '#EC4899' },
+    { label: 'รอส่งมอบ',              value: 6, color: '#94A3B8' },
+    { label: 'ปิดงาน',                value: 5, color: '#64748B' },
+    { label: 'รอยืนยันรับ',           value: 2, color: '#FCD34D' },
+    { label: 'คืนแล้ว',               value: 3, color: '#EF4444' }
+];
+
+const legendEl = document.getElementById('donutLegend');
+donutData.forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'legend-item';
+    el.innerHTML = `<span class="legend-dot" style="background:${d.color}"></span>${d.label}`;
+    legendEl.appendChild(el);
+});
+
+new Chart(document.getElementById('donutChart'), {
+    type: 'doughnut',
+    data: {
+        labels: donutData.map(d => d.label),
+        datasets: [{
+            data: donutData.map(d => d.value),
+            backgroundColor: donutData.map(d => d.color),
+            borderWidth: 2, borderColor: '#fff', hoverOffset: 8
+        }]
+    },
+    options: {
+        cutout: '62%', responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1B3A6B', padding: 10, cornerRadius: 8 } },
+        animation: { animateRotate: true, duration: 1200, easing: 'easeOutQuart' }
+    }
+});
+
+const lineLabels = ['2026-09','2026-10','2026-11','2026-12','2027-01','2027-02','2027-03','2027-04','2027-05','2027-06','2027-07','2027-08'];
+const lineValues = [100000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+new Chart(document.getElementById('lineChart'), {
+    type: 'line',
+    data: {
+        labels: lineLabels,
+        datasets: [{
+            label: 'KBANK', data: lineValues, borderColor: '#F87171',
+            backgroundColor: (ctx) => {
+                const chart = ctx.chart; const {ctx: c, chartArea} = chart;
+                if (!chartArea) return null;
+                const g = c.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+                g.addColorStop(0, 'rgba(248,113,113,.28)'); g.addColorStop(1, 'rgba(248,113,113,0)');
+                return g;
+            },
+            borderWidth: 2.5, tension: .3, fill: true,
+            pointRadius: 4, pointHoverRadius: 6, pointBackgroundColor: '#F87171', pointBorderColor: '#fff', pointBorderWidth: 2
+        }]
+    },
+    options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+            legend: { position: 'top', align: 'end', labels: { boxWidth: 8, boxHeight: 8, usePointStyle: true, font: { size: 12, family: 'Kanit' } } },
+            tooltip: { backgroundColor: '#1B3A6B', padding: 10, cornerRadius: 8, callbacks: { label: c => c.dataset.label + ': ' + c.parsed.y.toLocaleString() } }
+        },
+        scales: {
+            x: { grid: { display: false }, ticks: { font: { size: 11, family: 'Kanit' }, maxRotation: 45, minRotation: 45, color: '#64748B' } },
+            y: { grid: { color: '#F1F5F9' }, ticks: { font: { size: 11, family: 'Kanit' }, color: '#64748B', callback: v => v.toLocaleString() }, beginAtZero: true }
+        },
+        animation: { duration: 1200, easing: 'easeOutQuart' }
+    }
+});
+
+const banks = [
+    { name: 'BAY - Bank of Ayudhya',   active: 1, returned: 4, expire: 0, expired: 3, sumTotal: '55,000,000',  sumRemain: '53,600,102',  fee: '5,000' },
+    { name: 'BBL - Bangkok Bank',      active: 7, returned: 9, expire: 0, expired: 4, sumTotal: '100,000,000', sumRemain: '100,320,109', fee: '4,660' },
+    { name: 'KBANK - Kasikorn Bank',   active: 1, returned: 0, expire: 1, expired: 0, sumTotal: '75,000,000',  sumRemain: '74,900,000',  fee: '0' },
+    { name: 'KTB - Krung Thai Bank',   active: 0, returned: 2, expire: 0, expired: 0, sumTotal: '60,000,000',  sumRemain: '60,002,012',  fee: '0' },
+    { name: 'SCB - Siam Commercial Bank', active: 0, returned: 0, expire: 0, expired: 0, sumTotal: '50,000,000',  sumRemain: '50,000,000',  fee: '0' }
+];
+
+const bankGrid = document.getElementById('bankGrid');
+banks.forEach(b => {
+    const card = document.createElement('div');
+    card.className = 'bank-card';
+    card.innerHTML = `
+        <div class="bank-name">${b.name}</div>
+        <div class="grid grid-cols-2 gap-4 items-start">
+            <div class="flex flex-col gap-2">
+                <div class="status-row status-active"><span>Active</span><span class="status-count">${b.active}</span></div>
+                <div class="status-row status-returned"><span>Returned</span><span class="status-count">${b.returned}</span></div>
+                <div class="status-row status-expire"><span>Expire &lt; 1 Month</span><span class="status-count">${b.expire}</span></div>
+                <div class="status-row status-expired"><span>Expired</span><span class="status-count">${b.expired}</span></div>
+            </div>
+            <div class="flex flex-col gap-3 justify-center pt-1">
+                <div>
+                    <div class="metric-label text-[12px]">วงเงิน LG รวม</div>
+                    <div class="metric-value">${b.sumTotal} ฿</div>
+                </div>
+                <div>
+                    <div class="metric-label text-[12px]">วงเงินคงเหลือที่ใช้ได้</div>
+                    <div class="metric-value danger">${b.sumRemain} ฿</div>
+                </div>
+                <div>
+                    <div class="metric-label text-[12px]">ค่าธรรมเนียมค้างสะสม</div>
+                    <div class="metric-value ${b.fee === '0' ? '' : 'warning'}">${b.fee} ฿</div>
+                </div>
+            </div>
+        </div>`;
+    bankGrid.appendChild(card);
+});
+
+function refreshData() {
+    const btn = event.currentTarget;
+    btn.style.transition = 'transform .6s ease';
+    btn.style.transform = 'rotate(360deg)';
+    setTimeout(() => { btn.style.transform = ''; }, 700);
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+    });
+});
+
+if (typeof lucide !== 'undefined') lucide.createIcons();
+</script>
+</body>
+</html>

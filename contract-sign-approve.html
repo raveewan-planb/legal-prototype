@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal System - ขออนุมัติลงนามสัญญา</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">@theme { --font-sans: 'Kanit', sans-serif; }</style>
+    <link rel="stylesheet" href="shared-styles.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <!-- Flatpickr -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <style>
+        /* ══════════ TABLE ══════════ */
+        .table-card {
+            background: #fff; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,.06);
+        }
+        .table-wrapper { overflow-x: auto; overflow-y: auto; max-height: calc(100vh - 310px); }
+        table { width: 100%; border-collapse: collapse; }
+        thead th {
+            background: #1B3A6B; color: #fff; font-weight: 600; font-size: 13px;
+            padding: 14px 16px; text-align: left; white-space: nowrap;
+            position: sticky; top: 0; z-index: 2;
+        }
+        tbody tr { border-bottom: 1px solid #F1F5F9; transition: background .15s; }
+        tbody tr:hover { background: #F8FAFC; }
+        tbody td { padding: 14px 16px; font-size: 13px; color: #475569; white-space: nowrap; }
+
+        /* Checkbox */
+        .row-check { width: 18px; height: 18px; accent-color: #7C3AED; cursor: pointer; }
+        .check-all { width: 18px; height: 18px; accent-color: #7C3AED; cursor: pointer; }
+
+        /* Badges */
+        .badge-status {
+            display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px;
+            font-size: 12px; font-weight: 600; white-space: nowrap;
+        }
+        .badge-status .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+        .badge-draft { background: #F1F5F9; color: #64748B; }  .badge-draft .dot { background: #94A3B8; }
+        .badge-return { background: #FFF7ED; color: #C2410C; }  .badge-return .dot { background: #F97316; }
+        .badge-legal { background: #F5F3FF; color: #7C3AED; }  .badge-legal .dot { background: #8B5CF6; }
+        .badge-review { background: #EFF6FF; color: #2563EB; }  .badge-review .dot { background: #2563EB; }
+        .badge-approve { background: #FFFBEB; color: #A16207; }  .badge-approve .dot { background: #F59E0B; }
+        .badge-sign { background: #FDF2F8; color: #BE185D; }  .badge-sign .dot { background: #EC4899; }
+        .badge-complete { background: #F0FDF4; color: #15803D; }  .badge-complete .dot { background: #22C55E; }
+
+        .badge-pending { background: #FFF7ED; color: #C2410C; }  .badge-pending .dot { background: #F97316; }
+        .badge-done { background: #F0FDF4; color: #15803D; }  .badge-done .dot { background: #22C55E; }
+
+        /* Action Buttons */
+        .action-btns { display: flex; gap: 6px; }
+        .action-btn {
+            width: 30px; height: 30px; border-radius: 6px; border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: all .2s;
+        }
+        .action-btn.edit { background: #FFF7ED; color: #C2410C; }
+        .action-btn.edit:hover { background: #FFEDD5; }
+        .action-btn.remark { background: #EDE9FE; color: #7C3AED; }
+        .action-btn.remark:hover { background: #DDD6FE; }
+
+        /* Pagination */
+        .pagination {
+            display: flex; justify-content: center; align-items: center; gap: 4px; padding: 20px;
+        }
+        .pagination button {
+            width: 36px; height: 36px; border-radius: 8px; border: 1px solid #E2E8F0;
+            background: #fff; color: #475569; font-size: 14px; font-weight: 500;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-family: inherit; transition: all .2s;
+        }
+        .pagination button:hover { background: #EFF6FF; border-color: #2563EB; color: #2563EB; }
+        .pagination button.pg-active { background: #2563EB; color: #fff; border-color: #2563EB; }
+        .pagination button.nav { font-size: 12px; }
+
+        /* ══════════ FILTER ══════════ */
+        .filter-bar {
+            background: #fff; border-radius: 12px; padding: 16px 20px; margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.06);
+            display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+        }
+        .filter-select {
+            padding: 8px 32px 8px 12px; border: 1px solid #E2E8F0; border-radius: 8px;
+            font-size: 13px; font-family: inherit; color: #475569; background: #fff;
+            appearance: none; cursor: pointer; min-width: 140px; outline: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748B' viewBox='0 0 16 16'%3E%3Cpath d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 10px center;
+            transition: border-color .2s;
+        }
+        .filter-select:focus { border-color: #88D2F2; box-shadow: 0 0 0 3px rgba(136,210,242,.18); }
+
+        /* Date Picker */
+        .date-range-group {
+            display: flex; align-items: center; gap: 6px;
+        }
+        .date-input-wrap {
+            position: relative; display: flex; align-items: center;
+        }
+        .date-input-wrap input {
+            padding: 8px 12px 8px 34px; border: 1px solid #E2E8F0; border-radius: 8px;
+            font-size: 13px; font-family: inherit; color: #475569; background: #fff;
+            width: 140px; outline: none; cursor: pointer; transition: border-color .2s;
+        }
+        .date-input-wrap input:focus { border-color: #88D2F2; box-shadow: 0 0 0 3px rgba(136,210,242,.18); }
+        .date-icon {
+            position: absolute; left: 10px; pointer-events: none; color: #94A3B8;
+        }
+        .date-sep { font-size: 13px; color: #94A3B8; font-weight: 500; }
+
+        /* Flatpickr overrides */
+        .flatpickr-calendar { font-family: 'Kanit', sans-serif !important; }
+
+        /* Search */
+        .search-box {
+            display: flex; align-items: center; gap: 8px; padding: 8px 14px;
+            border: 1px solid #E2E8F0; border-radius: 8px; background: #fff;
+            transition: border-color .2s; min-width: 220px;
+        }
+        .search-box:focus-within { border-color: #88D2F2; box-shadow: 0 0 0 3px rgba(136,210,242,.18); }
+        .search-box input { border: none; outline: none; font-size: 13px; font-family: inherit; flex: 1; color: #475569; }
+
+        /* ══════════ MODALS ══════════ */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 1000;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: all .25s;
+        }
+        .modal-overlay.is-active { opacity: 1; visibility: visible; }
+        .modal-card {
+            background: #fff; border-radius: 16px; width: 95%; max-width: 520px;
+            padding: 32px; box-shadow: 0 25px 50px rgba(0,0,0,.15);
+        }
+        .modal-card .modal-icon {
+            width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 16px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .modal-card h3 { font-size: 18px; font-weight: 700; color: #1B3A6B; margin-bottom: 8px; text-align: center; }
+        .modal-card .btn-group { display: flex; gap: 12px; justify-content: center; margin-top: 20px; }
+        .btn-dismiss {
+            padding: 10px 28px; border-radius: 10px; border: 1px solid #CBD5E1;
+            background: #fff; color: #475569; font-size: 14px; font-weight: 600;
+            cursor: pointer; font-family: inherit; transition: all .2s;
+        }
+        .btn-dismiss:hover { background: #F1F5F9; }
+        .btn-confirm-purple {
+            padding: 10px 28px; border-radius: 10px; border: none;
+            background: #7C3AED; color: #fff; font-size: 14px; font-weight: 600;
+            cursor: pointer; font-family: inherit; transition: all .2s;
+        }
+        .btn-confirm-purple:hover { background: #6D28D9; }
+
+        /* Remark modal */
+        .remark-textarea {
+            width: 100%; min-height: 80px; border: 1px solid #CBD5E1; border-radius: 10px;
+            padding: 12px; font-size: 14px; font-family: inherit; resize: vertical;
+            outline: none; transition: border .2s; box-sizing: border-box;
+        }
+        .remark-textarea:focus { border-color: #7C3AED; box-shadow: 0 0 0 3px rgba(124,58,237,.12); }
+
+        /* Email confirm list */
+        .email-confirm-list {
+            max-height: 240px; overflow-y: auto; margin: 16px 0;
+            border: 1px solid #E2E8F0; border-radius: 10px;
+        }
+        .email-confirm-list table { width: 100%; border-collapse: collapse; }
+        .email-confirm-list thead th {
+            background: #F8FAFC; padding: 10px 14px; font-size: 12px; font-weight: 700;
+            color: #64748B; text-align: left; border-bottom: 1px solid #E2E8F0;
+            position: sticky; top: 0;
+        }
+        .email-confirm-list tbody td {
+            padding: 10px 14px; font-size: 13px; color: #475569; border-bottom: 1px solid #F1F5F9;
+        }
+
+        /* Send email button */
+        .btn-send-email {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 20px; border-radius: 10px; border: none;
+            background: linear-gradient(135deg, #7C3AED, #6D28D9); color: #fff;
+            font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit;
+            transition: all .2s; box-shadow: 0 2px 8px rgba(124,58,237,.25);
+        }
+        .btn-send-email:hover { background: linear-gradient(135deg, #6D28D9, #5B21B6); box-shadow: 0 4px 12px rgba(124,58,237,.35); }
+        .btn-send-email:disabled { opacity: .5; cursor: not-allowed; }
+        .btn-send-email .count-badge {
+            background: rgba(255,255,255,.25); padding: 2px 8px; border-radius: 10px;
+            font-size: 12px; font-weight: 700;
+        }
+
+        /* Selected count bar */
+        .selected-bar {
+            display: none; align-items: center; gap: 12px; padding: 10px 16px;
+            background: #EDE9FE; border-radius: 10px; margin-bottom: 12px;
+            font-size: 13px; font-weight: 600; color: #6D28D9;
+        }
+        .selected-bar.show { display: flex; }
+
+        /* Remark indicator */
+        .remark-dot {
+            width: 8px; height: 8px; border-radius: 50%; background: #7C3AED;
+            display: inline-block;
+        }
+
+        /* Status Toggle Tabs */
+        .status-toggle {
+            display: flex; gap: 6px; align-items: center;
+        }
+        .status-tab {
+            display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px;
+            border-radius: 20px; border: 1.5px solid #E2E8F0; background: #fff;
+            font-size: 13px; font-weight: 600; color: #64748B; cursor: pointer;
+            font-family: inherit; transition: all .2s;
+        }
+        .status-tab .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+        .status-tab .tab-count {
+            background: #F1F5F9; padding: 1px 8px; border-radius: 10px;
+            font-size: 11px; font-weight: 700; color: #64748B;
+        }
+        .status-tab:hover { border-color: #94A3B8; }
+        .status-tab.active {
+            background: #EDE9FE; border-color: #7C3AED; color: #6D28D9;
+        }
+        .status-tab.active .tab-count {
+            background: #7C3AED; color: #fff;
+        }
+
+        /* Edit Modal */
+        .edit-label {
+            display: block; font-size: 12px; font-weight: 600; color: #64748B;
+            margin-bottom: 5px;
+        }
+        .edit-input {
+            width: 100%; padding: 9px 12px; border: 1px solid #CBD5E1; border-radius: 8px;
+            font-size: 13px; font-family: inherit; color: #334155; outline: none;
+            transition: border-color .2s; box-sizing: border-box; background: #fff;
+        }
+        .edit-input:focus { border-color: #C2410C; box-shadow: 0 0 0 3px rgba(194,65,12,.1); }
+        .edit-input:read-only:focus { border-color: #CBD5E1; box-shadow: none; }
+
+        /* Done rows muted style */
+        tr.row-done td { color: #94A3B8; }
+
+        @media (max-width: 768px) {
+            .filter-bar { flex-direction: column; gap: 8px; }
+            .filter-select, .search-box, .date-input-wrap input { width: 100%; min-width: unset; }
+            .table-wrapper { max-height: calc(100vh - 340px); }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen font-sans">
+
+<div id="topbar"></div>
+<div id="sidebar"></div>
+
+<div class="ml-[260px] mt-14 p-7 min-h-[calc(100vh-56px)] flex flex-col max-md:ml-0 max-md:p-4 max-[480px]:mt-[50px] max-[480px]:p-3">
+    <!-- Breadcrumb -->
+    <div class="flex items-center gap-2 text-sm text-slate-400 mb-4">
+        <a href="contract-status-edit.html" class="hover:text-slate-600 transition-colors no-underline text-slate-400">การจัดการสัญญา</a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+        <span class="text-slate-700 font-medium">ขออนุมัติลงนามสัญญา</span>
+    </div>
+
+    <!-- Page Header -->
+    <div class="flex justify-between items-start mb-5 max-md:flex-col max-md:gap-3">
+        <div>
+            <h1 class="text-[26px] font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl max-[480px]:text-lg">
+                <i data-lucide="stamp" class="w-5.5 h-5.5 text-[#7C3AED]"></i>
+                <span>ขออนุมัติลงนามสัญญา</span>
+            </h1>
+            <p class="text-slate-500 text-sm mt-1">รายการสัญญาที่ต้องขออนุมัติลงนาม — เลือกรายการแล้วกดส่งอีเมลขออนุมัติ</p>
+        </div>
+        <div class="flex gap-2.5 items-center shrink-0">
+            <button class="btn-send-email" id="btnSendEmail" onclick="openEmailConfirmModal()" disabled>
+                <i data-lucide="mail" class="w-4 h-4"></i>
+                ส่งอีเมลขออนุมัติ
+                <span class="count-badge" id="emailCountBadge">0</span>
+            </button>
+            <a href="contract-status-edit.html" class="inline-flex items-center justify-center gap-2 px-4.5 py-2.5 rounded-lg text-sm font-medium bg-white border border-slate-300 text-slate-500 hover:bg-slate-50 hover:border-slate-400 transition-all no-underline whitespace-nowrap cursor-pointer font-[inherit]">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                <span>กลับ</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Filter Bar Row 1 -->
+    <div class="filter-bar">
+        <div class="search-box">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400"></i>
+            <input type="text" placeholder="ค้นหาเลขสัญญา / ชื่อสัญญา...">
+        </div>
+        <div class="status-toggle" id="statusToggle">
+            <button class="status-tab" data-status="all" onclick="switchStatusTab(this)"><span class="dot" style="background:#3B82F6;"></span> ทั้งหมด <span class="tab-count" id="countAll">7</span></button>
+            <button class="status-tab active" data-status="pending" onclick="switchStatusTab(this)"><span class="dot" style="background:#F97316;"></span> รอดำเนินการ <span class="tab-count" id="countPending">5</span></button>
+            <button class="status-tab" data-status="done" onclick="switchStatusTab(this)"><span class="dot" style="background:#22C55E;"></span> ดำเนินการแล้ว <span class="tab-count" id="countDone">2</span></button>
+        </div>
+        <select class="filter-select">
+            <option>แผนกทั้งหมด</option>
+            <option>ฝ่ายกฎหมาย</option>
+            <option>ฝ่ายการตลาด</option>
+            <option>ฝ่ายเทคโนโลยีสารสนเทศ</option>
+            <option>ฝ่ายปฏิบัติการ</option>
+            <option>ฝ่ายจัดซื้อ</option>
+            <option>ฝ่ายบัญชีและการเงิน</option>
+        </select>
+        <select class="filter-select">
+            <option>ประเภทสัญญาทั้งหมด</option>
+            <option>สัญญาจ้างบริการ</option>
+            <option>สัญญาเช่า</option>
+            <option>สัญญาจัดซื้อ</option>
+            <option>สัญญาบริการ SaaS</option>
+            <option>สัญญาผลิตงาน</option>
+            <option>สัญญาจ้างที่ปรึกษา</option>
+        </select>
+        <select class="filter-select">
+            <option>สถานะสัญญาทั้งหมด</option>
+            <option>แบบร่าง</option>
+            <option>ส่งกลับเพื่อแก้ไข</option>
+            <option>รอกฎหมายจ่ายงาน</option>
+            <option>รอกฎหมายตรวจสอบ/ร่าง</option>
+            <option>รอหัวหน้างานอนุมัติ</option>
+            <option>รอกฎหมายสรุปความเสี่ยง</option>
+            <option>เลือกการลงนาม</option>
+            <option>รอจัดทำสัญญาฉบับสมบูรณ์</option>
+            <option>แนบสัญญาฉบับสมบูรณ์</option>
+            <option>รอกฎหมายตรวจสอบ</option>
+            <option>เสร็จสิ้น</option>
+        </select>
+        <div class="date-range-group">
+            <div class="date-input-wrap">
+                <i data-lucide="calendar" class="w-3.5 h-3.5 date-icon"></i>
+                <input type="text" id="filterDateStart" placeholder="วันเริ่มต้น" readonly>
+            </div>
+            <span class="date-sep">—</span>
+            <div class="date-input-wrap">
+                <i data-lucide="calendar" class="w-3.5 h-3.5 date-icon"></i>
+                <input type="text" id="filterDateEnd" placeholder="วันสิ้นสุด" readonly>
+            </div>
+        </div>
+    </div>
+
+    <!-- Selected count bar -->
+    <div class="selected-bar" id="selectedBar">
+        <i data-lucide="check-square" class="w-4 h-4"></i>
+        <span>เลือกแล้ว <strong id="selectedCount">0</strong> รายการ</span>
+    </div>
+
+    <!-- Table -->
+    <div class="table-card">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" class="check-all" id="checkAll" onchange="toggleAll(this)"></th>
+                        <th>จัดการ</th>
+                        <th>เลขสัญญา</th>
+                        <th>สถานะ</th>
+                        <th>ชื่อสัญญา</th>
+                        <th>ประเภทสัญญา</th>
+                        <th>คู่สัญญา</th>
+                        <th>บริษัท</th>
+                        <th>ระยะเวลาสัญญา</th>
+                        <th>วันเริ่มต้นสัญญา</th>
+                        <th>วันสิ้นสุดสัญญา</th>
+                        <th>รายจ่าย (บาท)</th>
+                        <th>รายรับ (บาท)</th>
+                        <th>สถานะสัญญา</th>
+                        <th>ผู้รับผิดชอบ</th>
+                        <th>แผนก</th>
+                        <th>วันที่สร้างคำขอ</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Row 1 -->
+                    <tr data-status="pending">
+                        <td><input type="checkbox" class="row-check" onchange="updateSelectedCount()"></td>
+                        <td><div class="action-btns"><button class="action-btn edit" title="แก้ไข" onclick="openEditModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button><button class="action-btn remark" title="หมายเหตุ" onclick="openRemarkModal(this)"><i data-lucide="message-square-plus" class="w-3.5 h-3.5"></i></button></div></td>
+                        <td style="font-weight:700;color:#2563EB;">SD2026/001</td>
+                        <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
+                        <td>สัญญาเช่าพื้นที่สำนักงาน</td>
+                        <td>สัญญาเช่า</td>
+                        <td>บริษัท พร็อพเพอร์ตี้</td>
+                        <td>บริษัท แพลนบี มีเดีย</td>
+                        <td>12 เดือน</td>
+                        <td>01/06/2025</td>
+                        <td>31/05/2026</td>
+                        <td style="text-align:right;">450,000.00</td>
+                        <td style="text-align:right;">—</td>
+                        <td><span class="badge-status badge-return"><span class="dot"></span> ส่งกลับแก้ไข</span></td>
+                        <td>นายวิชัย เจริญสุข</td>
+                        <td>ฝ่ายกฎหมาย</td>
+                        <td>24/03/2026 09:45</td>
+                    </tr>
+                    <!-- Row 2 -->
+                    <tr data-status="pending">
+                        <td><input type="checkbox" class="row-check" onchange="updateSelectedCount()"></td>
+                        <td><div class="action-btns"><button class="action-btn edit" title="แก้ไข" onclick="openEditModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button><button class="action-btn remark" title="หมายเหตุ" onclick="openRemarkModal(this)"><i data-lucide="message-square-plus" class="w-3.5 h-3.5"></i></button></div></td>
+                        <td style="font-weight:700;color:#2563EB;">RA2026/013</td>
+                        <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
+                        <td>สัญญาผลิตสื่อโฆษณา Digital</td>
+                        <td>สัญญาผลิตงาน</td>
+                        <td>บริษัท แพลนบี ดิเลเว่น</td>
+                        <td>บริษัท แพลนบี ดิเลเว่น</td>
+                        <td>12 เดือน</td>
+                        <td>16/05/2025</td>
+                        <td>15/05/2026</td>
+                        <td style="text-align:right;">1,200,000.00</td>
+                        <td style="text-align:right;">—</td>
+                        <td><span class="badge-status badge-approve"><span class="dot"></span> รอหัวหน้าอนุมัติ</span></td>
+                        <td>นายวิชัย เจริญสุข</td>
+                        <td>ฝ่ายการตลาด</td>
+                        <td>22/03/2026 11:30</td>
+                    </tr>
+                    <!-- Row 3 -->
+                    <tr data-status="pending">
+                        <td><input type="checkbox" class="row-check" onchange="updateSelectedCount()"></td>
+                        <td><div class="action-btns"><button class="action-btn edit" title="แก้ไข" onclick="openEditModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button><button class="action-btn remark" title="หมายเหตุ" onclick="openRemarkModal(this)"><i data-lucide="message-square-plus" class="w-3.5 h-3.5"></i></button></div></td>
+                        <td style="font-weight:700;color:#2563EB;">PB2026/045</td>
+                        <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
+                        <td>สัญญาให้บริการ Cloud Hosting</td>
+                        <td>สัญญาบริการ SaaS</td>
+                        <td>AWS Thailand Ltd.</td>
+                        <td>บริษัท แพลนบี มีเดีย</td>
+                        <td>12 เดือน</td>
+                        <td>01/02/2026</td>
+                        <td>31/01/2027</td>
+                        <td style="text-align:right;">2,850,000.00</td>
+                        <td style="text-align:right;">—</td>
+                        <td><span class="badge-status badge-sign"><span class="dot"></span> รอลงนาม</span></td>
+                        <td>นายสมชาย โชดี</td>
+                        <td>ฝ่ายเทคโนโลยีสารสนเทศ</td>
+                        <td>20/03/2026 14:00</td>
+                    </tr>
+                    <!-- Row 4 -->
+                    <tr data-status="pending">
+                        <td><input type="checkbox" class="row-check" onchange="updateSelectedCount()"></td>
+                        <td><div class="action-btns"><button class="action-btn edit" title="แก้ไข" onclick="openEditModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button><button class="action-btn remark" title="หมายเหตุ" onclick="openRemarkModal(this)"><i data-lucide="message-square-plus" class="w-3.5 h-3.5"></i></button></div></td>
+                        <td style="font-weight:700;color:#2563EB;">PB2026/028</td>
+                        <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
+                        <td>สัญญาจัดซื้ออุปกรณ์สำนักงาน</td>
+                        <td>สัญญาจัดซื้อ</td>
+                        <td>บริษัท ออฟฟิศ ซัพพลาย</td>
+                        <td>บริษัท แพลนบี ดิเลเว่น</td>
+                        <td>12 เดือน</td>
+                        <td>01/01/2026</td>
+                        <td>31/12/2026</td>
+                        <td style="text-align:right;">380,000.00</td>
+                        <td style="text-align:right;">—</td>
+                        <td><span class="badge-status badge-review"><span class="dot"></span> รอตรวจสอบ/ร่าง</span></td>
+                        <td>นายวิชัย เจริญสุข</td>
+                        <td>ฝ่ายจัดซื้อ</td>
+                        <td>22/03/2026 08:45</td>
+                    </tr>
+                    <!-- Row 5 -->
+                    <tr data-status="pending">
+                        <td><input type="checkbox" class="row-check" onchange="updateSelectedCount()"></td>
+                        <td><div class="action-btns"><button class="action-btn edit" title="แก้ไข" onclick="openEditModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button><button class="action-btn remark" title="หมายเหตุ" onclick="openRemarkModal(this)"><i data-lucide="message-square-plus" class="w-3.5 h-3.5"></i></button></div></td>
+                        <td style="font-weight:700;color:#2563EB;">PB2026/076</td>
+                        <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
+                        <td>สัญญาจ้างออกแบบ UI/UX ระบบ CRM</td>
+                        <td>สัญญาจ้างบริการ</td>
+                        <td>บริษัท ดิจิทัลครีเอทีฟ</td>
+                        <td>บริษัท แพลนบี มีเดีย</td>
+                        <td>12 เดือน</td>
+                        <td>16/06/2025</td>
+                        <td>15/06/2026</td>
+                        <td style="text-align:right;">—</td>
+                        <td style="text-align:right;">1,500,000.00</td>
+                        <td><span class="badge-status badge-review"><span class="dot"></span> รอตรวจสอบ/ร่าง</span></td>
+                        <td>นางสาววิภา สุขใจ</td>
+                        <td>ฝ่ายเทคโนโลยีสารสนเทศ</td>
+                        <td>21/03/2026 15:20</td>
+                    </tr>
+                    <!-- Row 6 (done) -->
+                    <tr class="row-done" data-status="done" style="display:none;">
+                        <td></td>
+                        <td></td>
+                        <td style="font-weight:700;color:#94A3B8;">PB2026/051</td>
+                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
+                        <td>สัญญาจ้างพิมพ์สิ่งพิมพ์ประจำปี</td>
+                        <td>สัญญาจ้างบริการ</td>
+                        <td>บริษัท ปริ้นท์โปร</td>
+                        <td>บริษัท แพลนบี มีเดีย</td>
+                        <td>12 เดือน</td>
+                        <td>01/11/2025</td>
+                        <td>31/10/2026</td>
+                        <td style="text-align:right;">560,000.00</td>
+                        <td style="text-align:right;">—</td>
+                        <td><span class="badge-status badge-sign"><span class="dot"></span> รอลงนาม</span></td>
+                        <td>นายวิชัย เจริญสุข</td>
+                        <td>ฝ่ายการตลาด</td>
+                        <td>19/03/2026 10:45</td>
+                    </tr>
+                    <!-- Row 7 (done) -->
+                    <tr class="row-done" data-status="done" style="display:none;">
+                        <td></td>
+                        <td></td>
+                        <td style="font-weight:700;color:#94A3B8;">PB2026/055</td>
+                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
+                        <td>สัญญาจ้างวิจัยตลาด OOH</td>
+                        <td>สัญญาจ้างที่ปรึกษา</td>
+                        <td>บริษัท รีเสิร์ชโปร</td>
+                        <td>บริษัท แพลนบี มีเดีย</td>
+                        <td>12 เดือน</td>
+                        <td>01/04/2025</td>
+                        <td>31/03/2026</td>
+                        <td style="text-align:right;">750,000.00</td>
+                        <td style="text-align:right;">—</td>
+                        <td><span class="badge-status badge-legal"><span class="dot"></span> รอกฎหมายสรุปความเสี่ยง</span></td>
+                        <td>นายสมชาย โชดี</td>
+                        <td>ฝ่ายการตลาด</td>
+                        <td>21/03/2026 09:15</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination">
+            <button class="nav"><i data-lucide="chevron-left" class="w-3 h-3"></i></button>
+            <button class="pg-active">1</button>
+            <button>2</button>
+            <button class="nav"><i data-lucide="chevron-right" class="w-3 h-3"></i></button>
+        </div>
+    </div>
+
+</div>
+
+<!-- ══════════ MODAL: แก้ไขข้อมูลสัญญา ══════════ -->
+<div class="modal-overlay" id="editModal">
+    <div class="modal-card" style="max-width:720px; max-height:90vh; overflow-y:auto;">
+        <div class="modal-icon" style="background:#FFF7ED;color:#C2410C;">
+            <i data-lucide="pencil" class="w-6 h-6"></i>
+        </div>
+        <h3>แก้ไขข้อมูลสัญญา</h3>
+        <p id="editContractTitle" style="text-align:center;font-size:14px;color:#475569;margin-bottom:20px;">สัญญา —</p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px 18px;">
+            <!-- เลขสัญญา -->
+            <div>
+                <label class="edit-label">เลขสัญญา</label>
+                <input type="text" id="editContractNo" class="edit-input" readonly style="background:#F8FAFC;color:#94A3B8;cursor:not-allowed;">
+            </div>
+            <!-- ชื่อสัญญา -->
+            <div>
+                <label class="edit-label">ชื่อสัญญา</label>
+                <input type="text" id="editContractName" class="edit-input">
+            </div>
+            <!-- ประเภทสัญญา -->
+            <div>
+                <label class="edit-label">ประเภทสัญญา</label>
+                <select id="editContractType" class="edit-input" style="appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 fill=%27%2364748B%27 viewBox=%270 0 16 16%27%3E%3Cpath d=%27M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z%27/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 10px center;padding-right:32px;">
+                    <option>สัญญาจ้างบริการ</option>
+                    <option>สัญญาเช่า</option>
+                    <option>สัญญาจัดซื้อ</option>
+                    <option>สัญญาบริการ SaaS</option>
+                    <option>สัญญาผลิตงาน</option>
+                    <option>สัญญาจ้างที่ปรึกษา</option>
+                </select>
+            </div>
+            <!-- คู่สัญญา -->
+            <div>
+                <label class="edit-label">คู่สัญญา</label>
+                <input type="text" id="editParty" class="edit-input">
+            </div>
+            <!-- บริษัท -->
+            <div>
+                <label class="edit-label">บริษัท</label>
+                <select id="editCompany" class="edit-input" style="appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 fill=%27%2364748B%27 viewBox=%270 0 16 16%27%3E%3Cpath d=%27M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z%27/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 10px center;padding-right:32px;">
+                    <option>บริษัท แพลนบี มีเดีย</option>
+                    <option>บริษัท แพลนบี ดิเลเว่น</option>
+                </select>
+            </div>
+            <!-- วันเริ่มต้นสัญญา -->
+            <div>
+                <label class="edit-label">วันเริ่มต้นสัญญา</label>
+                <input type="text" id="editStartDate" class="edit-input edit-date" placeholder="dd/mm/yyyy" readonly>
+            </div>
+            <!-- วันสิ้นสุดสัญญา -->
+            <div>
+                <label class="edit-label">วันสิ้นสุดสัญญา</label>
+                <input type="text" id="editEndDate" class="edit-input edit-date" placeholder="dd/mm/yyyy" readonly>
+            </div>
+            <!-- ระยะเวลาสัญญา (auto-calculated) -->
+            <div>
+                <label class="edit-label">ระยะเวลาสัญญา</label>
+                <input type="text" id="editDuration" class="edit-input" readonly style="background:#F8FAFC;color:#94A3B8;cursor:not-allowed;">
+            </div>
+            <!-- รายจ่าย -->
+            <div>
+                <label class="edit-label">รายจ่าย (บาท)</label>
+                <input type="text" id="editExpense" class="edit-input" placeholder="0.00">
+            </div>
+            <!-- รายรับ -->
+            <div>
+                <label class="edit-label">รายรับ (บาท)</label>
+                <input type="text" id="editIncome" class="edit-input" placeholder="0.00">
+            </div>
+        </div>
+
+        <div class="btn-group" style="margin-top:24px;">
+            <button class="btn-dismiss" onclick="closeEditModal()">ยกเลิก</button>
+            <button class="btn-confirm-purple" style="background:#C2410C;" onclick="saveEditModal()"><i data-lucide="check" class="w-4 h-4" style="margin-right:4px;"></i> บันทึก</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════ MODAL: หมายเหตุ ══════════ -->
+<div class="modal-overlay" id="remarkModal">
+    <div class="modal-card">
+        <div class="modal-icon" style="background:#EDE9FE;color:#7C3AED;">
+            <i data-lucide="message-square-plus" class="w-6 h-6"></i>
+        </div>
+        <h3>หมายเหตุ</h3>
+        <p id="remarkContractText" style="text-align:center;font-size:14px;color:#475569;margin-bottom:16px;">สัญญา —</p>
+        <label style="display:block;font-size:13px;font-weight:600;color:#475569;margin-bottom:6px;">กรอกหมายเหตุ</label>
+        <textarea id="remarkText" class="remark-textarea" placeholder="กรอกหมายเหตุเพิ่มเติม..."></textarea>
+        <div class="btn-group">
+            <button class="btn-dismiss" onclick="closeRemarkModal()">ยกเลิก</button>
+            <button class="btn-confirm-purple" onclick="saveRemark()">บันทึก</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════ MODAL: ยืนยันส่งอีเมล ══════════ -->
+<div class="modal-overlay" id="emailConfirmModal">
+    <div class="modal-card" style="max-width:640px;">
+        <div class="modal-icon" style="background:#EDE9FE;color:#7C3AED;">
+            <i data-lucide="mail" class="w-6 h-6"></i>
+        </div>
+        <h3>ยืนยันการส่งอีเมลขออนุมัติ</h3>
+        <p style="text-align:center;font-size:14px;color:#475569;">รายการสัญญาต่อไปนี้จะถูกส่งขออนุมัติทางอีเมล</p>
+        <div class="email-confirm-list" id="emailConfirmList">
+            <!-- Populated by JS -->
+        </div>
+        <div style="text-align:center;font-size:13px;color:#64748B;margin-bottom:4px;">
+            ผู้อนุมัติ: <strong style="color:#1B3A6B;">คุณพินิจสรณ์ ลือชัยขจรพันธ์</strong>
+        </div>
+        <div class="btn-group">
+            <button class="btn-dismiss" onclick="closeEmailConfirmModal()">ยกเลิก</button>
+            <button class="btn-confirm-purple" onclick="confirmSendEmail()"><i data-lucide="send" class="w-4 h-4" style="margin-right:4px;"></i> ยืนยันส่งอีเมล</button>
+        </div>
+    </div>
+</div>
+
+<script src="shared-layout.js"></script>
+<script>
+    // Render shared layout
+    document.getElementById('topbar').innerHTML = renderTopbar();
+    document.getElementById('sidebar').innerHTML = renderSidebar();
+    document.querySelectorAll('.sidebar-item').forEach(el => {
+        el.classList.remove('active');
+        if (el.textContent.trim().includes('การจัดการสัญญา')) el.classList.add('active');
+    });
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+
+    // ── Flatpickr ──
+    flatpickr('#filterDateStart', {
+        dateFormat: 'd/m/Y', allowInput: false, disableMobile: true,
+        locale: { firstDayOfWeek: 1 },
+        onReady: function(s, d, instance) { instance.calendarContainer.style.fontFamily = "'Kanit', sans-serif"; }
+    });
+    flatpickr('#filterDateEnd', {
+        dateFormat: 'd/m/Y', allowInput: false, disableMobile: true,
+        locale: { firstDayOfWeek: 1 },
+        onReady: function(s, d, instance) { instance.calendarContainer.style.fontFamily = "'Kanit', sans-serif"; }
+    });
+
+    // ── Checkbox Logic ──
+    function toggleAll(el) {
+        const checks = document.querySelectorAll('tr[data-status="pending"] .row-check');
+        checks.forEach(c => c.checked = el.checked);
+        updateSelectedCount();
+    }
+
+    function updateSelectedCount() {
+        const checks = document.querySelectorAll('.row-check:checked');
+        const count = checks.length;
+        const bar = document.getElementById('selectedBar');
+        const btn = document.getElementById('btnSendEmail');
+        const badge = document.getElementById('emailCountBadge');
+
+        document.getElementById('selectedCount').textContent = count;
+        badge.textContent = count;
+
+        if (count > 0) {
+            bar.classList.add('show');
+            btn.disabled = false;
+        } else {
+            bar.classList.remove('show');
+            btn.disabled = true;
+        }
+
+        // Update check-all state
+        const allChecks = document.querySelectorAll('.row-check');
+        document.getElementById('checkAll').checked = (count === allChecks.length && count > 0);
+    }
+
+    // ── Remark Modal ──
+    let currentRemarkRow = null;
+
+    function openRemarkModal(btn) {
+        currentRemarkRow = btn.closest('tr');
+        const contractNo = currentRemarkRow.querySelectorAll('td')[2].textContent.trim();
+        const contractName = currentRemarkRow.querySelectorAll('td')[4].textContent.trim();
+        document.getElementById('remarkContractText').textContent = 'สัญญา ' + contractNo + ' — ' + contractName;
+
+        // Load existing remark
+        const existing = currentRemarkRow.getAttribute('data-remark') || '';
+        document.getElementById('remarkText').value = existing;
+
+        document.getElementById('remarkModal').classList.add('is-active');
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function closeRemarkModal() {
+        document.getElementById('remarkModal').classList.remove('is-active');
+        currentRemarkRow = null;
+    }
+
+    function saveRemark() {
+        if (currentRemarkRow) {
+            const text = document.getElementById('remarkText').value.trim();
+            currentRemarkRow.setAttribute('data-remark', text);
+
+            // Show/hide remark indicator on the remark button
+            const remarkBtn = currentRemarkRow.querySelector('.action-btn.remark');
+            let indicator = remarkBtn.querySelector('.remark-dot');
+            if (text) {
+                if (!indicator) {
+                    indicator = document.createElement('span');
+                    indicator.className = 'remark-dot';
+                    indicator.style.cssText = 'position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:50%;background:#7C3AED;';
+                    remarkBtn.style.position = 'relative';
+                    remarkBtn.appendChild(indicator);
+                }
+            } else {
+                if (indicator) indicator.remove();
+            }
+        }
+        closeRemarkModal();
+
+        // Toast
+        showToast('บันทึกหมายเหตุเรียบร้อยแล้ว');
+    }
+
+    document.getElementById('remarkModal').addEventListener('click', function(e) {
+        if (e.target === this) closeRemarkModal();
+    });
+
+    // ── Email Confirm Modal ──
+    function openEmailConfirmModal() {
+        const checks = document.querySelectorAll('.row-check:checked');
+        if (checks.length === 0) return;
+
+        let html = '<table><thead><tr><th>#</th><th>เลขสัญญา</th><th>ชื่อสัญญา</th><th>สถานะ</th></tr></thead><tbody>';
+        checks.forEach((cb, i) => {
+            const row = cb.closest('tr');
+            const tds = row.querySelectorAll('td');
+            html += '<tr>';
+            html += '<td>' + (i + 1) + '</td>';
+            html += '<td style="font-weight:600;color:#2563EB;">' + tds[2].textContent.trim() + '</td>';
+            html += '<td>' + tds[4].textContent.trim() + '</td>';
+            html += '<td>' + tds[3].innerHTML + '</td>';
+            html += '</tr>';
+        });
+        html += '</tbody></table>';
+
+        document.getElementById('emailConfirmList').innerHTML = html;
+        document.getElementById('emailConfirmModal').classList.add('is-active');
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function closeEmailConfirmModal() {
+        document.getElementById('emailConfirmModal').classList.remove('is-active');
+    }
+
+    function confirmSendEmail() {
+        closeEmailConfirmModal();
+
+        // Move checked rows to done status
+        const checks = document.querySelectorAll('.row-check:checked');
+        checks.forEach(cb => {
+            const row = cb.closest('tr');
+            row.setAttribute('data-status', 'done');
+            row.classList.add('row-done');
+
+            // Replace status badge
+            const statusCell = row.querySelectorAll('td')[3];
+            statusCell.innerHTML = '<span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span>';
+
+            // Remove checkbox, edit, remark
+            row.querySelectorAll('td')[0].innerHTML = '';
+            row.querySelectorAll('td')[1].innerHTML = '';
+
+            // Mute contract number
+            const contractCell = row.querySelectorAll('td')[2];
+            contractCell.style.color = '#94A3B8';
+
+            // Hide from current view (pending tab is active)
+            row.style.display = 'none';
+        });
+        document.getElementById('checkAll').checked = false;
+        updateSelectedCount();
+        updateTabCounts();
+
+        showToast('ส่งอีเมลขออนุมัติเรียบร้อยแล้ว');
+    }
+
+    // ── Status Tab Toggle ──
+    function switchStatusTab(btn) {
+        document.querySelectorAll('.status-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+
+        const status = btn.getAttribute('data-status');
+        const rows = document.querySelectorAll('#tableBody tr');
+        rows.forEach(row => {
+            const rowStatus = row.getAttribute('data-status');
+            row.style.display = (status === 'all' || rowStatus === status) ? '' : 'none';
+        });
+
+        // Show/hide header checkbox and send button based on tab
+        const checkAllTh = document.getElementById('checkAll');
+        const sendBtn = document.getElementById('btnSendEmail');
+        const selectedBar = document.getElementById('selectedBar');
+        if (status === 'done') {
+            checkAllTh.style.display = 'none';
+            sendBtn.style.display = 'none';
+            selectedBar.classList.remove('show');
+        } else {
+            checkAllTh.style.display = '';
+            sendBtn.style.display = '';
+            updateSelectedCount();
+        }
+    }
+
+    function updateTabCounts() {
+        const pending = document.querySelectorAll('#tableBody tr[data-status="pending"]').length;
+        const done = document.querySelectorAll('#tableBody tr[data-status="done"]').length;
+        document.getElementById('countPending').textContent = pending;
+        document.getElementById('countDone').textContent = done;
+        document.getElementById('countAll').textContent = pending + done;
+    }
+
+    document.getElementById('emailConfirmModal').addEventListener('click', function(e) {
+        if (e.target === this) closeEmailConfirmModal();
+    });
+
+    // ── Toast ──
+    function showToast(msg) {
+        const toast = document.createElement('div');
+        toast.style.cssText = 'position:fixed;bottom:32px;right:32px;background:#7C3AED;color:#fff;padding:14px 24px;border-radius:12px;font-size:14px;font-weight:600;z-index:2000;box-shadow:0 8px 24px rgba(124,58,237,.3);display:flex;align-items:center;gap:8px;font-family:Kanit,sans-serif;';
+        toast.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> ' + msg;
+        document.body.appendChild(toast);
+        setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity .3s'; }, 2500);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    // ── Edit Modal ──
+    let currentEditRow = null;
+    let editStartPicker = null;
+    let editEndPicker = null;
+
+    // Init Flatpickr for edit modal dates
+    editStartPicker = flatpickr('#editStartDate', {
+        dateFormat: 'd/m/Y', allowInput: false, disableMobile: true,
+        locale: { firstDayOfWeek: 1 },
+        onReady: function(s, d, instance) { instance.calendarContainer.style.fontFamily = "'Kanit', sans-serif"; },
+        onChange: function() { calcEditDuration(); }
+    });
+    editEndPicker = flatpickr('#editEndDate', {
+        dateFormat: 'd/m/Y', allowInput: false, disableMobile: true,
+        locale: { firstDayOfWeek: 1 },
+        onReady: function(s, d, instance) { instance.calendarContainer.style.fontFamily = "'Kanit', sans-serif"; },
+        onChange: function() { calcEditDuration(); }
+    });
+
+    function calcEditDuration() {
+        const startVal = document.getElementById('editStartDate').value;
+        const endVal = document.getElementById('editEndDate').value;
+        if (!startVal || !endVal) { document.getElementById('editDuration').value = '—'; return; }
+
+        const sParts = startVal.split('/');
+        const eParts = endVal.split('/');
+        const sDate = new Date(parseInt(sParts[2]), parseInt(sParts[1]) - 1, parseInt(sParts[0]));
+        const eDate = new Date(parseInt(eParts[2]), parseInt(eParts[1]) - 1, parseInt(eParts[0]));
+
+        let months = (eDate.getFullYear() - sDate.getFullYear()) * 12 + (eDate.getMonth() - sDate.getMonth());
+        if (eDate.getDate() >= sDate.getDate()) months += 1; // inclusive
+
+        if (months >= 12 && months % 12 === 0) {
+            document.getElementById('editDuration').value = (months / 12) + ' ปี';
+        } else if (months > 12) {
+            const y = Math.floor(months / 12);
+            const m = months % 12;
+            document.getElementById('editDuration').value = y + ' ปี ' + m + ' เดือน';
+        } else {
+            document.getElementById('editDuration').value = months + ' เดือน';
+        }
+    }
+
+    // Badge class map for status
+    const statusBadgeMap = {
+        'แบบร่าง': 'badge-draft',
+        'ส่งกลับแก้ไข': 'badge-return',
+        'รอกฎหมายจ่ายงาน': 'badge-legal',
+        'รอตรวจสอบ/ร่าง': 'badge-review',
+        'รอหัวหน้าอนุมัติ': 'badge-approve',
+        'รอกฎหมายสรุปความเสี่ยง': 'badge-legal',
+        'เลือกการลงนาม': 'badge-approve',
+        'รอจัดทำสัญญาฉบับสมบูรณ์': 'badge-approve',
+        'แนบสัญญาฉบับสมบูรณ์': 'badge-approve',
+        'รอลงนาม': 'badge-sign',
+        'เสร็จสิ้น': 'badge-complete'
+    };
+
+    function openEditModal(btn) {
+        currentEditRow = btn.closest('tr');
+        const tds = currentEditRow.querySelectorAll('td');
+
+        const contractNo = tds[2].textContent.trim();
+        const contractName = tds[4].textContent.trim();
+        document.getElementById('editContractTitle').textContent = 'สัญญา ' + contractNo + ' — ' + contractName;
+
+        document.getElementById('editContractNo').value = contractNo;
+        document.getElementById('editContractName').value = contractName;
+        document.getElementById('editContractType').value = tds[5].textContent.trim();
+        document.getElementById('editParty').value = tds[6].textContent.trim();
+        document.getElementById('editCompany').value = tds[7].textContent.trim();
+
+        // Dates
+        editStartPicker.setDate(tds[9].textContent.trim(), false, 'd/m/Y');
+        editEndPicker.setDate(tds[10].textContent.trim(), false, 'd/m/Y');
+        document.getElementById('editDuration').value = tds[8].textContent.trim();
+
+        // Money
+        const expenseText = tds[11].textContent.trim();
+        const incomeText = tds[12].textContent.trim();
+        document.getElementById('editExpense').value = (expenseText === '—') ? '' : expenseText;
+        document.getElementById('editIncome').value = (incomeText === '—') ? '' : incomeText;
+
+
+        document.getElementById('editModal').classList.add('is-active');
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function closeEditModal() {
+        document.getElementById('editModal').classList.remove('is-active');
+        currentEditRow = null;
+    }
+
+    function saveEditModal() {
+        if (!currentEditRow) return;
+        const tds = currentEditRow.querySelectorAll('td');
+
+        // Update table cells from form values
+        tds[4].textContent = document.getElementById('editContractName').value;
+        tds[5].textContent = document.getElementById('editContractType').value;
+        tds[6].textContent = document.getElementById('editParty').value;
+        tds[7].textContent = document.getElementById('editCompany').value;
+
+        // Duration
+        tds[8].textContent = document.getElementById('editDuration').value;
+        tds[9].textContent = document.getElementById('editStartDate').value;
+        tds[10].textContent = document.getElementById('editEndDate').value;
+
+        // Expense / Income
+        const expVal = document.getElementById('editExpense').value.trim();
+        const incVal = document.getElementById('editIncome').value.trim();
+        tds[11].textContent = expVal || '—';
+        tds[12].textContent = incVal || '—';
+
+
+        closeEditModal();
+        showToast('บันทึกข้อมูลสัญญาเรียบร้อยแล้ว');
+    }
+
+    document.getElementById('editModal').addEventListener('click', function(e) {
+        if (e.target === this) closeEditModal();
+    });
+
+    // ── Pagination ──
+    document.querySelectorAll('.pagination button:not(.nav)').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.pagination button').forEach(b => b.classList.remove('pg-active'));
+            this.classList.add('pg-active');
+        });
+    });
+</script>
+</body>
+</html>

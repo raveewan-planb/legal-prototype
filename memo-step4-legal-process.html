@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal System - บันทึกข้อความ: รอกฎหมายดำเนินการ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">@theme { --font-sans: 'Kanit', sans-serif; }</style>
+    <link rel="stylesheet" href="shared-styles.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+<div id="topbar-container"></div>
+<div id="sidebar-container"></div>
+<div class="ml-[260px] mt-14 p-7 min-h-[calc(100vh-56px)] max-md:ml-0 max-md:p-4 max-[480px]:mt-[50px] max-[480px]:p-3">
+
+    <!-- Page Header -->
+    <div class="flex justify-between items-start mb-6 max-md:flex-col max-md:gap-3">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl">
+                <i data-lucide="notebook-pen" class="w-6 h-6" style="color:#2563EB;"></i> บันทึกข้อความ
+            </h1>
+            <p class="text-slate-500 text-sm mt-1">ขั้นตอนที่ 4: ผู้ดูแลระบบฝ่ายกฎหมายดำเนินการ</p>
+        </div>
+    </div>
+
+    <!-- Stepper -->
+    <div id="stepper-container"></div>
+
+    <!-- Status Header -->
+    <div class="flex items-center gap-4 mb-5 flex-wrap">
+        <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-lg bg-[#1B3A6B] text-white text-sm font-bold tracking-wide">
+            <i data-lucide="hash" class="w-4 h-4"></i> เลขบันทึก: MEMO-202604001
+        </span>
+        <div class="flex items-center gap-3 ml-auto">
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-semibold bg-pink-100 text-pink-700">
+                <i data-lucide="settings" class="w-3.5 h-3.5"></i> ผู้ดูแลระบบฝ่ายกฎหมาย
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-[13px] font-semibold bg-blue-50 text-blue-600 border border-blue-300">
+                <i data-lucide="circle" class="w-2 h-2 fill-current"></i> รอกฎหมายดำเนินการ
+            </span>
+        </div>
+    </div>
+
+    <!-- Previous Step 1 -->
+    <div class="bg-white rounded-xl p-5 mb-4 shadow-sm border border-green-200 bg-[#FAFFFE]">
+        <div class="flex items-center gap-2.5 cursor-pointer flex-wrap" onclick="toggleCollapse(this)">
+            <i data-lucide="circle-check" class="w-5 h-5 text-green-500 flex-shrink-0"></i>
+            <span class="flex-1 font-bold text-green-700 text-[15px]">ขั้นตอนที่ 1: สร้างบันทึกข้อความ</span>
+            <span class="text-[11px] text-slate-400 font-normal mr-2">ผู้ใช้งานทั่วไป · 05/04/2026 10:30 น.</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200 collapse-icon"></i>
+        </div>
+        <div class="compact-body is-hidden mt-3">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-0">
+                <div class="flex justify-between items-center py-2.5 border-b border-slate-100"><span class="text-[13px] text-slate-500 font-medium">ชื่อผู้ส่งคำขอ</span><span class="text-[14px] text-slate-800 font-semibold">นางสาววิภา สุขใจ</span></div>
+                <div class="flex justify-between items-center py-2.5 border-b border-slate-100"><span class="text-[13px] text-slate-500 font-medium">ประเภทบันทึก</span><span class="text-[14px] text-slate-800 font-semibold">ขอถอยสัญญา</span></div>
+                <div class="flex justify-between items-center py-2.5 border-b border-slate-100"><span class="text-[13px] text-slate-500 font-medium">เลขอ้างอิง LUR</span><span class="text-[14px] text-blue-600 font-bold">VS2024/001</span></div>
+                <div class="flex justify-between items-center py-2.5 border-b border-slate-100"><span class="text-[13px] text-slate-500 font-medium">ถอยไปสถานะ</span><span class="text-[14px] text-orange-600 font-bold">รอฝ่ายกฎหมายตรวจสอบ/ร่าง</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Previous Step 2 -->
+    <div class="bg-white rounded-xl p-5 mb-4 shadow-sm border border-green-200 bg-[#FAFFFE]">
+        <div class="flex items-center gap-2.5 cursor-pointer flex-wrap" onclick="toggleCollapse(this)">
+            <i data-lucide="circle-check" class="w-5 h-5 text-green-500 flex-shrink-0"></i>
+            <span class="flex-1 font-bold text-green-700 text-[15px]">ขั้นตอนที่ 2: หัวหน้าฝ่ายอนุมัติ</span>
+            <span class="text-[11px] text-slate-400 font-normal mr-2">หัวหน้าฝ่ายของผู้ใช้งาน · 05/04/2026 14:15 น.</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200 collapse-icon"></i>
+        </div>
+        <div class="compact-body is-hidden mt-3">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-0">
+                <div class="flex justify-between items-center py-2.5 border-b border-slate-100"><span class="text-[13px] text-slate-500 font-medium">ผู้อนุมัติ</span><span class="text-[14px] text-slate-800 font-semibold">คุณสมชาย ผู้จัดการฝ่าย</span></div>
+                <div class="flex justify-between items-center py-2.5 border-b border-slate-100"><span class="text-[13px] text-slate-500 font-medium">ผลการอนุมัติ</span><span class="text-[14px] text-green-600 font-bold">อนุมัติ</span></div>
+                <div class="flex justify-between items-center py-2.5 border-b border-slate-100 col-span-full"><span class="text-[13px] text-slate-500 font-medium">ความเห็น</span><span class="text-[14px] text-slate-800 font-semibold">เห็นชอบ ให้ดำเนินการถอยสัญญาได้</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Previous Step 3 -->
+    <div class="bg-white rounded-xl p-5 mb-4 shadow-sm border border-green-200 bg-[#FAFFFE]">
+        <div class="flex items-center gap-2.5 cursor-pointer flex-wrap" onclick="toggleCollapse(this)">
+            <i data-lucide="circle-check" class="w-5 h-5 text-green-500 flex-shrink-0"></i>
+            <span class="flex-1 font-bold text-green-700 text-[15px]">ขั้นตอนที่ 3: กฎหมายอนุมัติ</span>
+            <span class="text-[11px] text-slate-400 font-normal mr-2">ผู้จัดการฝ่ายกฎหมาย · 06/04/2026 09:00 น.</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200 collapse-icon"></i>
+        </div>
+        <div class="compact-body is-hidden mt-3">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-0">
+                <div class="flex justify-between items-center py-2.5 border-b border-slate-100"><span class="text-[13px] text-slate-500 font-medium">ผู้อนุมัติ</span><span class="text-[14px] text-slate-800 font-semibold">คุณวรพจน์ ผู้จัดการฝ่ายกฎหมาย</span></div>
+                <div class="flex justify-between items-center py-2.5 border-b border-slate-100"><span class="text-[13px] text-slate-500 font-medium">ผลการอนุมัติ</span><span class="text-[14px] text-green-600 font-bold">อนุมัติ</span></div>
+                <div class="flex justify-between items-center py-2.5 border-b border-slate-100 col-span-full"><span class="text-[13px] text-slate-500 font-medium">ความเห็น</span><span class="text-[14px] text-slate-800 font-semibold">ตรวจสอบแล้ว เห็นชอบให้ถอยสัญญากลับไปขั้นตอนตรวจสอบร่าง</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- ส่วนของกฎหมายดำเนินการ                   -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="bg-white rounded-xl p-6 shadow-sm mb-5">
+        <h2 class="text-[16px] font-bold text-[#1B3A6B] mb-5 pb-3 border-b border-slate-200 flex items-center gap-2.5">
+            <i data-lucide="settings" class="w-5 h-5 text-blue-600"></i> ดำเนินการโดยผู้ดูแลระบบฝ่ายกฎหมาย
+        </h2>
+        <div class="space-y-4 mt-2">
+            <div>
+                <label class="text-sm font-semibold text-slate-600 mb-2 block">ความเห็น / ข้อเสนอแนะ</label>
+                <textarea rows="4" placeholder="กรุณาระบุความเห็นหรือบันทึกผลการดำเนินการ..." class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm focus:border-blue-500 outline-none resize-y"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="border-t border-slate-200 pt-5 mt-2 flex items-center justify-between flex-wrap gap-3">
+        <a href="memo-repository.html" class="inline-flex items-center gap-2 px-5 py-2.5 border border-slate-300 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> ย้อนกลับ
+        </a>
+        <div class="flex items-center gap-3">
+            <button type="button" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-colors" style="background:#6BDE9D;" onclick="alert('ดำเนินการเสร็จสิ้น')">
+                <i data-lucide="check-check" class="w-4 h-4"></i> เสร็จสิ้น
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script src="shared-layout.js"></script>
+<script>
+    const MEMO_STEPS = [
+        { num: 1, label: 'สร้างคำขอ', file: 'memo-step1-create.html' },
+        { num: 2, label: 'หัวหน้าอนุมัติ', file: 'memo-step2-boss-approve.html' },
+        { num: 3, label: 'กฎหมายอนุมัติ', file: 'memo-step3-legal-approve.html' },
+        { num: 4, label: 'กฎหมายดำเนินการ', file: 'memo-step4-legal-process.html' },
+    ];
+
+    function renderMemoStepper(current) {
+        let html = '<div class="stepper-wrapper"><div class="stepper" style="min-width:500px;">';
+        MEMO_STEPS.forEach((s, i) => {
+            const cls = s.num < current ? 'done' : s.num === current ? 'active' : 'pending';
+            const icon = s.num < current ? '<i data-lucide="check" class="w-4 h-4"></i>' : s.num;
+            html += `<div class="step ${cls}" onclick="window.location.href='${s.file}'"><div class="step-circle">${icon}</div><div class="step-label">${s.label}</div></div>`;
+            if (i < MEMO_STEPS.length - 1) html += `<div class="step-line ${s.num < current ? 'done' : ''}"></div>`;
+        });
+        html += '</div></div>';
+        return html;
+    }
+
+    document.getElementById('topbar-container').innerHTML = renderTopbar();
+    document.getElementById('sidebar-container').innerHTML = renderSidebar();
+    document.getElementById('stepper-container').innerHTML = renderMemoStepper(4);
+    document.querySelectorAll('.sidebar-item').forEach(el => {
+        el.classList.remove('active');
+        if (el.textContent.trim().includes('บันทึกข้อความ')) el.classList.add('active');
+    });
+    /* ── Memo History Panel ── */
+    const MEMO_HISTORY = [
+        { step: 1, icon: 'send', color: 'blue', title: 'สร้างบันทึกข้อความ / แบบร่าง', date: '05/04/2026 10:30 น.', operator: 'นางสาววิภา สุขใจ', role: 'ผู้ใช้งานทั่วไป', roleIcon: 'user', desc: 'ประเภท: ขอถอยสัญญา — อ้างอิง VS2024/001' },
+        { step: 2, icon: 'user-check', color: 'yellow', title: 'หัวหน้าฝ่ายอนุมัติ', date: '05/04/2026 14:15 น.', operator: 'คุณสมชาย ผู้จัดการฝ่าย', role: 'หัวหน้าฝ่ายของผู้ใช้งาน', roleIcon: 'user-check', desc: 'อนุมัติ — ส่งต่อฝ่ายกฎหมาย' },
+        { step: 3, icon: 'shield-check', color: 'purple', title: 'กฎหมายอนุมัติ', date: '06/04/2026 09:00 น.', operator: 'คุณวรพจน์ ผู้จัดการฝ่ายกฎหมาย', role: 'ผู้จัดการฝ่ายกฎหมาย', roleIcon: 'shield-check', desc: 'อนุมัติ — ส่งให้กฎหมายดำเนินการ' },
+        { step: 4, icon: 'settings', color: 'blue', title: 'รอกฎหมายดำเนินการ', date: '06/04/2026 10:00 น.', operator: 'คุณอัญชลี ผู้ดูแลระบบ', role: 'ผู้ดูแลระบบฝ่ายกฎหมาย', roleIcon: 'settings', desc: 'ดำเนินการถอยสัญญาตามคำขอ' },
+    ];
+
+    function renderMemoHistory(currentStep) {
+        const items = MEMO_HISTORY.filter(h => h.step <= currentStep);
+        let timelineHtml = '';
+        items.forEach(h => {
+            const dotColor = h.step === currentStep ? 'blue' : 'green';
+            timelineHtml += `
+            <div class="timeline-item">
+                <div class="timeline-dot ${dotColor}"><i data-lucide="${h.icon}"></i></div>
+                <div class="flex-1">
+                    <div class="font-bold text-slate-800 text-[13px]">Step ${h.step}: ${h.title}</div>
+                    <div class="text-xs text-slate-400 mt-0.5"><i data-lucide="clock" class="w-3 h-3 inline -mt-px mr-1"></i>${h.date}</div>
+                    <div class="inline-flex items-center gap-1.5 mt-1.5 px-3 py-0.5 bg-slate-100 rounded-full text-xs text-slate-500 font-medium">
+                        <i data-lucide="${h.roleIcon}" class="w-3 h-3"></i> ${h.operator} <span class="text-slate-300 mx-1">|</span> ${h.role}
+                    </div>
+                    ${h.desc ? `<div class="text-xs text-slate-500 mt-1">${h.desc}</div>` : ''}
+                </div>
+            </div>`;
+        });
+
+        const panel = document.createElement('div');
+        panel.innerHTML = `
+        <button class="history-btn" onclick="toggleHistory()">
+            <i data-lucide="history" class="w-4 h-4"></i> History
+            <span class="bg-blue-600 text-white text-[11px] px-2 py-px rounded-lg font-bold">${items.length}</span>
+        </button>
+        <div class="history-overlay" id="historyOverlay" onclick="toggleHistory()"></div>
+        <div class="history-panel" id="historyPanel">
+            <div class="flex items-center justify-between px-6 py-5 border-b border-slate-200 bg-gradient-to-br from-[#1B3A6B] to-[#234E8E] text-white">
+                <h3 class="text-[17px] font-bold flex items-center gap-2.5"><i data-lucide="history" class="w-5 h-5"></i> ประวัติการดำเนินการ</h3>
+                <button class="bg-white/15 border-none text-white w-8 h-8 rounded-lg cursor-pointer flex items-center justify-center hover:bg-white/30 transition-colors" onclick="toggleHistory()"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-6">${timelineHtml}</div>
+        </div>`;
+        document.body.appendChild(panel);
+    }
+
+    function toggleHistory() {
+        document.getElementById('historyOverlay').classList.toggle('open');
+        document.getElementById('historyPanel').classList.toggle('open');
+    }
+
+    renderMemoHistory(4);
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+</script>
+</body>
+</html>

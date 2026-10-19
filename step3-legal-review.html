@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal System - ขั้นตอนที่ 3: ตรวจสอบร่างสัญญา</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">@theme { --font-sans: 'Kanit', sans-serif; }</style>
+    <link rel="stylesheet" href="shared-styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+<div id="topbar-container"></div>
+<div id="sidebar-container"></div>
+<div class="ml-[260px] mt-14 p-7 min-h-[calc(100vh-56px)] max-md:ml-0 max-md:p-4 max-[480px]:mt-[50px] max-[480px]:p-3">
+    <div class="flex justify-between items-start mb-6 max-md:flex-col max-md:gap-3">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl"><i data-lucide="scale" class="w-6 h-6" style="color:#BE185D;"></i> ตรวจสอบร่างสัญญา</h1>
+            <p>ขั้นตอนที่ 3: ผู้ตรวจสอบฝ่ายกฎหมายตรวจสอบและแก้ไขร่างสัญญา</p>
+        </div>
+    </div>
+    <div id="stepper-container"></div>
+    <div id="status-header"></div>
+
+    <div id="previous-steps"></div>
+
+    <!-- ═══ ACTIVE: ตรวจสอบร่างสัญญา ═══ -->
+    <div class="bg-white rounded-xl p-6 mb-5 shadow-sm border-2 border-blue-600 shadow-md max-md:p-4">
+        <div class="text-base font-bold text-[#1B3A6B] mb-4 pb-3 border-b-2 border-blue-50 flex items-center gap-2.5 flex-wrap">
+            <span class="bg-blue-600 text-white text-[11px] px-2.5 py-0.5 rounded-full font-semibold">3</span>
+            <i data-lucide="search" class="w-5 h-5" style="color:#2563EB;"></i> ตรวจสอบร่างสัญญา
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-semibold bg-pink-100 text-pink-700 ml-auto"><i data-lucide="scale" class="w-3 h-3"></i> ผู้ตรวจสอบฝ่ายกฎหมาย</span>
+        </div>
+        <div class="grid grid-cols-2 gap-x-6 gap-y-4 max-md:grid-cols-1">
+            <div class="flex flex-col gap-1.5 col-span-full"><label class="text-[13px] font-semibold text-slate-600">สรุปสาระสำคัญของสัญญา <span class="text-red-500">*</span></label><textarea placeholder="สรุปประเด็นสำคัญ เช่น ขอบเขตงาน, เงื่อนไขพิเศษ, ข้อยกเว้น" rows="3" class="px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 bg-white outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors resize-y min-h-[72px]"></textarea></div>
+            <div class="flex flex-col gap-1.5 col-span-full"><label class="text-[13px] font-semibold text-slate-600">ความเห็น / ข้อเสนอแนะ</label><textarea placeholder="ความเห็นของฝ่ายกฎหมายต่อร่างสัญญาฉบับนี้" class="px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 bg-white outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors resize-y min-h-[72px]"></textarea></div>
+            <div class="flex flex-col gap-1.5"><label class="text-[13px] font-semibold text-slate-600">ตีตราสาร <span class="text-red-500">*</span></label>
+                <div class="flex gap-4 mt-1.5">
+                    <label class="flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-200 rounded-lg cursor-pointer">
+                        <input type="radio" name="stamp" value="yes" class="accent-green-600"> <span class="font-semibold text-green-700">ตีตราสาร</span>
+                    </label>
+                    <label class="flex items-center gap-2 px-4 py-2 bg-red-50 border border-red-200 rounded-lg cursor-pointer">
+                        <input type="radio" name="stamp" value="no" class="accent-red-600"> <span class="font-semibold text-red-600">ไม่ตีตราสาร</span>
+                    </label>
+                </div>
+            </div>
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[13px] font-semibold text-slate-600">แฮชแท็ก</label>
+                <div class="flex flex-wrap gap-2 px-3 py-2 border border-slate-300 rounded-lg min-h-[40px] items-center">
+                    <div class="inline-flex items-center gap-1.5 bg-blue-50 text-blue-600 px-3 py-0.5 rounded-full text-xs font-semibold">#ERP <span class="rm cursor-pointer" onclick="this.parentElement.remove()">&times;</span></div>
+                    <input type="text" placeholder="พิมพ์แล้วกด Enter" onkeydown="addTag(event, this)" class="flex-1 outline-none bg-transparent text-sm">
+                </div>
+            </div>
+            <div class="flex flex-col gap-1.5 col-span-full">
+                <label class="text-[13px] font-semibold text-slate-600">แนบไฟล์ฉบับแก้ไข <span class="text-red-500">*</span></label>
+                <div class="border-2 border-dashed border-slate-300 rounded-xl p-5 text-center cursor-pointer hover:border-blue-600 hover:bg-blue-50 transition-all bg-slate-50/50" onclick="this.querySelector('input').click()">
+                    <input type="file" hidden multiple><i data-lucide="cloud-upload" class="w-6 h-6 mx-auto mb-2" style="color:#2563EB;"></i>
+                    <p>ลากไฟล์มาวาง หรือ <span class="browse">เลือกไฟล์</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center gap-3 pt-5 mt-5 border-t border-slate-200 flex-wrap max-md:justify-center">
+            <a href="contract-repository.html" class="inline-flex items-center gap-2 px-5 py-2.5 border border-slate-300 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors no-underline">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> ย้อนกลับ
+            </a>
+            <div class="flex items-center gap-3">
+                <button class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#FF8888] text-white hover:bg-[#E07777] transition-colors cursor-pointer border-none"><i data-lucide="undo-2" class="w-4 h-4"></i> ส่งกลับแก้ไข</button>
+                <a href="step4-approve.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#6BDE9D] text-white hover:bg-[#5AC88B] transition-colors no-underline"><i data-lucide="check" class="w-4 h-4"></i> ยืนยัน — ส่งต่ออนุมัติ</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="shared-layout.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
+<script>
+    initPage(3);
+
+    // ── Override Step 2 section: make it editable with Reassign button ──
+    (function() {
+        const prevContainer = document.getElementById('previous-steps');
+        if (!prevContainer) return;
+        // Find the step 2 card by searching for text content
+        const allCards = prevContainer.querySelectorAll('.bg-white.rounded-xl');
+        let step2Card = null;
+        allCards.forEach(card => {
+            const titleEl = card.querySelector('span.flex-1');
+            if (titleEl && titleEl.textContent.includes('ขั้นตอนที่ 2')) {
+                step2Card = card;
+            }
+        });
+        if (!step2Card) return;
+
+        // Restyle as editable card
+        step2Card.className = 'bg-white rounded-xl p-5 mb-4 shadow-sm border-2 border-amber-400';
+
+        step2Card.innerHTML = `
+            <div class="flex items-center gap-2.5 cursor-pointer flex-wrap" onclick="toggleCollapse(this)">
+                <i data-lucide="pencil" class="w-5 h-5 text-amber-500 flex-shrink-0"></i>
+                <span class="flex-1 font-bold text-[#1B3A6B] text-[15px]">ขั้นตอนที่ 2: แจกงานให้ผู้ตรวจสอบ</span>
+                <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-semibold bg-pink-100 text-pink-700"><i data-lucide="shield-check" class="w-3 h-3"></i> ผู้จัดการฝ่ายกฎหมาย</span>
+                <span class="text-[11px] text-slate-400 font-normal mr-2">26/03/2026 11:15 น.</span>
+                <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200 collapse-icon" style="transform:rotate(180deg);"></i>
+            </div>
+            <div class="compact-body mt-4">
+                <div class="bg-amber-50 border border-amber-200 rounded-lg p-3.5 flex items-start gap-2.5 mb-5">
+                    <i data-lucide="info" class="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0"></i>
+                    <p class="text-amber-800 text-[13px] leading-relaxed">สามารถเปลี่ยนผู้ตรวจสอบได้โดยกดปุ่ม <strong>Reassign</strong></p>
+                </div>
+                <div class="grid grid-cols-2 gap-x-6 gap-y-4 max-md:grid-cols-1">
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-[13px] font-semibold text-slate-600">ระดับความเสี่ยง</label>
+                        <select id="reassignRisk" class="px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 bg-white outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors">
+                            <option value="low">&#9679; ต่ำ (Low)</option>
+                            <option value="medium" selected>&#9679; ปานกลาง (Medium)</option>
+                            <option value="high">&#9679; สูง (High)</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-[13px] font-semibold text-slate-600">ผู้ตรวจสอบ <span class="text-red-500">*</span></label>
+                        <select id="reassignReviewer" class="px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 bg-white outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors">
+                            <option value="">-- เลือกผู้ตรวจสอบ --</option>
+                            <option value="prasit" selected>คุณประสิทธิ์ ฝ่ายกฎหมาย</option>
+                            <option value="somchai">คุณสมชาย ฝ่ายกฎหมาย</option>
+                            <option value="wichai">คุณวิชัย ฝ่ายกฎหมาย</option>
+                            <option value="nattapong">คุณณัฐพงษ์ ฝ่ายกฎหมาย</option>
+                            <option value="anchali">คุณอัญชลี ฝ่ายกฎหมาย</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-[13px] font-semibold text-slate-600">วันที่ Assign Task <span class="inline-block bg-indigo-100 text-indigo-700 text-[10px] px-2 py-px rounded-full font-semibold ml-1.5">อัตโนมัติ</span></label>
+                        <div class="px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-600">26/03/2026</div>
+                    </div>
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-[13px] font-semibold text-slate-600">ความเห็น</label>
+                        <input type="text" value="กรุณาตรวจสอบข้อมูลสัญญาและเงื่อนไขให้ครบถ้วน" id="reassignComment" class="px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 bg-white outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors">
+                    </div>
+                </div>
+                <div class="flex justify-end mt-4">
+                    <button class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm bg-amber-400 text-white hover:bg-amber-500 transition-colors cursor-pointer border-none" onclick="doReassign()">
+                        <i data-lucide="user-pen" class="w-4 h-4"></i> Reassign
+                    </button>
+                </div>
+            </div>
+        `;
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    })();
+
+    function doReassign() {
+        const reviewer = document.getElementById('reassignReviewer');
+        if (!reviewer.value) {
+            alert('กรุณาเลือกผู้ตรวจสอบ');
+            return;
+        }
+        const reviewerName = reviewer.options[reviewer.selectedIndex].text;
+        const riskEl = document.getElementById('reassignRisk');
+        const riskName = riskEl.options[riskEl.selectedIndex].text;
+
+        // Show success feedback
+        const card = reviewer.closest('.rounded-xl');
+        const oldBanner = card.querySelector('.bg-amber-50');
+        if (oldBanner) {
+            oldBanner.className = 'bg-green-50 border border-green-200 rounded-lg p-3.5 flex items-start gap-2.5 mb-5';
+            oldBanner.innerHTML = `
+                <i data-lucide="circle-check" class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0"></i>
+                <p class="text-green-800 text-[13px] leading-relaxed">Reassign สำเร็จ — มอบหมายงานให้ <strong>${reviewerName}</strong> | ความเสี่ยง: <strong>${riskName}</strong></p>
+            `;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+    }
+</script>
+</body>
+</html>

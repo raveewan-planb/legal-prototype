@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal System - ปรับสถานะการต่อสัญญา</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">@theme { --font-sans: 'Kanit', sans-serif; }</style>
+    <link rel="stylesheet" href="shared-styles.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* ── Table ── */
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table thead th {
+            background: #F8FAFC; padding: 12px 14px; font-size: 12px; font-weight: 700;
+            color: #64748B; text-align: left; white-space: nowrap; border-bottom: 2px solid #E2E8F0;
+            text-transform: uppercase; letter-spacing: 0.03em;
+        }
+        .data-table tbody td {
+            padding: 13px 14px; font-size: 13px; border-bottom: 1px solid #F1F5F9; vertical-align: middle;
+        }
+        .data-table tbody tr:hover { background: #F8FAFC; }
+
+        /* ── Modal ── */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 200;
+            display: flex; align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal-box {
+            background: #fff; border-radius: 16px; width: 100%; max-width: 680px;
+            max-height: 90vh; display: flex; flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0,0,0,.15);
+        }
+
+        /* ── Contract Search Multi-select ── */
+        .contract-search-box {
+            border: 1px solid #E2E8F0; border-radius: 10px; padding: 8px 12px;
+            display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+            min-height: 44px; cursor: text; transition: border-color .2s;
+        }
+        .contract-search-box:focus-within { border-color: #88D2F2; box-shadow: 0 0 0 3px rgba(136,210,242,.2); }
+        .contract-search-box input {
+            border: none; outline: none; flex: 1; min-width: 120px; font-size: 13px; padding: 2px 0;
+        }
+        .contract-tag {
+            display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px 3px 12px;
+            background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 20px;
+            font-size: 12px; font-weight: 600; color: #B45309; white-space: nowrap;
+        }
+        .contract-tag button {
+            background: none; border: none; cursor: pointer; color: #FCD34D;
+            font-size: 16px; line-height: 1; padding: 0 2px; transition: color .15s;
+        }
+        .contract-tag button:hover { color: #EF4444; }
+        .contract-dropdown {
+            position: absolute; top: 100%; left: 0; right: 0; z-index: 10;
+            background: #fff; border: 1px solid #E2E8F0; border-radius: 10px;
+            max-height: 200px; overflow-y: auto; margin-top: 4px;
+            box-shadow: 0 8px 24px rgba(0,0,0,.1);
+        }
+        .contract-dropdown-item {
+            padding: 10px 14px; cursor: pointer; display: flex; align-items: center; gap: 10px;
+            font-size: 13px; transition: background .15s;
+        }
+        .contract-dropdown-item:hover { background: #F1F5F9; }
+        .contract-dropdown-item.selected { background: #FFFBEB; }
+        .contract-dropdown-item .cd-no { font-weight: 700; color: #334155; min-width: 110px; }
+        .contract-dropdown-item .cd-name { color: #64748B; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .contract-dropdown-item .cd-check { color: #B45309; margin-left: auto; }
+
+        /* ── Ref contract search (single) ── */
+        .ref-search-box {
+            border: 1px solid #E2E8F0; border-radius: 10px; padding: 8px 12px;
+            display: flex; align-items: center; gap: 8px; min-height: 44px; transition: border-color .2s;
+        }
+        .ref-search-box:focus-within { border-color: #88D2F2; box-shadow: 0 0 0 3px rgba(136,210,242,.2); }
+        .ref-search-box input {
+            border: none; outline: none; flex: 1; font-size: 13px; padding: 2px 0;
+        }
+        .ref-selected {
+            display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 12px;
+            background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 20px;
+            font-size: 12px; font-weight: 600; color: #047857; white-space: nowrap;
+        }
+        .ref-selected button {
+            background: none; border: none; cursor: pointer; color: #6EE7B7;
+            font-size: 16px; line-height: 1; padding: 0 2px; transition: color .15s;
+        }
+        .ref-selected button:hover { color: #EF4444; }
+        .ref-dropdown {
+            position: absolute; top: 100%; left: 0; right: 0; z-index: 10;
+            background: #fff; border: 1px solid #E2E8F0; border-radius: 10px;
+            max-height: 200px; overflow-y: auto; margin-top: 4px;
+            box-shadow: 0 8px 24px rgba(0,0,0,.1);
+        }
+        .ref-dropdown-item {
+            padding: 10px 14px; cursor: pointer; display: flex; align-items: center; gap: 10px;
+            font-size: 13px; transition: background .15s;
+        }
+        .ref-dropdown-item:hover { background: #F1F5F9; }
+        .ref-dropdown-item .cd-no { font-weight: 700; color: #334155; min-width: 110px; }
+        .ref-dropdown-item .cd-name { color: #64748B; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* ── Field Row ── */
+        .field-row { display: grid; grid-template-columns: 160px 1fr; align-items: start; gap: 8px; }
+        .field-label { font-size: 13px; font-weight: 600; color: #475569; padding-top: 10px; display: flex; align-items: center; gap: 4px; }
+        .field-label .req { color: #EF4444; font-size: 14px; }
+
+        /* ── Action Buttons ── */
+        .action-btns { display: flex; gap: 6px; }
+        .action-btn {
+            width: 30px; height: 30px; border-radius: 6px; border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: all .2s;
+        }
+        .action-btn.renew { background: #FFFBEB; color: #D97706; }
+        .action-btn.renew:hover { background: #FEF3C7; }
+
+        /* ── Request Status Badges ── */
+        .badge-status {
+            display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px;
+            font-size: 12px; font-weight: 600; white-space: nowrap;
+        }
+        .badge-status .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+        .badge-pending { background: #FFF7ED; color: #C2410C; }
+        .badge-pending .dot { background: #F97316; }
+        .badge-done { background: #F0FDF4; color: #15803D; }
+        .badge-done .dot { background: #22C55E; }
+
+        /* ── Renew Status Badges ── */
+        .badge-rn-wait { background: #FEF3C7; color: #92400E; }
+        .badge-rn-no { background: #FEE2E2; color: #991B1B; }
+        .badge-rn-inprogress { background: #DBEAFE; color: #1E40AF; }
+        .badge-rn-notyet { background: #F1F5F9; color: #475569; }
+        .badge-rn-done { background: #D1FAE5; color: #065F46; }
+
+        /* ── Contract Status Badges ── */
+        .badge-cs {
+            display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px;
+            font-size: 11px; font-weight: 600; white-space: nowrap;
+        }
+        .badge-cs.draft { background: #F1F5F9; color: #64748B; }
+        .badge-cs.return { background: #FFF7ED; color: #C2410C; }
+        .badge-cs.legal { background: #F5F3FF; color: #7C3AED; }
+        .badge-cs.review { background: #EFF6FF; color: #2563EB; }
+        .badge-cs.approve { background: #FFFBEB; color: #A16207; }
+        .badge-cs.sign { background: #FDF2F8; color: #BE185D; }
+        .badge-cs.complete { background: #F0FDF4; color: #15803D; }
+
+        /* Done row muted */
+        tr.row-done td { color: #94A3B8; }
+
+        /* ── Confirm modal ── */
+        .confirm-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 300;
+            display: flex; align-items: center; justify-content: center; padding: 20px;
+            opacity: 0; visibility: hidden; transition: all .25s;
+        }
+        .confirm-overlay.is-active { opacity: 1; visibility: visible; }
+        .confirm-card {
+            background: #fff; border-radius: 16px; width: 95%; max-width: 540px;
+            padding: 28px 32px; box-shadow: 0 25px 50px rgba(0,0,0,.15);
+        }
+        .confirm-card .confirm-icon {
+            width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 16px;
+            display: flex; align-items: center; justify-content: center;
+            background: #FFFBEB; color: #D97706;
+        }
+        .confirm-card h3 { font-size: 18px; font-weight: 700; color: #1B3A6B; margin-bottom: 8px; text-align: center; }
+        .confirm-info-table {
+            width: 100%; border-collapse: collapse; margin: 16px 0;
+            border: 1px solid #E2E8F0; border-radius: 10px; overflow: hidden;
+        }
+        .confirm-info-table tr { border-bottom: 1px solid #F1F5F9; }
+        .confirm-info-table tr:last-child { border-bottom: none; }
+        .confirm-info-table td { padding: 10px 16px; font-size: 13px; }
+        .confirm-info-table td:first-child { color: #64748B; font-weight: 500; width: 180px; background: #F8FAFC; }
+        .confirm-info-table td:last-child { color: #1E293B; font-weight: 600; }
+        .confirm-btns { display: flex; gap: 12px; justify-content: center; margin-top: 20px; }
+        .btn-cancel-confirm {
+            padding: 10px 28px; border-radius: 10px; border: 1px solid #CBD5E1;
+            background: #fff; color: #475569; font-size: 14px; font-weight: 600;
+            cursor: pointer; font-family: inherit; transition: all .2s;
+        }
+        .btn-cancel-confirm:hover { background: #F1F5F9; }
+        .btn-do-confirm {
+            padding: 10px 28px; border-radius: 10px; border: none;
+            background: #D97706; color: #fff; font-size: 14px; font-weight: 600;
+            cursor: pointer; font-family: inherit; transition: all .2s;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .btn-do-confirm:hover { background: #B45309; }
+
+        .is-hidden { display: none !important; }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen font-sans">
+
+<div id="topbar"></div>
+<div id="sidebar"></div>
+
+<!-- ═══ Modal ═══ -->
+<div id="statusModal" class="modal-overlay is-hidden" onclick="if(event.target===this)closeModal()">
+    <div class="modal-box">
+        <!-- Modal Header -->
+        <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center">
+                    <i data-lucide="refresh-cw" class="w-5 h-5 text-amber-600"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800">ปรับสถานะการต่อสัญญา</h3>
+                    <p class="text-xs text-slate-400 mt-0.5">เลือกสัญญาและระบุสถานะการต่อสัญญา</p>
+                </div>
+            </div>
+            <button onclick="closeModal()" class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-slate-100 transition-colors text-slate-400 hover:text-slate-600">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="px-6 py-5 space-y-5 overflow-y-auto flex-1">
+
+            <!-- 1. เลือกสัญญา (Multi-select search) -->
+            <div>
+                <label class="field-label mb-2">เลือกสัญญาที่ต้องการปรับสถานะ <span class="req">*</span></label>
+                <div class="relative" id="contractSelectWrap">
+                    <div class="contract-search-box" onclick="document.getElementById('contractSearchInput').focus()">
+                        <div id="selectedContractTags"></div>
+                        <input type="text" id="contractSearchInput" placeholder="ค้นหาเลขสัญญา หรือชื่อสัญญา..." oninput="filterContracts(this.value)" onfocus="showContractDropdown()">
+                    </div>
+                    <div id="contractDropdown" class="contract-dropdown is-hidden"></div>
+                </div>
+            </div>
+
+            <!-- 2. สถานะการต่อสัญญา -->
+            <div class="field-row">
+                <label class="field-label">สถานะ <span class="req">*</span></label>
+                <select id="selStatus" onchange="onStatusChange()" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#88D2F2] focus:ring-2 focus:ring-[#88D2F2]/20 transition-all">
+                    <option value="">-- เลือกสถานะ --</option>
+                    <option value="รอต่อสัญญา">รอต่อสัญญา</option>
+                    <option value="ไม่ต่อสัญญา">ไม่ต่อสัญญา</option>
+                    <option value="อยู่ระหว่างดำเนินการ">อยู่ระหว่างดำเนินการ</option>
+                    <option value="ยังไม่ได้ดำเนินการ">ยังไม่ได้ดำเนินการ</option>
+                    <option value="ต่อสัญญาแล้ว">ต่อสัญญาแล้ว</option>
+                </select>
+            </div>
+
+            <!-- 3. Sub-status (แสดงเฉพาะ อยู่ระหว่างดำเนินการ) -->
+            <div class="field-row is-hidden" id="subStatusRow">
+                <label class="field-label">รายละเอียดสถานะ <span class="req">*</span></label>
+                <select id="selSubStatus" onchange="onSubStatusChange()" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#88D2F2] focus:ring-2 focus:ring-[#88D2F2]/20 transition-all">
+                    <option value="">-- เลือกรายละเอียด --</option>
+                    <option value="รอหัวหน้าพิจารณาการต่อสัญญา">รอหัวหน้าพิจารณาการต่อสัญญา</option>
+                    <option value="ส่งหนังสือขอต่อสัญญา">ส่งหนังสือขอต่อสัญญา</option>
+                    <option value="รอหนังสือตอบรับ">รอหนังสือตอบรับ</option>
+                    <option value="รอคู่สัญญาร่างสัญญา">รอคู่สัญญาร่างสัญญา</option>
+                    <option value="รอกฎหมายร่างสัญญา">รอกฎหมายร่างสัญญา</option>
+                    <option value="รอคู่สัญญาพิจารณาสัญญา">รอคู่สัญญาพิจารณาสัญญา</option>
+                    <option value="ส่งร่างสัญญากฎหมายตรวจสอบ">ส่งร่างสัญญากฎหมายตรวจสอบ</option>
+                    <option value="อยู่ระหว่างเจรจาเงื่อนไขการต่อสัญญา">อยู่ระหว่างเจรจาเงื่อนไขการต่อสัญญา</option>
+                </select>
+            </div>
+
+            <!-- 3.5 วันที่ส่งหนังสือ (แสดงเฉพาะ ส่งหนังสือขอต่อสัญญา) -->
+            <div class="field-row is-hidden" id="sendDateRow">
+                <label class="field-label">วันที่ส่งหนังสือ <span class="req">*</span></label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                    <input type="text" id="sendDateDisplay" placeholder="dd/mm/yyyy" maxlength="10" readonly style="cursor:pointer;flex:1;" onclick="document.getElementById('sendDatePicker').showPicker()" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#88D2F2] focus:ring-2 focus:ring-[#88D2F2]/20 transition-all">
+                    <input type="date" id="sendDatePicker" onchange="syncSendDate(this)" style="position:absolute;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;">
+                    <button type="button" onclick="document.getElementById('sendDatePicker').showPicker()" style="width:40px;height:40px;border-radius:8px;border:1px solid #CBD5E1;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#2563EB;transition:all .2s;flex-shrink:0;" onmouseover="this.style.background='#EFF6FF'" onmouseout="this.style.background='#fff'">
+                        <i data-lucide="calendar" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 4. อ้างอิงสัญญา (แสดงเฉพาะ ต่อสัญญาแล้ว) -->
+            <div class="is-hidden" id="refContractRow">
+                <label class="field-label mb-2">อ้างอิงสัญญาในระบบ <span class="req">*</span></label>
+                <div class="relative" id="refSelectWrap">
+                    <div class="ref-search-box" id="refSearchBox">
+                        <i data-lucide="link" class="w-4 h-4 text-slate-400 shrink-0"></i>
+                        <div id="refSelectedTag"></div>
+                        <input type="text" id="refSearchInput" placeholder="ค้นหาเลขสัญญาที่ต้องการอ้างอิง..." oninput="filterRefContracts(this.value)" onfocus="showRefDropdown()">
+                    </div>
+                    <div id="refDropdown" class="ref-dropdown is-hidden"></div>
+                </div>
+            </div>
+
+            <!-- 5. หมายเหตุ (แสดงเสมอ) -->
+            <div class="field-row">
+                <label class="field-label">หมายเหตุ</label>
+                <textarea id="txtRemark" rows="3" placeholder="กรอกหมายเหตุเพิ่มเติม (ถ้ามี)..." class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#88D2F2] focus:ring-2 focus:ring-[#88D2F2]/20 transition-all resize-none"></textarea>
+            </div>
+
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="px-6 py-4 border-t border-slate-200 flex items-center justify-end gap-3">
+            <button onclick="closeModal()" class="px-5 py-2.5 rounded-lg font-semibold text-sm bg-white border border-slate-300 text-slate-600 hover:bg-slate-50 transition-colors">ยกเลิก</button>
+            <button onclick="saveStatus()" class="px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#88D2F2] text-[#1B3A6B] hover:bg-[#6BBFE0] transition-colors inline-flex items-center gap-2">
+                <i data-lucide="save" class="w-4 h-4"></i> บันทึก
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="ml-[260px] mt-14 p-7 min-h-[calc(100vh-56px)] flex flex-col max-md:ml-0 max-md:p-4 max-[480px]:mt-[50px] max-[480px]:p-3">
+    <!-- Page Header -->
+    <div class="flex justify-between items-start mb-5 max-md:flex-col max-md:gap-3">
+        <div>
+            <h1 class="text-[26px] font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl max-[480px]:text-lg">
+                <i data-lucide="refresh-cw" class="w-5.5 h-5.5 text-[#2563EB]"></i>
+                <span>ปรับสถานะการต่อสัญญา</span>
+            </h1>
+            <p class="text-slate-500 text-sm mt-1">รายการปรับสถานะการต่อสัญญาทั้งหมด — <strong>10</strong> รายการ</p>
+        </div>
+        <div class="flex gap-2.5 items-center shrink-0">
+            <a href="contract-status-edit.html" class="inline-flex items-center justify-center gap-2 px-4.5 py-2.5 rounded-lg text-sm font-medium bg-white border border-slate-300 text-slate-500 hover:bg-slate-50 hover:border-slate-400 transition-all no-underline whitespace-nowrap">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                <span>ย้อนกลับ</span>
+            </a>
+            <button onclick="openModal()" class="inline-flex items-center justify-center gap-2 px-5.5 py-2.5 rounded-lg text-sm font-semibold bg-[#88D2F2] text-[#1B3A6B] hover:bg-[#6BBFE0] transition-all whitespace-nowrap cursor-pointer border-none">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                <span>ปรับสถานะ</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar flex gap-3 items-center mb-5 flex-wrap max-md:flex-col max-md:items-stretch max-md:gap-2.5">
+        <div class="flex-1 min-w-[200px] relative max-md:w-full max-md:min-w-0">
+            <i data-lucide="search" class="icon w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" id="searchTable" oninput="filterTable()" placeholder="ค้นหาเลขสัญญา, สถานะ..." class="w-full py-2.5 pl-9 pr-3.5 border border-slate-300 rounded-lg text-sm font-[inherit] text-slate-600 bg-white outline-none transition-all focus:border-blue-500 focus:ring-3 focus:ring-blue-500/10">
+        </div>
+        <div class="text-xs text-slate-400" id="rowCount">แสดง 10 รายการ</div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex-1">
+        <div class="overflow-x-auto">
+            <table class="data-table" id="dataTable">
+                <thead>
+                    <tr>
+                        <th>จัดการ</th>
+                        <th>เลขสัญญา</th>
+                        <th>ชื่อสัญญา</th>
+                        <th>ประเภทสัญญา</th>
+                        <th>สถานะ</th>
+                        <th>สถานะการต่อสัญญาเดิม</th>
+                        <th>สถานะการต่อสัญญาใหม่</th>
+                        <th>ผู้รับผิดชอบสัญญา</th>
+                        <th>แผนก</th>
+                        <th>สถานะสัญญา</th>
+                        <th>วันที่สร้างคำขอ</th>
+                        <th>วันที่ดำเนินการ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-status="pending">
+                        <td><div class="action-btns"><button class="action-btn renew" title="ปรับสถานะ" onclick="openConfirmRenew(this)"><i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i></button></div></td>
+                        <td><span class="font-semibold text-amber-700">LUR-202601001</span></td>
+                        <td class="text-slate-700">สัญญาเช่าพื้นที่โฆษณา ถ.พหลโยธิน</td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">สัญญาเช่า</span></td>
+                        <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-wait">รอต่อสัญญา</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-inprogress">อยู่ระหว่างดำเนินการ</span></td>
+                        <td class="text-slate-600">Jiraporn Sangsuppakorn</td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">ฝ่ายจัดซื้อ</span></td>
+                        <td><span class="badge-cs review">รอตรวจสอบ/ร่าง</span></td>
+                        <td class="text-slate-500">24/04/2026 09:30</td>
+                        <td class="text-slate-400">—</td>
+                    </tr>
+                    <tr data-status="pending">
+                        <td><div class="action-btns"><button class="action-btn renew" title="ปรับสถานะ" onclick="openConfirmRenew(this)"><i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i></button></div></td>
+                        <td><span class="font-semibold text-amber-700">LUR-202602003</span></td>
+                        <td class="text-slate-700">สัญญาเช่าที่ดินเปล่า ลาดพร้าว</td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">สัญญาเช่า</span></td>
+                        <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-notyet">ยังไม่ได้ดำเนินการ</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-inprogress">อยู่ระหว่างดำเนินการ</span></td>
+                        <td class="text-slate-600">Chotika Kanchanakat</td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-700">ฝ่ายการตลาด</span></td>
+                        <td><span class="badge-cs approve">รอหัวหน้าอนุมัติ</span></td>
+                        <td class="text-slate-500">22/04/2026 11:15</td>
+                        <td class="text-slate-400">—</td>
+                    </tr>
+                    <tr data-status="pending">
+                        <td><div class="action-btns"><button class="action-btn renew" title="ปรับสถานะ" onclick="openConfirmRenew(this)"><i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i></button></div></td>
+                        <td><span class="font-semibold text-amber-700">LUR-202601005</span></td>
+                        <td class="text-slate-700">สัญญาจ้างบริการทำความสะอาด</td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">สัญญาจ้าง</span></td>
+                        <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-notyet">ยังไม่ได้ดำเนินการ</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-wait">รอต่อสัญญา</span></td>
+                        <td class="text-slate-600">Nattapong Worawit</td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700">ฝ่ายขาย</span></td>
+                        <td><span class="badge-cs legal">รอกฎหมายจ่ายงาน</span></td>
+                        <td class="text-slate-500">20/04/2026 14:00</td>
+                        <td class="text-slate-400">—</td>
+                    </tr>
+                    <tr data-status="pending">
+                        <td><div class="action-btns"><button class="action-btn renew" title="ปรับสถานะ" onclick="openConfirmRenew(this)"><i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i></button></div></td>
+                        <td><span class="font-semibold text-amber-700">LUR-202603002</span></td>
+                        <td class="text-slate-700">สัญญาบริการขนส่ง</td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">สัญญาบริการ</span></td>
+                        <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-wait">รอต่อสัญญา</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-no">ไม่ต่อสัญญา</span></td>
+                        <td class="text-slate-600">Siriporn Chairat</td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-50 text-green-700">ฝ่ายปฏิบัติการ</span></td>
+                        <td><span class="badge-cs sign">รอลงนาม</span></td>
+                        <td class="text-slate-500">18/04/2026 10:45</td>
+                        <td class="text-slate-400">—</td>
+                    </tr>
+                    <tr data-status="pending">
+                        <td><div class="action-btns"><button class="action-btn renew" title="ปรับสถานะ" onclick="openConfirmRenew(this)"><i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i></button></div></td>
+                        <td><span class="font-semibold text-amber-700">LUR-202512008</span></td>
+                        <td class="text-slate-700">สัญญาเช่าพื้นที่สำนักงาน อาคาร A</td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">สัญญาเช่า</span></td>
+                        <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-inprogress">อยู่ระหว่างดำเนินการ</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-done">ต่อสัญญาแล้ว</span></td>
+                        <td class="text-slate-600">Wichai Rattanawong</td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700">ฝ่ายบัญชีและการเงิน</span></td>
+                        <td><span class="badge-cs draft">แบบร่าง</span></td>
+                        <td class="text-slate-500">15/04/2026 08:30</td>
+                        <td class="text-slate-400">—</td>
+                    </tr>
+                    <tr data-status="pending">
+                        <td><div class="action-btns"><button class="action-btn renew" title="ปรับสถานะ" onclick="openConfirmRenew(this)"><i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i></button></div></td>
+                        <td><span class="font-semibold text-amber-700">LUR-202511004</span></td>
+                        <td class="text-slate-700">สัญญาจ้างพัฒนาระบบ IT</td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">สัญญาจ้าง</span></td>
+                        <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-notyet">ยังไม่ได้ดำเนินการ</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-wait">รอต่อสัญญา</span></td>
+                        <td class="text-slate-600">Thanaporn Sukjai</td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-teal-50 text-teal-700">ฝ่ายทรัพยากรบุคคล</span></td>
+                        <td><span class="badge-cs review">รอตรวจสอบ/ร่าง</span></td>
+                        <td class="text-slate-500">12/04/2026 15:20</td>
+                        <td class="text-slate-400">—</td>
+                    </tr>
+                    <tr data-status="pending">
+                        <td><div class="action-btns"><button class="action-btn renew" title="ปรับสถานะ" onclick="openConfirmRenew(this)"><i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i></button></div></td>
+                        <td><span class="font-semibold text-amber-700">LUR-202510006</span></td>
+                        <td class="text-slate-700">สัญญาเช่าอุปกรณ์สำนักงาน</td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">สัญญาเช่า</span></td>
+                        <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-inprogress">อยู่ระหว่างดำเนินการ</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-done">ต่อสัญญาแล้ว</span></td>
+                        <td class="text-slate-600">Kamonwan Petcharat</td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">ฝ่ายจัดซื้อ</span></td>
+                        <td><span class="badge-cs approve">รอหัวหน้าอนุมัติ</span></td>
+                        <td class="text-slate-500">10/04/2026 09:00</td>
+                        <td class="text-slate-400">—</td>
+                    </tr>
+                    <tr class="row-done" data-status="done">
+                        <td></td>
+                        <td><span class="font-semibold" style="color:#94A3B8;">VS2024/013</span></td>
+                        <td>บันทึกข้อตกลงแนบท้ายฯ (ฉบับที่ 5)</td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">บันทึกข้อตกลง</span></td>
+                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-notyet">ยังไม่ได้ดำเนินการ</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-done">ต่อสัญญาแล้ว</span></td>
+                        <td>Piyawat Somboon</td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700">ฝ่ายขาย</span></td>
+                        <td><span class="badge-cs complete">เสร็จสิ้น</span></td>
+                        <td>20/01/2026 10:00</td>
+                        <td>25/01/2026</td>
+                    </tr>
+                    <tr class="row-done" data-status="done">
+                        <td></td>
+                        <td><span class="font-semibold" style="color:#94A3B8;">VS2024/007</span></td>
+                        <td>สัญญาเช่าที่ดิน</td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">สัญญาเช่า</span></td>
+                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-wait">รอต่อสัญญา</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-inprogress">อยู่ระหว่างดำเนินการ</span></td>
+                        <td>Somchai Prasert</td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-700">ฝ่ายการตลาด</span></td>
+                        <td><span class="badge-cs complete">เสร็จสิ้น</span></td>
+                        <td>10/01/2026 11:00</td>
+                        <td>15/01/2026</td>
+                    </tr>
+                    <tr class="row-done" data-status="done">
+                        <td></td>
+                        <td><span class="font-semibold" style="color:#94A3B8;">VS2024/003</span></td>
+                        <td>บันทึกข้อตกลงแนบท้ายฯ (ฉบับที่ 4)</td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">บันทึกข้อตกลง</span></td>
+                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-notyet">ยังไม่ได้ดำเนินการ</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-wait">รอต่อสัญญา</span></td>
+                        <td>Wanida Srisuk</td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-50 text-green-700">ฝ่ายปฏิบัติการ</span></td>
+                        <td><span class="badge-cs complete">เสร็จสิ้น</span></td>
+                        <td>05/01/2026 14:30</td>
+                        <td>08/01/2026</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Table Footer -->
+        <div class="px-5 py-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+            <span>ทั้งหมด 10 รายการ</span>
+            <div class="flex items-center gap-1">
+                <button class="px-2.5 py-1 rounded bg-[#88D2F2] text-[#1B3A6B] font-semibold">1</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ═══ Confirm Renew Status Modal ═══ -->
+<div class="confirm-overlay" id="confirmRenewOverlay" onclick="if(event.target===this)closeConfirmRenew()">
+    <div class="confirm-card">
+        <div class="confirm-icon">
+            <i data-lucide="refresh-cw" class="w-7 h-7"></i>
+        </div>
+        <h3>ยืนยันการปรับสถานะการต่อสัญญา</h3>
+        <p style="text-align:center;font-size:13px;color:#64748B;margin-bottom:4px;">กรุณาตรวจสอบข้อมูลก่อนดำเนินการ</p>
+        <table class="confirm-info-table">
+            <tr><td>เลขสัญญา</td><td id="cfmContractNo">—</td></tr>
+            <tr><td>สถานะการต่อสัญญาเดิม</td><td id="cfmOldStatus">—</td></tr>
+            <tr><td>สถานะการต่อสัญญาใหม่</td><td id="cfmNewStatus">—</td></tr>
+            <tr><td>ผู้รับผิดชอบสัญญา</td><td id="cfmOwner">—</td></tr>
+            <tr><td>แผนก</td><td id="cfmDept">—</td></tr>
+            <tr><td>สถานะสัญญา</td><td id="cfmContractStatus">—</td></tr>
+        </table>
+        <div class="confirm-btns">
+            <button class="btn-cancel-confirm" onclick="closeConfirmRenew()">ยกเลิก</button>
+            <button class="btn-do-confirm" onclick="doConfirmRenew()">
+                <i data-lucide="check" class="w-4 h-4"></i> ยืนยัน
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ Toast ═══ -->
+<div id="toastSuccess" style="position:fixed;top:24px;right:24px;z-index:400;background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:14px 24px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.1);transform:translateX(120%);transition:transform .35s ease;font-size:14px;font-weight:600;color:#92400E;">
+    <i data-lucide="check-circle-2" class="w-5 h-5" style="color:#D97706;"></i>
+    <span>ปรับสถานะการต่อสัญญาเรียบร้อยแล้ว</span>
+</div>
+
+<script src="shared-layout.js"></script>
+<script>
+    document.getElementById('topbar').innerHTML = renderTopbar();
+    document.getElementById('sidebar').innerHTML = renderSidebar();
+    document.querySelectorAll('.sidebar-item').forEach(el => {
+        el.classList.remove('active');
+        if (el.textContent.trim().includes('การจัดการสัญญา')) el.classList.add('active');
+    });
+    lucide.createIcons();
+
+    /* ══════════════════════════════════════
+       CONTRACT MULTI-SELECT SEARCH
+       ══════════════════════════════════════ */
+    const ALL_CONTRACTS = [
+        { no: 'LUR-202601001', name: 'สัญญาเช่าพื้นที่โฆษณา ถ.พหลโยธิน' },
+        { no: 'LUR-202601005', name: 'สัญญาจ้างบริการทำความสะอาด' },
+        { no: 'LUR-202602003', name: 'สัญญาเช่าที่ดินเปล่า ลาดพร้าว' },
+        { no: 'LUR-202603002', name: 'สัญญาบริการขนส่ง' },
+        { no: 'LUR-202509001', name: 'สัญญาจ้างที่ปรึกษาด้านกฎหมาย' },
+        { no: 'LUR-202510006', name: 'สัญญาเช่าอุปกรณ์สำนักงาน' },
+        { no: 'LUR-202511004', name: 'สัญญาจ้างพัฒนาระบบ IT' },
+        { no: 'LUR-202512008', name: 'สัญญาเช่าพื้นที่สำนักงาน อาคาร A' },
+        { no: 'VS2024/013', name: 'บันทึกข้อตกลงแนบท้ายสัญญาเช่าที่ดิน (ฉบับที่ 5)' },
+        { no: 'VS2024/007', name: 'สัญญาเช่าที่ดิน' },
+        { no: 'VS2024/003', name: 'บันทึกข้อตกลงแนบท้ายสัญญาเช่าที่ดิน (ฉบับที่ 4)' },
+        { no: 'VS2023/018', name: 'สัญญาจ้างทำป้ายโฆษณา LED' },
+    ];
+    let selectedContracts = [];
+
+    function showContractDropdown() {
+        filterContracts(document.getElementById('contractSearchInput').value);
+        document.getElementById('contractDropdown').classList.remove('is-hidden');
+    }
+    document.addEventListener('click', e => {
+        if (!document.getElementById('contractSelectWrap').contains(e.target)) {
+            document.getElementById('contractDropdown').classList.add('is-hidden');
+        }
+        if (!document.getElementById('refSelectWrap').contains(e.target)) {
+            document.getElementById('refDropdown').classList.add('is-hidden');
+        }
+    });
+
+    function filterContracts(query) {
+        const q = query.toLowerCase();
+        const dd = document.getElementById('contractDropdown');
+        const filtered = ALL_CONTRACTS.filter(c => c.no.toLowerCase().includes(q) || c.name.toLowerCase().includes(q));
+        dd.innerHTML = filtered.map(c => {
+            const sel = selectedContracts.includes(c.no);
+            return `<div class="contract-dropdown-item ${sel ? 'selected' : ''}" onclick="toggleContract('${c.no}')">
+                <span class="cd-no">${c.no}</span>
+                <span class="cd-name">${c.name}</span>
+                ${sel ? '<i data-lucide="check" class="w-4 h-4 cd-check"></i>' : ''}
+            </div>`;
+        }).join('');
+        if (filtered.length === 0) dd.innerHTML = '<div class="px-4 py-3 text-sm text-slate-400 text-center">ไม่พบสัญญาที่ค้นหา</div>';
+        dd.classList.remove('is-hidden');
+        lucide.createIcons();
+    }
+
+    function toggleContract(no) {
+        const idx = selectedContracts.indexOf(no);
+        if (idx >= 0) selectedContracts.splice(idx, 1); else selectedContracts.push(no);
+        renderContractTags();
+        filterContracts(document.getElementById('contractSearchInput').value);
+    }
+    function removeContract(no) {
+        selectedContracts = selectedContracts.filter(c => c !== no);
+        renderContractTags();
+        filterContracts(document.getElementById('contractSearchInput').value);
+    }
+    function renderContractTags() {
+        document.getElementById('selectedContractTags').innerHTML = selectedContracts.map(no =>
+            `<span class="contract-tag">${no}<button onclick="event.stopPropagation();removeContract('${no}')">&times;</button></span>`
+        ).join('');
+    }
+
+    /* ══════════════════════════════════════
+       CONDITIONAL FIELDS
+       ══════════════════════════════════════ */
+    function onStatusChange() {
+        const val = document.getElementById('selStatus').value;
+        // Sub-status: show only for อยู่ระหว่างดำเนินการ
+        document.getElementById('subStatusRow').classList.toggle('is-hidden', val !== 'อยู่ระหว่างดำเนินการ');
+        // Ref contract: show only for ต่อสัญญาแล้ว
+        document.getElementById('refContractRow').classList.toggle('is-hidden', val !== 'ต่อสัญญาแล้ว');
+        // Hide send date when status changes away
+        if (val !== 'อยู่ระหว่างดำเนินการ') {
+            document.getElementById('sendDateRow').classList.add('is-hidden');
+            document.getElementById('selSubStatus').value = '';
+        }
+    }
+
+    function onSubStatusChange() {
+        const val = document.getElementById('selSubStatus').value;
+        document.getElementById('sendDateRow').classList.toggle('is-hidden', val !== 'ส่งหนังสือขอต่อสัญญา');
+    }
+
+    function syncSendDate(picker) {
+        if (!picker.value) { document.getElementById('sendDateDisplay').value = ''; return; }
+        const [y, m, d] = picker.value.split('-');
+        document.getElementById('sendDateDisplay').value = d + '/' + m + '/' + y;
+    }
+
+    /* ══════════════════════════════════════
+       REF CONTRACT SEARCH (Single select)
+       ══════════════════════════════════════ */
+    let selectedRef = null;
+
+    function showRefDropdown() {
+        filterRefContracts(document.getElementById('refSearchInput').value);
+        document.getElementById('refDropdown').classList.remove('is-hidden');
+    }
+    function filterRefContracts(query) {
+        const q = query.toLowerCase();
+        const dd = document.getElementById('refDropdown');
+        const filtered = ALL_CONTRACTS.filter(c => c.no.toLowerCase().includes(q) || c.name.toLowerCase().includes(q));
+        dd.innerHTML = filtered.map(c =>
+            `<div class="ref-dropdown-item" onclick="selectRef('${c.no}','${c.name.replace(/'/g,"\\'")}')">
+                <span class="cd-no">${c.no}</span>
+                <span class="cd-name">${c.name}</span>
+            </div>`
+        ).join('');
+        if (filtered.length === 0) dd.innerHTML = '<div class="px-4 py-3 text-sm text-slate-400 text-center">ไม่พบสัญญาที่ค้นหา</div>';
+        dd.classList.remove('is-hidden');
+    }
+    function selectRef(no, name) {
+        selectedRef = no;
+        document.getElementById('refSelectedTag').innerHTML =
+            `<span class="ref-selected"><i data-lucide="link" class="w-3.5 h-3.5"></i> ${no}<button onclick="event.stopPropagation();clearRef()">&times;</button></span>`;
+        document.getElementById('refSearchInput').value = '';
+        document.getElementById('refSearchInput').placeholder = '';
+        document.getElementById('refDropdown').classList.add('is-hidden');
+        lucide.createIcons();
+    }
+    function clearRef() {
+        selectedRef = null;
+        document.getElementById('refSelectedTag').innerHTML = '';
+        document.getElementById('refSearchInput').placeholder = 'ค้นหาเลขสัญญาที่ต้องการอ้างอิง...';
+    }
+
+    /* ══════════════════════════════════════
+       MODAL OPEN / CLOSE / SAVE
+       ══════════════════════════════════════ */
+    function openModal() {
+        selectedContracts = [];
+        selectedRef = null;
+        renderContractTags();
+        document.getElementById('contractSearchInput').value = '';
+        document.getElementById('selStatus').value = '';
+        document.getElementById('selSubStatus').value = '';
+        document.getElementById('txtRemark').value = '';
+        clearRef();
+        document.getElementById('subStatusRow').classList.add('is-hidden');
+        document.getElementById('sendDateRow').classList.add('is-hidden');
+        document.getElementById('sendDateDisplay').value = '';
+        document.getElementById('sendDatePicker').value = '';
+        document.getElementById('refContractRow').classList.add('is-hidden');
+        document.getElementById('statusModal').classList.remove('is-hidden');
+        lucide.createIcons();
+    }
+    function closeModal() {
+        document.getElementById('statusModal').classList.add('is-hidden');
+    }
+    function saveStatus() {
+        const status = document.getElementById('selStatus').value;
+        if (selectedContracts.length === 0) { alert('กรุณาเลือกสัญญาอย่างน้อย 1 รายการ'); return; }
+        if (!status) { alert('กรุณาเลือกสถานะ'); return; }
+        if (status === 'อยู่ระหว่างดำเนินการ' && !document.getElementById('selSubStatus').value) { alert('กรุณาเลือกรายละเอียดสถานะ'); return; }
+        if (status === 'ต่อสัญญาแล้ว' && !selectedRef) { alert('กรุณาเลือกสัญญาอ้างอิง'); return; }
+        alert('บันทึกการปรับสถานะเรียบร้อยแล้ว');
+        closeModal();
+    }
+
+    /* ══════════════════════════════════════
+       CONFIRM RENEW STATUS (per-row action)
+       ══════════════════════════════════════ */
+    let _confirmRow = null;
+
+    function openConfirmRenew(btn) {
+        const row = btn.closest('tr');
+        _confirmRow = row;
+        const cells = row.querySelectorAll('td');
+        // [0]=จัดการ [1]=เลขสัญญา [2]=ชื่อ [3]=ประเภท [4]=สถานะ [5]=สถานะเดิม [6]=สถานะใหม่ [7]=ผู้รับผิดชอบ [8]=แผนก [9]=สถานะสัญญา [10]=วันที่สร้าง [11]=วันที่ดำเนินการ
+        document.getElementById('cfmContractNo').textContent     = cells[1].textContent.trim();
+        document.getElementById('cfmOldStatus').textContent      = cells[5].textContent.trim();
+        document.getElementById('cfmNewStatus').textContent      = cells[6].textContent.trim();
+        document.getElementById('cfmOwner').textContent          = cells[7].textContent.trim();
+        document.getElementById('cfmDept').textContent           = cells[8].textContent.trim();
+        document.getElementById('cfmContractStatus').textContent = cells[9].textContent.trim();
+        document.getElementById('confirmRenewOverlay').classList.add('is-active');
+        lucide.createIcons();
+    }
+
+    function closeConfirmRenew() {
+        document.getElementById('confirmRenewOverlay').classList.remove('is-active');
+        _confirmRow = null;
+    }
+
+    function doConfirmRenew() {
+        if (!_confirmRow) return;
+        const cells = _confirmRow.querySelectorAll('td');
+        // Clear action button
+        cells[0].innerHTML = '';
+        // Update status badge to done
+        cells[4].innerHTML = '<span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span>';
+        // Set วันที่ดำเนินการ to today
+        const now = new Date();
+        const dd = String(now.getDate()).padStart(2, '0');
+        const mm = String(now.getMonth() + 1).padStart(2, '0');
+        const yyyy = now.getFullYear();
+        cells[11].textContent = dd + '/' + mm + '/' + yyyy;
+        // Add done class
+        _confirmRow.classList.add('row-done');
+        _confirmRow.setAttribute('data-status', 'done');
+
+        closeConfirmRenew();
+        showToast();
+    }
+
+    function showToast() {
+        const t = document.getElementById('toastSuccess');
+        t.style.transform = 'translateX(0)';
+        setTimeout(() => { t.style.transform = 'translateX(120%)'; }, 2800);
+    }
+
+    /* ══════════════════════════════════════
+       TABLE FILTER
+       ══════════════════════════════════════ */
+    function filterTable() {
+        const q = document.getElementById('searchTable').value.toLowerCase();
+        const rows = document.querySelectorAll('#dataTable tbody tr');
+        let count = 0;
+        rows.forEach(row => {
+            const show = row.textContent.toLowerCase().includes(q);
+            row.style.display = show ? '' : 'none';
+            if (show) count++;
+        });
+        document.getElementById('rowCount').textContent = `แสดง ${count} รายการ`;
+    }
+</script>
+</body>
+</html>

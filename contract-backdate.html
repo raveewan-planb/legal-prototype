@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal System - สร้างสัญญาย้อนหลัง</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+        @theme {
+            --font-sans: 'Kanit', sans-serif;
+        }
+    </style>
+    <link rel="stylesheet" href="shared-styles.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* ── TABLE ── */
+        .table-card {
+            background: #fff; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,.06);
+        }
+        .table-wrapper { overflow-x: auto; overflow-y: auto; max-height: calc(100vh - 260px); }
+        table { width: 100%; border-collapse: collapse; }
+        thead th {
+            background: #1B3A6B; color: #fff; font-weight: 600; font-size: 13px;
+            padding: 14px 16px; text-align: left; white-space: nowrap;
+            position: sticky; top: 0; z-index: 2;
+        }
+        tbody tr { border-bottom: 1px solid #F1F5F9; transition: background .15s; }
+        tbody tr:hover { background: #F8FAFC; }
+        tbody td { padding: 14px 16px; font-size: 13px; color: #475569; white-space: nowrap; }
+
+        /* ── Badges ── */
+        .badge-status {
+            display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px;
+            font-size: 12px; font-weight: 600; white-space: nowrap;
+        }
+        .badge-status .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+        .badge-pending { background: #FEF3C7; color: #92400E; }
+        .badge-pending .dot { background: #F59E0B; }
+        .badge-done { background: #D1FAE5; color: #065F46; }
+        .badge-done .dot { background: #22C55E; }
+
+        /* ── Action Buttons ── */
+        .action-btns { display: flex; gap: 6px; }
+        .action-btn {
+            width: 30px; height: 30px; border-radius: 6px; border: none;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 13px; transition: all .2s;
+        }
+        .action-btn.create { background: #ECFDF5; color: #059669; }
+        .action-btn.create:hover { background: #D1FAE5; }
+        /* ── Modal ── */
+        .bd-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 200;
+            display: flex; align-items: center; justify-content: center; padding: 20px;
+            opacity: 0; visibility: hidden; transition: all .25s;
+        }
+        .bd-overlay.is-active { opacity: 1; visibility: visible; }
+        .bd-modal {
+            background: #fff; border-radius: 16px; width: 100%; max-width: 750px;
+            max-height: 85vh; display: flex; flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0,0,0,.15);
+        }
+        .bd-modal-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 20px 24px; border-bottom: 1px solid #F1F5F9;
+        }
+        .bd-modal-header h3 { font-size: 16px; font-weight: 700; color: #1E293B; display: flex; align-items: center; gap: 8px; }
+        .bd-modal-header .close-btn {
+            width: 32px; height: 32px; border-radius: 8px; border: none; background: #F1F5F9;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; color: #64748B; transition: all .15s;
+        }
+        .bd-modal-header .close-btn:hover { background: #E2E8F0; color: #1E293B; }
+        .bd-modal-body { padding: 20px 24px; overflow-y: auto; flex: 1; }
+        .bd-modal-footer {
+            padding: 16px 24px; border-top: 1px solid #F1F5F9;
+            display: flex; justify-content: flex-end; gap: 10px;
+        }
+        .bd-info-box {
+            background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 14px 16px; margin-bottom: 16px;
+        }
+        .bd-info-row { display: flex; gap: 8px; padding: 6px 0; font-size: 13px; }
+        .bd-info-row:not(:last-child) { border-bottom: 1px solid #F1F5F9; }
+        .bd-info-label { color: #64748B; min-width: 150px; flex-shrink: 0; font-weight: 500; }
+        .bd-info-value { color: #1E293B; font-weight: 600; }
+        .bd-contract-list {
+            border: 1px solid #E2E8F0; border-radius: 10px; overflow: hidden;
+        }
+        .bd-contract-list table { width: 100%; border-collapse: collapse; }
+        .bd-contract-list thead th {
+            background: #F8FAFC; color: #475569; font-weight: 600; font-size: 12px;
+            padding: 10px 14px; text-align: left; border-bottom: 1px solid #E2E8F0;
+            position: static;
+        }
+        .bd-contract-list tbody td {
+            padding: 10px 14px; font-size: 13px; color: #334155; border-bottom: 1px solid #F1F5F9;
+        }
+        .bd-contract-list tbody tr:last-child td { border-bottom: none; }
+        .bd-contract-no { font-weight: 700; color: #2563EB; }
+
+        /* ── Buttons ── */
+        .btn-cancel {
+            padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 600;
+            border: 1px solid #E2E8F0; background: #fff; color: #64748B;
+            cursor: pointer; font-family: inherit; transition: all .15s;
+        }
+        .btn-cancel:hover { background: #F8FAFC; border-color: #CBD5E1; }
+        .btn-confirm {
+            padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 600;
+            border: none; background: #10B981; color: #fff;
+            cursor: pointer; font-family: inherit; transition: all .15s;
+        }
+        .btn-confirm:hover { background: #059669; }
+
+        /* ── Success animation ── */
+        .bd-success-msg {
+            display: none; text-align: center; padding: 24px;
+        }
+        .bd-success-msg.show { display: block; }
+        .bd-success-msg .check-icon {
+            width: 56px; height: 56px; border-radius: 50%; background: #D1FAE5;
+            display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px;
+        }
+
+        /* ── Pagination ── */
+        .pagination {
+            display: flex; justify-content: center; align-items: center; gap: 4px; padding: 20px;
+        }
+        .pagination button {
+            width: 36px; height: 36px; border-radius: 8px; border: 1px solid #E2E8F0;
+            background: #fff; color: #475569; font-size: 14px; font-weight: 500;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-family: inherit; transition: all .2s;
+        }
+        .pagination button:hover { background: #EFF6FF; border-color: #2563EB; color: #2563EB; }
+        .pagination button.pg-active { background: #2563EB; color: #fff; border-color: #2563EB; }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            tbody td { font-size: 12px; padding: 10px 12px; }
+            thead th { font-size: 12px; padding: 10px 12px; }
+            .bd-modal { max-width: 95vw; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="topbar-container"></div>
+<div id="sidebar-container"></div>
+
+<!-- Main Content -->
+<div class="ml-[260px] mt-14 p-7 min-h-[calc(100vh-56px)] flex flex-col max-md:ml-0 max-md:p-4 max-[480px]:mt-[50px] max-[480px]:p-3">
+    <!-- Breadcrumb -->
+    <div class="flex items-center gap-2 text-sm text-slate-400 mb-4">
+        <a href="contract-status-edit.html" class="hover:text-slate-600 transition-colors no-underline text-slate-400">การจัดการสัญญา</a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+        <span class="text-slate-700 font-medium">สร้างสัญญาย้อนหลัง</span>
+    </div>
+
+    <!-- Page Header -->
+    <div class="flex justify-between items-start mb-5 max-md:flex-col max-md:gap-3">
+        <div>
+            <h1 class="text-[26px] font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl max-[480px]:text-lg">
+                <i data-lucide="calendar-plus" class="w-5.5 h-5.5 text-[#10B981]"></i>
+                <span>สร้างสัญญาย้อนหลัง</span>
+            </h1>
+            <p class="text-slate-500 text-sm mt-1">สร้างข้อมูลสัญญาที่ดำเนินการไปแล้วย้อนหลัง — <strong>8</strong> รายการ</p>
+        </div>
+        <div class="flex gap-2.5 items-center shrink-0">
+            <a href="contract-status-edit.html" class="inline-flex items-center justify-center gap-2 px-4.5 py-2.5 rounded-lg text-sm font-medium bg-white border border-slate-300 text-slate-500 hover:bg-slate-50 hover:border-slate-400 transition-all no-underline whitespace-nowrap cursor-pointer font-[inherit]">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                <span>กลับ</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="flex gap-3 items-center mb-5 flex-wrap max-md:flex-col max-md:items-stretch max-md:gap-2.5">
+        <div class="flex-1 min-w-[200px] relative max-md:w-full max-md:min-w-0">
+            <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" placeholder="ค้นหาบริษัท, เลขสัญญา..." class="w-full py-2.5 pl-9 pr-3.5 border border-slate-300 rounded-lg text-sm font-[inherit] text-slate-600 bg-white outline-none transition-all focus:border-blue-500 focus:ring-3 focus:ring-blue-500/10">
+        </div>
+        <select class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27%2364748B%27%20stroke-width=%272%27%3E%3Cpolyline%20points=%276%209%2012%2015%2018%209%27/%3E%3C/svg%3E')] bg-no-repeat bg-[right_10px_center] max-md:flex-1">
+            <option>สถานะทั้งหมด</option>
+            <option>รอดำเนินการ</option>
+            <option>ดำเนินการแล้ว</option>
+        </select>
+        <select class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27%2364748B%27%20stroke-width=%272%27%3E%3Cpolyline%20points=%276%209%2012%2015%2018%209%27/%3E%3C/svg%3E')] bg-no-repeat bg-[right_10px_center] max-md:flex-1">
+            <option>ปีทั้งหมด</option>
+            <option>2025</option>
+            <option>2024</option>
+            <option>2023</option>
+        </select>
+    </div>
+
+    <!-- Table -->
+    <div class="table-card">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>การจัดการ</th>
+                        <th>บริษัทผู้ทำสัญญา</th>
+                        <th>ปีย้อนหลัง</th>
+                        <th>จำนวนสัญญา</th>
+                        <th>สถานะ</th>
+                        <th>ผู้รับผิดชอบสัญญา</th>
+                        <th>แผนก</th>
+                        <th>เลขสัญญา</th>
+                        <th>วันที่สร้างคำขอ</th>
+                        <th>วันที่ดำเนินการ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Row 1 - รอดำเนินการ -->
+                    <tr>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn create" title="สร้างสัญญา" onclick="event.stopPropagation();openBackdateModal(this)"><i data-lucide="file-plus-2" class="w-3.5 h-3.5"></i></button>
+                            </div>
+                        </td>
+                        <td style="font-weight:600;color:#1E293B;">บ. แพลนบี มีเดีย จำกัด (มหาชน)</td>
+                        <td>2025</td>
+                        <td><span style="font-weight:700;color:#2563EB;">5</span> ฉบับ</td>
+                        <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
+                        <td>นางสาววิภา สุขใจ</td>
+                        <td>ฝ่ายกฎหมาย</td>
+                        <td style="color:#94A3B8;">—</td>
+                        <td>20/03/2026</td>
+                        <td style="color:#94A3B8;">—</td>
+                    </tr>
+                    <!-- Row 2 - รอดำเนินการ -->
+                    <tr>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn create" title="สร้างสัญญา" onclick="event.stopPropagation();openBackdateModal(this)"><i data-lucide="file-plus-2" class="w-3.5 h-3.5"></i></button>
+                            </div>
+                        </td>
+                        <td style="font-weight:600;color:#1E293B;">บ. เทคโนโลยี แอดวานซ์ จำกัด</td>
+                        <td>2024</td>
+                        <td><span style="font-weight:700;color:#2563EB;">3</span> ฉบับ</td>
+                        <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
+                        <td>นายสมชาย โชดี</td>
+                        <td>IT Department</td>
+                        <td style="color:#94A3B8;">—</td>
+                        <td>18/03/2026</td>
+                        <td style="color:#94A3B8;">—</td>
+                    </tr>
+                    <!-- Row 3 - รอดำเนินการ -->
+                    <tr>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn create" title="สร้างสัญญา" onclick="event.stopPropagation();openBackdateModal(this)"><i data-lucide="file-plus-2" class="w-3.5 h-3.5"></i></button>
+                            </div>
+                        </td>
+                        <td style="font-weight:600;color:#1E293B;">บ. ไบร์ท ไซน์ จำกัด</td>
+                        <td>2025</td>
+                        <td><span style="font-weight:700;color:#2563EB;">2</span> ฉบับ</td>
+                        <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
+                        <td>นายวิชัย เจริญสุข</td>
+                        <td>Marketing</td>
+                        <td style="color:#94A3B8;">—</td>
+                        <td>22/03/2026</td>
+                        <td style="color:#94A3B8;">—</td>
+                    </tr>
+                    <!-- Row 4 - รอดำเนินการ -->
+                    <tr>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn create" title="สร้างสัญญา" onclick="event.stopPropagation();openBackdateModal(this)"><i data-lucide="file-plus-2" class="w-3.5 h-3.5"></i></button>
+                            </div>
+                        </td>
+                        <td style="font-weight:600;color:#1E293B;">TRUE Corp. จำกัด (มหาชน)</td>
+                        <td>2024</td>
+                        <td><span style="font-weight:700;color:#2563EB;">4</span> ฉบับ</td>
+                        <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
+                        <td>นางสาววิภา สุขใจ</td>
+                        <td>IT Department</td>
+                        <td style="color:#94A3B8;">—</td>
+                        <td>15/03/2026</td>
+                        <td style="color:#94A3B8;">—</td>
+                    </tr>
+                    <!-- Row 5 - รอดำเนินการ -->
+                    <tr>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn create" title="สร้างสัญญา" onclick="event.stopPropagation();openBackdateModal(this)"><i data-lucide="file-plus-2" class="w-3.5 h-3.5"></i></button>
+                            </div>
+                        </td>
+                        <td style="font-weight:600;color:#1E293B;">บ. การ์ด ซิเคียวริตี้ จำกัด</td>
+                        <td>2023</td>
+                        <td><span style="font-weight:700;color:#2563EB;">2</span> ฉบับ</td>
+                        <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
+                        <td>นายสมชาย โชดี</td>
+                        <td>Operations</td>
+                        <td style="color:#94A3B8;">—</td>
+                        <td>10/03/2026</td>
+                        <td style="color:#94A3B8;">—</td>
+                    </tr>
+                    <!-- Row 6 - ดำเนินการแล้ว -->
+                    <tr>
+                        <td>
+                            <div class="action-btns"></div>
+                        </td>
+                        <td style="font-weight:600;color:#1E293B;">บ. คลีนเซอร์วิส จำกัด</td>
+                        <td>2025</td>
+                        <td><span style="font-weight:700;color:#2563EB;">3</span> ฉบับ</td>
+                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
+                        <td>นายวิชัย เจริญสุข</td>
+                        <td>Operations</td>
+                        <td style="font-weight:600;color:#2563EB;">PB2025/201, PB2025/202, PB2025/203</td>
+                        <td>05/03/2026</td>
+                        <td>01/04/2026</td>
+                    </tr>
+                    <!-- Row 7 - ดำเนินการแล้ว -->
+                    <tr>
+                        <td>
+                            <div class="action-btns"></div>
+                        </td>
+                        <td style="font-weight:600;color:#1E293B;">AWS Thailand จำกัด</td>
+                        <td>2024</td>
+                        <td><span style="font-weight:700;color:#2563EB;">2</span> ฉบับ</td>
+                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
+                        <td>นางสาววิภา สุขใจ</td>
+                        <td>IT Department</td>
+                        <td style="font-weight:600;color:#2563EB;">PB2024/150, PB2024/151</td>
+                        <td>28/02/2026</td>
+                        <td>25/03/2026</td>
+                    </tr>
+                    <!-- Row 8 - ดำเนินการแล้ว -->
+                    <tr>
+                        <td>
+                            <div class="action-btns"></div>
+                        </td>
+                        <td style="font-weight:600;color:#1E293B;">บ. ออฟฟิศ ซัพพลาย จำกัด</td>
+                        <td>2023</td>
+                        <td><span style="font-weight:700;color:#2563EB;">1</span> ฉบับ</td>
+                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
+                        <td>นายสมชาย โชดี</td>
+                        <td>Operations</td>
+                        <td style="font-weight:600;color:#2563EB;">PB2023/088</td>
+                        <td>20/02/2026</td>
+                        <td>15/03/2026</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Pagination -->
+        <div class="pagination">
+            <button class="nav" title="ก่อนหน้า"><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i></button>
+            <button class="pg-active">1</button>
+            <button>2</button>
+            <button class="nav" title="ถัดไป"><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></button>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════ MODAL: สร้างสัญญาย้อนหลัง ══════════ -->
+<div class="bd-overlay" id="backdateModal">
+    <div class="bd-modal">
+        <div class="bd-modal-header">
+            <h3><i data-lucide="file-plus-2" class="w-5 h-5" style="color:#10B981;"></i> สร้างสัญญาย้อนหลัง</h3>
+            <button class="close-btn" onclick="closeBackdateModal()"><i data-lucide="x" class="w-4 h-4"></i></button>
+        </div>
+        <div class="bd-modal-body" id="bdModalBody">
+            <!-- Info Box -->
+            <div class="bd-info-box">
+                <div class="bd-info-row"><div class="bd-info-label">บริษัทผู้ทำสัญญา</div><div class="bd-info-value" id="bdCompany">—</div></div>
+                <div class="bd-info-row"><div class="bd-info-label">ปีย้อนหลัง</div><div class="bd-info-value" id="bdYear">—</div></div>
+                <div class="bd-info-row"><div class="bd-info-label">จำนวนสัญญา</div><div class="bd-info-value" id="bdCount">—</div></div>
+                <div class="bd-info-row"><div class="bd-info-label">ผู้รับผิดชอบ</div><div class="bd-info-value" id="bdOwner">—</div></div>
+                <div class="bd-info-row"><div class="bd-info-label">แผนก</div><div class="bd-info-value" id="bdDept">—</div></div>
+            </div>
+
+            <!-- Contract list to generate -->
+            <div style="font-size:13px;font-weight:600;color:#475569;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+                <i data-lucide="list" class="w-4 h-4" style="color:#10B981;"></i>
+                รายการสัญญาที่จะสร้าง
+            </div>
+            <div class="bd-contract-list" id="bdContractList">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- ความเห็น / ข้อเสนอแนะ -->
+            <div style="margin-top:16px;">
+                <label style="display:block;font-size:13px;font-weight:600;color:#475569;margin-bottom:6px;">ความเห็น / ข้อเสนอแนะ</label>
+                <textarea id="bdComment" placeholder="กรอกความเห็นหรือข้อเสนอแนะเพิ่มเติม (ถ้ามี)" style="width:100%;min-height:80px;border:1px solid #CBD5E1;border-radius:10px;padding:12px;font-size:14px;font-family:inherit;resize:vertical;outline:none;transition:border .2s;box-sizing:border-box;" onfocus="this.style.borderColor='#10B981';this.style.boxShadow='0 0 0 3px rgba(16,185,129,.12)'" onblur="this.style.borderColor='#CBD5E1';this.style.boxShadow='none'"></textarea>
+            </div>
+        </div>
+
+        <!-- Success message (hidden by default) -->
+        <div class="bd-success-msg" id="bdSuccessMsg">
+            <div class="check-icon"><i data-lucide="check" class="w-7 h-7" style="color:#059669;"></i></div>
+            <div style="font-size:16px;font-weight:700;color:#1E293B;margin-bottom:4px;">สร้างสัญญาย้อนหลังสำเร็จ</div>
+            <div style="font-size:13px;color:#64748B;" id="bdSuccessText">สร้างเลขสัญญาเรียบร้อยแล้ว</div>
+        </div>
+
+        <div class="bd-modal-footer" id="bdModalFooter">
+            <button class="btn-cancel" onclick="closeBackdateModal()">ยกเลิก</button>
+            <button class="btn-confirm" onclick="confirmBackdate()"><i data-lucide="check" class="w-4 h-4" style="margin-right:4px;"></i> ยืนยัน</button>
+        </div>
+    </div>
+</div>
+
+<script src="shared-layout.js"></script>
+<script>
+    document.getElementById('topbar-container').innerHTML = renderTopbar();
+    document.getElementById('sidebar-container').innerHTML = renderSidebar();
+
+    // Set active sidebar item
+    document.querySelectorAll('.sidebar-item').forEach(el => {
+        el.classList.remove('active');
+        if (el.textContent.trim().includes('การจัดการสัญญา')) el.classList.add('active');
+    });
+
+    // ── Mock data per row ──
+    const backdateData = {
+        0: {
+            company: 'บ. แพลนบี มีเดีย จำกัด (มหาชน)', year: '2025', count: 5,
+            owner: 'นางสาววิภา สุขใจ', dept: 'ฝ่ายกฎหมาย',
+            contracts: [
+                { name: 'สัญญาเช่าพื้นที่โฆษณา ถ.รัชดา', type: 'สัญญาเช่า', period: '01/01/2025 - 31/12/2025' },
+                { name: 'สัญญาจ้างผลิตสื่อ Digital', type: 'สัญญาจ้างบริการ', period: '01/03/2025 - 28/02/2026' },
+                { name: 'สัญญาเช่าพื้นที่โฆษณา ถ.พระราม 9', type: 'สัญญาเช่า', period: '01/02/2025 - 31/01/2026' },
+                { name: 'สัญญาจ้างที่ปรึกษากฎหมาย', type: 'สัญญาจ้างที่ปรึกษา', period: '01/04/2025 - 31/03/2026' },
+                { name: 'สัญญาจ้างบริการขนส่ง', type: 'สัญญาจ้างบริการ', period: '01/06/2025 - 31/05/2026' },
+            ]
+        },
+        1: {
+            company: 'บ. เทคโนโลยี แอดวานซ์ จำกัด', year: '2024', count: 3,
+            owner: 'นายสมชาย โชดี', dept: 'IT Department',
+            contracts: [
+                { name: 'สัญญาจ้างพัฒนาระบบ ERP', type: 'สัญญาจ้างบริการ', period: '01/05/2024 - 30/04/2025' },
+                { name: 'สัญญาบำรุงรักษาระบบ', type: 'สัญญาจ้างบริการ', period: '01/07/2024 - 30/06/2025' },
+                { name: 'สัญญาจ้างพัฒนาแอปมือถือ', type: 'สัญญาจ้างบริการ', period: '01/09/2024 - 31/08/2025' },
+            ]
+        },
+        2: {
+            company: 'บ. ไบร์ท ไซน์ จำกัด', year: '2025', count: 2,
+            owner: 'นายวิชัย เจริญสุข', dept: 'Marketing',
+            contracts: [
+                { name: 'สัญญาผลิตป้าย Billboard', type: 'สัญญาผลิตงาน', period: '01/01/2025 - 31/12/2025' },
+                { name: 'สัญญาผลิตป้าย LED', type: 'สัญญาผลิตงาน', period: '01/03/2025 - 28/02/2026' },
+            ]
+        },
+        3: {
+            company: 'TRUE Corp. จำกัด (มหาชน)', year: '2024', count: 4,
+            owner: 'นางสาววิภา สุขใจ', dept: 'IT Department',
+            contracts: [
+                { name: 'สัญญาบริการ Internet Leased Line', type: 'สัญญาบริการ SaaS', period: '01/01/2024 - 31/12/2024' },
+                { name: 'สัญญาบริการ Cloud Server', type: 'สัญญาบริการ SaaS', period: '01/04/2024 - 31/03/2025' },
+                { name: 'สัญญาบริการ Mobile Corporate', type: 'สัญญาบริการ SaaS', period: '01/06/2024 - 31/05/2025' },
+                { name: 'สัญญาบริการ Firewall', type: 'สัญญาบริการ SaaS', period: '01/08/2024 - 31/07/2025' },
+            ]
+        },
+        4: {
+            company: 'บ. การ์ด ซิเคียวริตี้ จำกัด', year: '2023', count: 2,
+            owner: 'นายสมชาย โชดี', dept: 'Operations',
+            contracts: [
+                { name: 'สัญญาจ้างรักษาความปลอดภัย สนง.ใหญ่', type: 'สัญญาจ้างบริการ', period: '01/01/2023 - 31/12/2023' },
+                { name: 'สัญญาจ้างรักษาความปลอดภัย คลังสินค้า', type: 'สัญญาจ้างบริการ', period: '01/03/2023 - 28/02/2024' },
+            ]
+        }
+    };
+
+    let currentRowIdx = null;
+
+    function openBackdateModal(btn) {
+        const row = btn.closest('tr');
+        const rows = Array.from(row.parentElement.children);
+        currentRowIdx = rows.indexOf(row);
+
+        const data = backdateData[currentRowIdx];
+        if (!data) return;
+
+        // Fill info
+        document.getElementById('bdCompany').textContent = data.company;
+        document.getElementById('bdYear').textContent = data.year;
+        document.getElementById('bdCount').textContent = data.count + ' ฉบับ';
+        document.getElementById('bdOwner').textContent = data.owner;
+        document.getElementById('bdDept').textContent = data.dept;
+
+        // Build contract list table
+        let html = '<table><thead><tr><th>ลำดับ</th><th>ชื่อสัญญา</th><th>ประเภทสัญญา</th><th>ระยะเวลาสัญญา</th><th>เลขสัญญาที่จะสร้าง</th></tr></thead><tbody>';
+        const prefix = 'PB' + data.year + '/';
+        const startNum = Math.floor(Math.random() * 200) + 100;
+        data._generatedNos = [];
+        data.contracts.forEach(function(c, i) {
+            const no = prefix + String(startNum + i).padStart(3, '0');
+            data._generatedNos.push(no);
+            html += '<tr>';
+            html += '<td style="text-align:center;color:#94A3B8;font-weight:600;">' + (i + 1) + '</td>';
+            html += '<td style="font-weight:600;color:#1E293B;">' + c.name + '</td>';
+            html += '<td>' + c.type + '</td>';
+            html += '<td>' + c.period + '</td>';
+            html += '<td class="bd-contract-no">' + no + '</td>';
+            html += '</tr>';
+        });
+        html += '</tbody></table>';
+        document.getElementById('bdContractList').innerHTML = html;
+
+        // Reset state
+        document.getElementById('bdModalBody').style.display = '';
+        document.getElementById('bdSuccessMsg').classList.remove('show');
+        document.getElementById('bdModalFooter').style.display = '';
+
+        document.getElementById('backdateModal').classList.add('is-active');
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function closeBackdateModal() {
+        document.getElementById('backdateModal').classList.remove('is-active');
+    }
+
+    function confirmBackdate() {
+        const data = backdateData[currentRowIdx];
+        if (!data) return;
+
+        // Hide body, show success
+        document.getElementById('bdModalBody').style.display = 'none';
+        document.getElementById('bdSuccessMsg').classList.add('show');
+        document.getElementById('bdSuccessText').textContent =
+            'สร้างเลขสัญญา ' + data._generatedNos.join(', ') + ' เรียบร้อยแล้ว';
+        document.getElementById('bdModalFooter').innerHTML =
+            '<button class="btn-confirm" onclick="closeBackdateModal()" style="background:#2563EB;"><i data-lucide="check" class="w-4 h-4" style="margin-right:4px;"></i> ปิด</button>';
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+
+        // Get today's date as dd/mm/yyyy
+        const now = new Date();
+        const todayStr = String(now.getDate()).padStart(2,'0') + '/' + String(now.getMonth()+1).padStart(2,'0') + '/' + now.getFullYear();
+
+        // Update the table row
+        const rows = document.querySelectorAll('tbody tr');
+        const row = rows[currentRowIdx];
+        if (row) {
+            const cells = row.querySelectorAll('td');
+            // Update action column — remove create icon
+            cells[0].innerHTML = '<div class="action-btns"></div>';
+            // Update status
+            cells[4].innerHTML = '<span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span>';
+            // Update contract numbers
+            cells[7].style.fontWeight = '600';
+            cells[7].style.color = '#2563EB';
+            cells[7].textContent = data._generatedNos.join(', ');
+            // Update วันที่ดำเนินการ
+            cells[9].style.color = '#475569';
+            cells[9].textContent = todayStr;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+    }
+
+    // Close modal on overlay click
+    document.getElementById('backdateModal').addEventListener('click', function(e) {
+        if (e.target === this) closeBackdateModal();
+    });
+
+    // Pagination
+    document.querySelectorAll('.pagination button').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.pagination button').forEach(b => b.classList.remove('pg-active'));
+            if (!this.classList.contains('nav')) this.classList.add('pg-active');
+        });
+    });
+
+    // Init Lucide
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+</script>
+</body>
+</html>

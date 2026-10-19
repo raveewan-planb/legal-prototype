@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal System - การจัดการสัญญา</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+        @theme {
+            --font-sans: 'Kanit', sans-serif;
+        }
+    </style>
+    <link rel="stylesheet" href="shared-styles.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        .shortcut-card {
+            background: #fff;
+            border: 1px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+        .shortcut-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            border-radius: 16px 16px 0 0;
+            transition: height 0.2s ease;
+        }
+        .shortcut-card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            transform: translateY(-3px);
+            border-color: transparent;
+        }
+        .shortcut-card:hover::before {
+            height: 6px;
+        }
+        .shortcut-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+        }
+        .shortcut-card:hover .shortcut-icon {
+            transform: scale(1.08);
+        }
+        .shortcut-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #334155;
+            text-align: center;
+            line-height: 1.4;
+        }
+        .shortcut-desc {
+            font-size: 12px;
+            color: #94A3B8;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        /* Color Themes */
+        .sc-transfer::before { background: #3B82F6; }
+        .sc-transfer .shortcut-icon { background: #EFF6FF; color: #3B82F6; }
+
+        .sc-approver::before { background: #8B5CF6; }
+        .sc-approver .shortcut-icon { background: #F5F3FF; color: #8B5CF6; }
+
+        .sc-renew::before { background: #F59E0B; }
+        .sc-renew .shortcut-icon { background: #FFFBEB; color: #F59E0B; }
+
+        .sc-backdate::before { background: #10B981; }
+        .sc-backdate .shortcut-icon { background: #ECFDF5; color: #10B981; }
+
+        .sc-revert::before { background: #6366F1; }
+        .sc-revert .shortcut-icon { background: #EEF2FF; color: #6366F1; }
+
+        .sc-cancel::before { background: #EF4444; }
+        .sc-cancel .shortcut-icon { background: #FEF2F2; color: #EF4444; }
+
+        .sc-sign-approve::before { background: #EC4899; }
+        .sc-sign-approve .shortcut-icon { background: #FDF2F8; color: #EC4899; }
+
+        /* Section Header */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .section-header .section-icon {
+            width: 40px; height: 40px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .section-header .section-title {
+            font-size: 18px; font-weight: 700; color: #1B3A6B;
+        }
+        .section-header .section-desc {
+            font-size: 13px; color: #64748B; margin-top: 2px;
+        }
+        .section-divider {
+            border: none; border-top: 2px dashed #CBD5E1; margin: 32px 0;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen font-sans">
+
+<div id="topbar"></div>
+<div id="sidebar"></div>
+
+<div class="ml-[260px] mt-14 p-7 min-h-[calc(100vh-56px)] flex flex-col max-md:ml-0 max-md:p-4 max-[480px]:mt-[50px] max-[480px]:p-3">
+    <!-- Page Header -->
+    <div class="flex justify-between items-start mb-6 max-md:flex-col max-md:gap-3">
+        <div>
+            <h1 class="text-[26px] font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl max-[480px]:text-lg">
+                <i data-lucide="pencil" class="w-5.5 h-5.5 text-[#2563EB]"></i>
+                <span>การจัดการสัญญา</span>
+            </h1>
+            <p class="text-slate-500 text-sm mt-1">เลือกรายการที่ต้องการดำเนินการ</p>
+        </div>
+    </div>
+
+    <!-- ═══════ Section 1: ผู้ใช้งาน ═══════ -->
+    <div class="section-header">
+        <div class="section-icon" style="background:#EFF6FF; color:#2563EB;">
+            <i data-lucide="user" class="w-5 h-5"></i>
+        </div>
+        <div>
+            <div class="section-title">ผู้ใช้งาน</div>
+            <div class="section-desc">รายการดำเนินการสำหรับผู้ใช้งานทั่วไป — <strong>3</strong> รายการ</div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-5 max-lg:grid-cols-2 max-sm:grid-cols-1">
+
+            <!-- 1. โอนย้ายสัญญา -->
+            <a href="contract-transfer.html" class="shortcut-card sc-transfer">
+                <div class="shortcut-icon">
+                    <i data-lucide="arrow-right-left" class="w-7 h-7"></i>
+                </div>
+                <div class="shortcut-label">โอนย้ายสัญญา</div>
+                <div class="shortcut-desc">โอนย้ายสัญญาไปยังผู้รับผิดชอบหรือแผนกอื่น</div>
+            </a>
+
+            <!-- 2. เปลี่ยนผู้อนุมัติสัญญา -->
+            <a href="contract-change-approver.html" class="shortcut-card sc-approver">
+                <div class="shortcut-icon">
+                    <i data-lucide="user-cog" class="w-7 h-7"></i>
+                </div>
+                <div class="shortcut-label">เปลี่ยนผู้อนุมัติสัญญา</div>
+                <div class="shortcut-desc">แก้ไขหรือเปลี่ยนผู้มีอำนาจอนุมัติสัญญา</div>
+            </a>
+
+            <!-- 3. ปรับสถานะการต่อสัญญา -->
+            <a href="contract-renew-status.html" class="shortcut-card sc-renew">
+                <div class="shortcut-icon">
+                    <i data-lucide="refresh-cw" class="w-7 h-7"></i>
+                </div>
+                <div class="shortcut-label">ปรับสถานะการต่อสัญญา</div>
+                <div class="shortcut-desc">ปรับสถานะการต่ออายุสัญญาที่ใกล้หมดอายุ</div>
+            </a>
+
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- ═══════ Section 2: ผู้ดูแลฝ่ายกฎหมาย ═══════ -->
+    <div class="section-header">
+        <div class="section-icon" style="background:#FDF2F8; color:#BE185D;">
+            <i data-lucide="shield-check" class="w-5 h-5"></i>
+        </div>
+        <div>
+            <div class="section-title">ผู้ดูแลฝ่ายกฎหมาย</div>
+            <div class="section-desc">รายการดำเนินการสำหรับผู้ดูแลฝ่ายกฎหมาย — <strong>7</strong> รายการ</div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-4 gap-5 max-lg:grid-cols-2 max-sm:grid-cols-1">
+
+            <!-- 1. โอนย้ายสัญญา -->
+            <a href="contract-transfer-admin.html" class="shortcut-card sc-transfer">
+                <div class="shortcut-icon">
+                    <i data-lucide="arrow-right-left" class="w-7 h-7"></i>
+                </div>
+                <div class="shortcut-label">โอนย้ายสัญญา</div>
+                <div class="shortcut-desc">โอนย้ายสัญญาไปยังผู้รับผิดชอบหรือแผนกอื่น</div>
+            </a>
+
+            <!-- 2. เปลี่ยนผู้อนุมัติสัญญา -->
+            <a href="contract-change-approver-admin.html" class="shortcut-card sc-approver">
+                <div class="shortcut-icon">
+                    <i data-lucide="user-cog" class="w-7 h-7"></i>
+                </div>
+                <div class="shortcut-label">เปลี่ยนผู้อนุมัติสัญญา</div>
+                <div class="shortcut-desc">แก้ไขหรือเปลี่ยนผู้มีอำนาจอนุมัติสัญญา</div>
+            </a>
+
+            <!-- 3. ปรับสถานะการต่อสัญญา -->
+            <a href="contract-renew-status-admin.html" class="shortcut-card sc-renew">
+                <div class="shortcut-icon">
+                    <i data-lucide="refresh-cw" class="w-7 h-7"></i>
+                </div>
+                <div class="shortcut-label">ปรับสถานะการต่อสัญญา</div>
+                <div class="shortcut-desc">ปรับสถานะการต่ออายุสัญญาที่ใกล้หมดอายุ</div>
+            </a>
+
+            <!-- 4. สร้างสัญญาย้อนหลัง -->
+            <a href="contract-backdate.html" class="shortcut-card sc-backdate">
+                <div class="shortcut-icon">
+                    <i data-lucide="calendar-plus" class="w-7 h-7"></i>
+                </div>
+                <div class="shortcut-label">สร้างสัญญาย้อนหลัง</div>
+                <div class="shortcut-desc">สร้างข้อมูลสัญญาที่ดำเนินการไปแล้วย้อนหลัง</div>
+            </a>
+
+            <!-- 5. ถอยสัญญา -->
+            <a href="contract-revert.html" class="shortcut-card sc-revert">
+                <div class="shortcut-icon">
+                    <i data-lucide="undo-2" class="w-7 h-7"></i>
+                </div>
+                <div class="shortcut-label">ถอยสัญญา</div>
+                <div class="shortcut-desc">ย้อนสถานะสัญญากลับไปขั้นตอนก่อนหน้า</div>
+            </a>
+
+            <!-- 6. ยกเลิกสัญญา -->
+            <a href="contract-cancel.html" class="shortcut-card sc-cancel">
+                <div class="shortcut-icon">
+                    <i data-lucide="file-x-2" class="w-7 h-7"></i>
+                </div>
+                <div class="shortcut-label">ยกเลิกสัญญา</div>
+                <div class="shortcut-desc">ยกเลิกสัญญาที่อยู่ระหว่างดำเนินการ</div>
+            </a>
+
+            <!-- 7. ขออนุมัติลงนามสัญญา -->
+            <a href="contract-sign-approve.html" class="shortcut-card sc-sign-approve">
+                <div class="shortcut-icon">
+                    <i data-lucide="stamp" class="w-7 h-7"></i>
+                </div>
+                <div class="shortcut-label">ขออนุมัติลงนามสัญญา</div>
+                <div class="shortcut-desc">ส่งคำขออนุมัติให้ผู้มีอำนาจลงนามในสัญญา</div>
+            </a>
+
+    </div>
+
+</div>
+
+<script src="shared-layout.js"></script>
+<script>
+    document.getElementById('topbar').innerHTML = renderTopbar();
+    document.getElementById('sidebar').innerHTML = renderSidebar();
+
+    // Set active sidebar item
+    document.querySelectorAll('.sidebar-item').forEach(el => {
+        el.classList.remove('active');
+        if (el.textContent.trim().includes('การจัดการสัญญา')) el.classList.add('active');
+    });
+
+    lucide.createIcons();
+</script>
+</body>
+</html>
