@@ -118,10 +118,54 @@ select {
     color: #fff; font-size: 20px; cursor: pointer; align-items: center; justify-content: center;
     border-radius: 8px; transition: background .2s;
 }
-/* Desktop sidebar collapsed state */
-.sidebar.collapsed { left: -270px; }
-.sidebar.collapsed ~ .ml-\[260px\],
+/* Desktop sidebar collapsed state — icon rail */
+.sidebar.collapsed { width: 72px; left: 0; overflow-x: hidden; }
+.sidebar.collapsed .sidebar-item { justify-content: center; padding: 10px 0; margin: 2px 10px; position: relative; }
+.sidebar.collapsed .sidebar-item > *:not(svg):not(i) { display: none; }
+.sidebar.collapsed .sidebar-item { font-size: 0; gap: 0; }
+.sidebar.collapsed .sidebar-item svg, .sidebar.collapsed .sidebar-item i { font-size: 14px; width: 20px; height: 20px; }
+.sidebar.collapsed .sidebar-section-title { display: none; }
+.sidebar.collapsed .sidebar-brand-text { display: none; }
+.sidebar.collapsed .sidebar-toggle { transform: rotate(180deg); }
+.sidebar.collapsed ~ .ml-\[260px\] { margin-left: 72px; }
 .sidebar-hidden .ml-\[260px\] { margin-left: 0; }
+
+/* Collapse/expand chevron — fixed sibling of sidebar so it is not clipped by overflow */
+.sidebar-toggle {
+    position: fixed; top: 72px; left: 248px; width: 24px; height: 24px;
+    background: #fff; border: 1px solid #E2E8F0; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+    color: #64748B; box-shadow: 0 2px 8px rgba(15,23,42,.12);
+    transition: left .3s ease, background .2s ease, color .2s ease, transform .2s ease;
+    z-index: 95;
+}
+.sidebar-toggle:hover { background: #6fc5ea; color: #fff; border-color: #6fc5ea; transform: scale(1.12); }
+.sidebar-toggle svg { width: 14px; height: 14px; transition: transform .3s ease; }
+.sidebar.collapsed ~ .sidebar-toggle { left: 60px; }
+.sidebar.collapsed ~ .sidebar-toggle svg { transform: rotate(180deg); }
+@media (max-width: 1024px) {
+    .sidebar-toggle { left: 208px; }
+    .sidebar.collapsed ~ .sidebar-toggle { left: 60px; }
+}
+@media (max-width: 768px) {
+    .sidebar-toggle { display: none; }
+}
+
+/* Tooltip on collapsed sidebar hover */
+.sidebar.collapsed .sidebar-item::after {
+    content: attr(data-label); position: absolute; left: calc(100% + 14px); top: 50%;
+    transform: translateY(-50%); background: #1B3A6B; color: #fff; padding: 6px 12px;
+    border-radius: 6px; font-size: 12px; font-weight: 500; white-space: nowrap;
+    opacity: 0; pointer-events: none; transition: opacity .18s ease; z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,.15);
+}
+.sidebar.collapsed .sidebar-item:hover::after { opacity: 1; }
+.sidebar.collapsed .sidebar-item::before {
+    content: ''; position: absolute; left: calc(100% + 7px); top: 50%; transform: translateY(-50%);
+    width: 0; height: 0; border: 5px solid transparent; border-right-color: #1B3A6B;
+    opacity: 0; pointer-events: none; transition: opacity .18s ease; z-index: 100;
+}
+.sidebar.collapsed .sidebar-item:hover::before { opacity: 1; }
 .hamburger-btn:hover { background: rgba(255,255,255,.15); }
 .hamburger-btn svg { width: 20px; height: 20px; }
 

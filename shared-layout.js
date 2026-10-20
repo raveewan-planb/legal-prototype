@@ -40,28 +40,29 @@ function renderSidebar() {
     <div class="sidebar" id="sidebarNav">
         <div class="flex items-center gap-2.5 px-5 pb-4 border-b border-slate-200">
             <i data-lucide="file-text" class="w-5 h-5 text-[#2563EB]"></i>
-            <span class="text-[#2563EB] font-bold text-[17px]">Legal System</span>
+            <span class="text-[#2563EB] font-bold text-[17px] sidebar-brand-text">Legal System</span>
         </div>
-        <div class="px-4 pt-3.5 pb-1.5 text-xs font-semibold text-slate-400 uppercase tracking-wider">ภาพรวม</div>
-        <a class="sidebar-item" href="dashboard.html"><i data-lucide="layout-dashboard"></i> Dashboard</a>
-        <div class="px-4 pt-3.5 pb-1.5 text-xs font-semibold text-slate-400 uppercase tracking-wider">การจัดการสัญญา</div>
-        <a class="sidebar-item active" href="contract-repository.html"><i data-lucide="warehouse"></i> คลังสัญญา</a>
-        <a class="sidebar-item" href="contract-approve.html"><i data-lucide="circle-check-big"></i> อนุมัติสัญญา</a>
-        <a class="sidebar-item" href="contract-renew.html"><i data-lucide="refresh-cw"></i> ต่ออายุสัญญา</a>
-        <a class="sidebar-item" href="contract-tracking.html"><i data-lucide="clipboard-check"></i> ติดตามสัญญา</a>
-        <a class="sidebar-item" href="contract-status-edit.html"><i data-lucide="settings"></i> การจัดการสัญญา</a>
-        <div class="px-4 pt-3.5 pb-1.5 text-xs font-semibold text-slate-400 uppercase tracking-wider">คำขออื่น ๆ</div>
-        <a class="sidebar-item" href="#"><i data-lucide="file-text"></i> ขอเอกสาร</a>
-        <a class="sidebar-item" href="#"><i data-lucide="building-2"></i> ขอหนังสือค้ำประกัน</a>
-        <a class="sidebar-item" href="memo-repository.html"><i data-lucide="notebook-pen"></i> บันทึกข้อความ</a>
-        <div class="px-4 pt-3.5 pb-1.5 text-xs font-semibold text-slate-400 uppercase tracking-wider">ทรัพย์สินทางปัญญาและเอกสาร</div>
-        <a class="sidebar-item" href="#"><i data-lucide="hammer"></i> กรมธรรม์</a>
-        <a class="sidebar-item" href="#"><i data-lucide="id-card"></i> ใบอนุญาต</a>
-        <a class="sidebar-item" href="#"><i data-lucide="copyright"></i> เครื่องหมายการค้า</a>
-        <div class="px-4 pt-3.5 pb-1.5 text-xs font-semibold text-slate-400 uppercase tracking-wider">การให้คำปรึกษาและรายงาน</div>
-        <a class="sidebar-item" href="#"><i data-lucide="scale"></i> ปรึกษากฎหมาย</a>
-        <a class="sidebar-item" href="#"><i data-lucide="bar-chart-3"></i> รายงาน</a>
-    </div>`;
+        <div class="px-4 pt-3.5 pb-1.5 text-xs font-semibold text-slate-400 uppercase tracking-wider sidebar-section-title">ภาพรวม</div>
+        <a class="sidebar-item" href="dashboard.html" data-label="Dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <div class="px-4 pt-3.5 pb-1.5 text-xs font-semibold text-slate-400 uppercase tracking-wider sidebar-section-title">การจัดการสัญญา</div>
+        <a class="sidebar-item active" href="contract-repository.html" data-label="คลังสัญญา"><i data-lucide="warehouse"></i> คลังสัญญา</a>
+        <a class="sidebar-item" href="contract-approve.html" data-label="อนุมัติสัญญา"><i data-lucide="circle-check-big"></i> อนุมัติสัญญา</a>
+        <a class="sidebar-item" href="contract-renew.html" data-label="ต่ออายุสัญญา"><i data-lucide="refresh-cw"></i> ต่ออายุสัญญา</a>
+        <a class="sidebar-item" href="contract-tracking.html" data-label="ติดตามสัญญา"><i data-lucide="clipboard-check"></i> ติดตามสัญญา</a>
+        <a class="sidebar-item" href="contract-status-edit.html" data-label="การจัดการสัญญา"><i data-lucide="settings"></i> การจัดการสัญญา</a>
+        <div class="px-4 pt-3.5 pb-1.5 text-xs font-semibold text-slate-400 uppercase tracking-wider sidebar-section-title">คำขออื่น ๆ</div>
+        <a class="sidebar-item" href="#" data-label="ขอเอกสาร"><i data-lucide="file-text"></i> ขอเอกสาร</a>
+        <a class="sidebar-item" href="#" data-label="ขอหนังสือค้ำประกัน"><i data-lucide="building-2"></i> ขอหนังสือค้ำประกัน</a>
+        <a class="sidebar-item" href="memo-repository.html" data-label="บันทึกข้อความ"><i data-lucide="notebook-pen"></i> บันทึกข้อความ</a>
+        <div class="px-4 pt-3.5 pb-1.5 text-xs font-semibold text-slate-400 uppercase tracking-wider sidebar-section-title">ทรัพย์สินทางปัญญาและเอกสาร</div>
+        <a class="sidebar-item" href="#" data-label="กรมธรรม์"><i data-lucide="hammer"></i> กรมธรรม์</a>
+        <a class="sidebar-item" href="#" data-label="ใบอนุญาต"><i data-lucide="id-card"></i> ใบอนุญาต</a>
+        <a class="sidebar-item" href="#" data-label="เครื่องหมายการค้า"><i data-lucide="copyright"></i> เครื่องหมายการค้า</a>
+        <div class="px-4 pt-3.5 pb-1.5 text-xs font-semibold text-slate-400 uppercase tracking-wider sidebar-section-title">การให้คำปรึกษาและรายงาน</div>
+        <a class="sidebar-item" href="#" data-label="ปรึกษากฎหมาย"><i data-lucide="scale"></i> ปรึกษากฎหมาย</a>
+        <a class="sidebar-item" href="#" data-label="รายงาน"><i data-lucide="bar-chart-3"></i> รายงาน</a>
+    </div>
+    <button class="sidebar-toggle" id="sidebarToggleBtn" onclick="toggleSidebar()" aria-label="ย่อ/ขยายเมนู"><i data-lucide="chevron-left"></i></button>`;
 }
 
 /* ── Clickable Stepper ── */
@@ -323,15 +324,15 @@ function toggleSidebar() {
     } else {
         // Desktop: collapse/expand sidebar and shift main content
         if (sidebar) sidebar.classList.toggle('collapsed');
-        // Shift main content area
         const mainContent = document.querySelector('.ml-\\[260px\\]');
         if (mainContent) {
             if (sidebar.classList.contains('collapsed')) {
-                mainContent.style.marginLeft = '0';
+                mainContent.style.marginLeft = '72px';
             } else {
                 mainContent.style.marginLeft = '';
             }
         }
+        if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 }
 
