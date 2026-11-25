@@ -39,7 +39,7 @@
             display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
             min-height: 44px; cursor: text; transition: border-color .2s;
         }
-        .contract-search-box:focus-within { border-color: #88D2F2; box-shadow: 0 0 0 3px rgba(136,210,242,.2); }
+        .contract-search-box:focus-within { border-color: #B9DDFF; box-shadow: 0 0 0 3px rgba(136,210,242,.2); }
         .contract-search-box input {
             border: none; outline: none; flex: 1; min-width: 120px; font-size: 13px; padding: 2px 0;
         }
@@ -75,6 +75,145 @@
         .field-label .req { color: #EF4444; font-size: 14px; }
 
         .is-hidden { display: none !important; }
+        /* ── Date Filter (split start/end + preset, compact) ── */
+        .date-filter-group {
+            display: inline-flex; align-items: stretch; gap: 2px;
+            background: #fff; border: 1px solid #E2E8F0; border-radius: 8px;
+            padding: 2px; box-shadow: 0 1px 2px rgba(15,23,42,.04);
+            transition: border-color .18s ease, box-shadow .18s ease; height: 38px;
+        }
+        .date-filter-group:hover { border-color: #B9DDFF; box-shadow: 0 2px 8px rgba(111,197,234,.15); }
+        .date-filter-group:focus-within { border-color: #4790FF; box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+        .date-filter-group > i[data-lucide] { align-self: center; width: 10px; height: 10px; }
+        .date-single {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 4px 8px; border-radius: 5px; cursor: pointer;
+            transition: background .18s ease;
+        }
+        .date-single:hover, .date-single.is-open { background: #F1FBFF; }
+        .date-single.is-open { outline: 1.5px solid #4790FF; outline-offset: -1px; }
+        .date-single > i[data-lucide] { width: 12px; height: 12px; }
+        .date-single input {
+            width: 86px; font: inherit; font-size: 12px; color: #334155;
+            background: transparent; border: none; outline: none; padding: 0; cursor: pointer;
+        }
+        .date-single input::placeholder { color: #94A3B8; font-size: 11.5px; }
+        .date-preset-wrap {
+            display: inline-flex; align-items: center; padding: 0 8px;
+            background: linear-gradient(135deg, #F0F9FF, #F1FBFF);
+            border-radius: 5px; transition: background .18s;
+        }
+        .date-preset-wrap:hover { background: linear-gradient(135deg, #E0F2FE, #B9DDFF); }
+        .date-preset-wrap::before {
+            content: ''; display: inline-block; width: 12px; height: 12px; margin-right: 4px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="%232563EB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>') no-repeat center;
+        }
+        .date-preset-wrap select {
+            font: inherit; font-size: 12px; font-weight: 600; color: #022867;
+            background: transparent; border: none; outline: none; padding: 0;
+            padding-right: 14px; width: 60px; cursor: pointer; appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="%232563EB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>');
+            background-repeat: no-repeat; background-position: right 2px center;
+        }
+        .date-clear-btn {
+            display: none; align-items: center; justify-content: center;
+            width: 20px; align-self: center;
+            background: #F1F5F9; border: none; color: #64748B; cursor: pointer; border-radius: 50%; height: 20px;
+            transition: background .15s, color .15s;
+        }
+        .date-clear-btn:hover { background: #FEE2E2; color: #DC2626; }
+        .date-clear-btn svg { width: 11px; height: 11px; }
+        .date-filter-group.has-value .date-clear-btn { display: inline-flex; }
+
+        /* ── Litepicker theme override ── */
+        .litepicker {
+            font-family: 'Kanit', sans-serif;
+            border-radius: 14px; box-shadow: 0 20px 50px rgba(15,23,42,.18);
+            border: 1px solid #E2E8F0; overflow: hidden;
+        }
+        .litepicker .container__main { background: #fff; }
+        .litepicker .container__months { padding: 14px; }
+        .litepicker .container__months .month-item-header { font-weight: 600; color: #022867; font-size: 14px; }
+        .litepicker .container__days .day-item {
+            color: #475569; font-weight: 500; font-size: 13px;
+            border-radius: 50%; transition: background .15s, color .15s;
+        }
+        .litepicker .container__days .day-item:hover { background: #F1FBFF; color: #4790FF; }
+        .litepicker .container__days .day-item.is-today { color: #4790FF; font-weight: 700; }
+        .litepicker .container__days .day-item.is-start-date,
+        .litepicker .container__days .day-item.is-end-date {
+            background: #4790FF !important; color: #fff !important; border-radius: 50%;
+        }
+        .litepicker .container__days .day-item.is-locked { color: #CBD5E1; }
+
+        /* ── Status badges ── */
+        .badge-ts {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 1.5px 7px; border-radius: 12px; font-size: 10.5px; font-weight: 600;
+            line-height: 1.4; white-space: nowrap;
+        }
+        .badge-ts .dot { width: 5px; height: 5px; border-radius: 50%; }
+        .ts-done     { background: #DCFCE7; color: #166534; } .ts-done .dot     { background: #16A34A; }
+        .ts-pending  { background: #FEF3C7; color: #92400E; } .ts-pending .dot  { background: #F59E0B; }
+        .ts-rejected { background: #FEE2E2; color: #991B1B; } .ts-rejected .dot { background: #DC2626; }
+        /* สถานะในระบบ badges */
+        .badge-cs { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .badge-cs .dot { width: 6px; height: 6px; border-radius: 50%; }
+        .cs-draft    { background: #F1F5F9; color: #64748B; } .cs-draft .dot    { background: #94A3B8; }
+        .cs-approve  { background: #FFFBEB; color: #A16207; } .cs-approve .dot  { background: #F59E0B; }
+        .cs-risk     { background: #FEF2F2; color: #DC2626; } .cs-risk .dot     { background: #EF4444; }
+        .cs-sign     { background: #FDF2F8; color: #BE185D; } .cs-sign .dot     { background: #EC4899; }
+        .cs-complete { background: #F0FDF4; color: #15803D; } .cs-complete .dot { background: #22C55E; }
+
+        /* ── Segmented radio (สถานะการเปลี่ยนผู้อนุมัติ) ── */
+        .seg-radio {
+            display: inline-flex; align-items: center; gap: 4px;
+            background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px;
+            padding: 4px; box-shadow: 0 1px 3px rgba(15,23,42,.05);
+        }
+        .seg-radio label {
+            position: relative; cursor: pointer; user-select: none;
+            padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 600;
+            color: #64748B; transition: all .25s cubic-bezier(.16,1,.3,1);
+            display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
+        }
+        .seg-radio label:hover { color: #022867; background: #fff; }
+        .seg-radio input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
+        .seg-radio label .sr-dot {
+            width: 8px; height: 8px; border-radius: 50%; display: inline-block;
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+        .seg-radio label[data-status="all"]     .sr-dot { background: #94A3B8; }
+        .seg-radio label[data-status="pending"] .sr-dot { background: #F59E0B; }
+        .seg-radio label[data-status="done"]    .sr-dot { background: #22C55E; }
+        .seg-radio label:has(input:checked) {
+            color: #fff;
+            transform: translateY(-1px);
+        }
+        .seg-radio label:has(input:checked) .sr-dot {
+            background: #fff !important;
+            box-shadow: 0 0 0 3px rgba(255,255,255,.35);
+            transform: scale(1.1);
+        }
+        .seg-radio label[data-status="all"]:has(input:checked) {
+            background: linear-gradient(120deg, #022867, #334155);
+            box-shadow: 0 4px 12px rgba(27,58,107,.3);
+        }
+        .seg-radio label[data-status="pending"]:has(input:checked) {
+            background: linear-gradient(120deg, #D97706, #F59E0B);
+            box-shadow: 0 4px 12px rgba(245,158,11,.35);
+        }
+        .seg-radio label[data-status="done"]:has(input:checked) {
+            background: linear-gradient(120deg, #15803D, #22C55E);
+            box-shadow: 0 4px 12px rgba(34,197,94,.3);
+        }
+        .seg-radio label[data-status="rejected"] .sr-dot { background: #DC2626; }
+        .seg-radio label[data-status="rejected"]:has(input:checked) {
+            background: linear-gradient(120deg, #B91C1C, #DC2626);
+            box-shadow: 0 4px 12px rgba(220,38,38,.35);
+        }
+
+
     </style>
 </head>
 <body class="bg-slate-100 min-h-screen font-sans">
@@ -119,7 +258,7 @@
             <!-- 2. ผู้อนุมัติสัญญาใหม่ -->
             <div class="field-row">
                 <label class="field-label">ผู้อนุมัติสัญญาใหม่ <span class="req">*</span></label>
-                <select id="selNewApprover" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#88D2F2] focus:ring-2 focus:ring-[#88D2F2]/20 transition-all">
+                <select id="selNewApprover" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#B9DDFF] focus:ring-2 focus:ring-[#B9DDFF]/20 transition-all">
                     <option value="">-- เลือกผู้อนุมัติ --</option>
                     <option value="Somchai Prasert">Somchai Prasert</option>
                     <option value="Pichit Thongkam">Pichit Thongkam</option>
@@ -137,7 +276,7 @@
         <!-- Modal Footer -->
         <div class="px-6 py-4 border-t border-slate-200 flex items-center justify-end gap-3">
             <button onclick="closeModal()" class="px-5 py-2.5 rounded-lg font-semibold text-sm bg-white border border-slate-300 text-slate-600 hover:bg-slate-50 transition-colors">ยกเลิก</button>
-            <button onclick="saveApproverChange()" class="px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#88D2F2] text-[#1B3A6B] hover:bg-[#6BBFE0] transition-colors inline-flex items-center gap-2">
+            <button onclick="saveApproverChange()" class="px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#B9DDFF] text-[#022867] hover:bg-[#7FC0FB] transition-colors inline-flex items-center gap-2">
                 <i data-lucide="save" class="w-4 h-4"></i> บันทึก
             </button>
         </div>
@@ -149,7 +288,7 @@
     <div class="flex justify-between items-start mb-5 max-md:flex-col max-md:gap-3">
         <div>
             <h1 class="text-[26px] font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl max-[480px]:text-lg">
-                <i data-lucide="user-cog" class="w-5.5 h-5.5 text-[#2563EB]"></i>
+                <i data-lucide="user-cog" class="w-5.5 h-5.5 text-[#4790FF]"></i>
                 <span>เปลี่ยนผู้อนุมัติสัญญา</span>
             </h1>
             <p class="text-slate-500 text-sm mt-1">รายการเปลี่ยนผู้อนุมัติสัญญาทั้งหมด — <strong>8</strong> รายการ</p>
@@ -159,7 +298,7 @@
                 <i data-lucide="arrow-left" class="w-4 h-4"></i>
                 <span>ย้อนกลับ</span>
             </a>
-            <button onclick="openModal()" class="inline-flex items-center justify-center gap-2 px-5.5 py-2.5 rounded-lg text-sm font-semibold bg-[#88D2F2] text-[#1B3A6B] hover:bg-[#6BBFE0] transition-all whitespace-nowrap cursor-pointer border-none">
+            <button onclick="openModal()" class="inline-flex items-center justify-center gap-2 px-5.5 py-2.5 rounded-lg text-sm font-semibold bg-[#B9DDFF] text-[#022867] hover:bg-[#7FC0FB] transition-all whitespace-nowrap cursor-pointer border-none">
                 <i data-lucide="plus" class="w-4 h-4"></i>
                 <span>เปลี่ยนผู้อนุมัติ</span>
             </button>
@@ -172,6 +311,31 @@
             <i data-lucide="search" class="icon w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
             <input type="text" id="searchTable" oninput="filterTable()" placeholder="ค้นหาเลขสัญญา, ผู้อนุมัติ..." class="w-full py-2.5 pl-9 pr-3.5 border border-slate-300 rounded-lg text-sm font-[inherit] text-slate-600 bg-white outline-none transition-all focus:border-blue-500 focus:ring-3 focus:ring-blue-500/10">
         </div>
+        <div class="seg-radio" role="radiogroup" aria-label="สถานะการเปลี่ยนผู้อนุมัติ">
+            <label data-status="all"><input type="radio" name="filterChangeStatus" value="" checked onchange="filterTable()"><span class="sr-dot"></span>ทั้งหมด</label>
+            <label data-status="pending"><input type="radio" name="filterChangeStatus" value="รอดำเนินการ" onchange="filterTable()"><span class="sr-dot"></span>รอดำเนินการ</label>
+            <label data-status="done"><input type="radio" name="filterChangeStatus" value="อนุมัติ" onchange="filterTable()"><span class="sr-dot"></span>อนุมัติ</label>
+            <label data-status="rejected"><input type="radio" name="filterChangeStatus" value="ไม่อนุมัติ" onchange="filterTable()"><span class="sr-dot"></span>ไม่อนุมัติ</label>
+        </div>
+        <select id="filterDept" onchange="filterTable()" class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27%2364748B%27%20stroke-width=%272%27%3E%3Cpolyline%20points=%276%209%2012%2015%2018%209%27/%3E%3C/svg%3E')] bg-no-repeat bg-[right_10px_center] min-w-[160px]">
+            <option value="">แผนกทั้งหมด</option>
+            <option>ฝ่ายจัดซื้อ</option>
+            <option>ฝ่ายขาย</option>
+            <option>ฝ่ายการตลาด</option>
+            <option>ฝ่ายปฏิบัติการ</option>
+            <option>ฝ่ายบัญชีและการเงิน</option>
+            <option>ฝ่ายทรัพยากรบุคคล</option>
+        </select>
+        <select id="filterContractType" onchange="filterTable()" class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27%2364748B%27%20stroke-width=%272%27%3E%3Cpolyline%20points=%276%209%2012%2015%2018%209%27/%3E%3C/svg%3E')] bg-no-repeat bg-[right_10px_center] min-w-[160px]">
+            <option value="">ประเภทสัญญาทั้งหมด</option>
+            <option>สัญญาจ้างบริการ</option>
+            <option>สัญญาเช่า</option>
+            <option>สัญญาจัดซื้อ</option>
+            <option>สัญญาบริการ SaaS</option>
+            <option>สัญญาผลิตงาน</option>
+            <option>สัญญาจ้างที่ปรึกษา</option>
+        </select>
+        <div data-ldp-range data-from="filterDateFrom" data-to="filterDateTo" data-ph-start="วันเริ่มต้น" data-ph-end="วันสิ้นสุด" data-onchange="filterTable"></div>
         <div class="text-xs text-slate-400" id="rowCount">แสดง 8 รายการ</div>
     </div>
 
@@ -183,12 +347,14 @@
                     <tr>
                         <th style="width:50px">ลำดับ</th>
                         <th>เลขสัญญา</th>
+                        <th>สถานะในระบบ</th>
                         <th>ชื่อสัญญา</th>
                         <th>ประเภทสัญญา</th>
                         <th>ผู้อนุมัติเดิม</th>
                         <th>ผู้อนุมัติใหม่</th>
+                        <th>สถานะการเปลี่ยนผู้อนุมัติ</th>
                         <th>แผนก</th>
-                        <th>วันที่แก้ไข</th>
+                        <th>วันที่เปลี่ยนผู้อนุมัติ</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -277,10 +443,12 @@
         </div>
 
         <!-- Table Footer -->
-        <div class="px-5 py-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-            <span>ทั้งหมด 8 รายการ</span>
-            <div class="flex items-center gap-1">
-                <button class="px-2.5 py-1 rounded bg-[#88D2F2] text-[#1B3A6B] font-semibold">1</button>
+        <div class="table-footer">
+            <div class="table-footer-info">ทั้งหมด <b>8</b> รายการ</div>
+            <div class="table-footer-pager">
+                <button class="pg-nav" aria-label="ก่อนหน้า" disabled><i data-lucide="chevron-left"></i></button>
+                <button class="pg-num pg-active">1</button>
+                <button class="pg-nav" aria-label="ถัดไป" disabled><i data-lucide="chevron-right"></i></button>
             </div>
         </div>
     </div>
@@ -296,6 +464,38 @@
         if (el.textContent.trim().includes('การจัดการสัญญา')) el.classList.add('active');
     });
     lucide.createIcons();
+
+    /* ─── Inject 2 columns: สถานะในระบบ (td index 2) และ สถานะการเปลี่ยนผู้อนุมัติ (td index 7) ─── */
+    (function injectExtraCols(){
+        const cs = [
+            { cls: 'cs-draft',    label: 'แบบร่าง' },
+            { cls: 'cs-approve',  label: 'รอหัวหน้าอนุมัติ' },
+            { cls: 'cs-risk',     label: 'สรุปความเสี่ยง' },
+            { cls: 'cs-sign',     label: 'จัดทำ/ลงนาม' },
+            { cls: 'cs-complete', label: 'เสร็จสิ้น' }
+        ];
+        const csSeq = [0,4,1,2,3,4,1,0,3,2,4,1];
+        const ts = [
+            { cls: 'ts-done',     label: 'อนุมัติ' },
+            { cls: 'ts-pending',  label: 'รอดำเนินการ' },
+            { cls: 'ts-rejected', label: 'ไม่อนุมัติ' }
+        ];
+        const tsSeq = [0,2,1,0,1,0,2,1,1,0,2,1];
+        document.querySelectorAll('#dataTable tbody tr').forEach((row, idx) => {
+            if (row.dataset.augmented === '1') return;
+            row.dataset.augmented = '1';
+            const cells = row.children;
+            if (cells.length < 5) return;
+            const c = cs[csSeq[idx % csSeq.length]];
+            const csTd = document.createElement('td');
+            csTd.innerHTML = `<span class="badge-cs ${c.cls}"><span class="dot"></span>${c.label}</span>`;
+            row.insertBefore(csTd, cells[2]);
+            const t = ts[tsSeq[idx % tsSeq.length]];
+            const tsTd = document.createElement('td');
+            tsTd.innerHTML = `<span class="badge-ts ${t.cls}"><span class="dot"></span>${t.label}</span>`;
+            row.insertBefore(tsTd, cells[7]);
+        });
+    })();
 
     /* ══════════════════════════════════════
        CONTRACT MULTI-SELECT SEARCH
@@ -393,13 +593,45 @@
     /* ══════════════════════════════════════
        TABLE FILTER
        ══════════════════════════════════════ */
+    function fmtISO(d) {
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${dd}`;
+    }
+    function fmtDisplay(d) {
+        const dd = String(d.getDate()).padStart(2, '0');
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const yy = d.getFullYear();
+        return `${dd}/${mm}/${yy}`;
+    }
+    
     function filterTable() {
-        const q = document.getElementById('searchTable').value.toLowerCase();
+        const q  = document.getElementById('searchTable').value.toLowerCase();
+        const cs = (document.querySelector('input[name="filterChangeStatus"]:checked')?.value || '').toLowerCase();
+        const dept = (document.getElementById('filterDept').value || '').toLowerCase();
+        const type = (document.getElementById('filterContractType').value || '').toLowerCase();
+        const dFrom = document.getElementById('filterDateFrom').value;
+        const dTo   = document.getElementById('filterDateTo').value;
+        function toDate(s){ const m = (s || '').match(/\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}/); return m ? LDP.parse(m[0]) : null; }
+        const from = dFrom ? LDP.parse(dFrom) : null;
+        const to   = dTo   ? LDP.parse(dTo)   : null;
         const rows = document.querySelectorAll('#dataTable tbody tr');
         let count = 0;
         rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
             const text = row.textContent.toLowerCase();
-            const show = text.includes(q);
+            const rStatus = (cells[7]?.textContent || '').toLowerCase();
+            const rType   = (cells[4]?.textContent || '').toLowerCase();
+            const rDept   = (cells[8]?.textContent || '').toLowerCase();
+            const rDate   = [...cells].reverse().map(c => toDate(c.textContent)).find(Boolean) || null;
+            let show = true;
+            if (q && !text.includes(q)) show = false;
+            if (show && cs && !rStatus.includes(cs)) show = false;
+            if (show && dept && !rDept.includes(dept)) show = false;
+            if (show && type && !rType.includes(type)) show = false;
+            if (show && from && rDate && rDate < from) show = false;
+            if (show && to   && rDate && rDate > to)   show = false;
             row.style.display = show ? '' : 'none';
             if (show) count++;
         });

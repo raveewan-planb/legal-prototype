@@ -20,11 +20,11 @@
             min-height: 42px; padding: 6px 12px; border: 1px solid #CBD5E1; border-radius: 8px;
             background: #fff; cursor: pointer; transition: border .2s;
         }
-        .multi-select-trigger:focus-within, .multi-select-trigger.open { border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+        .multi-select-trigger:focus-within, .multi-select-trigger.open { border-color: #4790FF; box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
         .multi-select-trigger .placeholder { color: #94A3B8; font-size: 14px; }
         .ms-tag {
             display: inline-flex; align-items: center; gap: 4px;
-            background: #EFF6FF; color: #2563EB; font-size: 12px; font-weight: 600;
+            background: #F1FBFF; color: #4790FF; font-size: 12px; font-weight: 600;
             padding: 3px 10px; border-radius: 6px; white-space: nowrap;
         }
         .ms-tag .ms-rm { cursor: pointer; font-size: 14px; color: #93C5FD; font-weight: 700; margin-left: 2px; }
@@ -42,19 +42,19 @@
             cursor: pointer; font-size: 14px; color: #475569; transition: background .15s;
         }
         .ms-option:hover { background: #F8FAFC; }
-        .ms-option.selected { background: #EFF6FF; color: #2563EB; font-weight: 600; }
+        .ms-option.selected { background: #F1FBFF; color: #4790FF; font-weight: 600; }
         .ms-option .ms-check { width: 18px; height: 18px; border: 2px solid #CBD5E1; border-radius: 4px;
             display: flex; align-items: center; justify-content: center; font-size: 11px; color: transparent; flex-shrink: 0; }
-        .ms-option.selected .ms-check { background: #2563EB; border-color: #2563EB; color: #fff; }
+        .ms-option.selected .ms-check { background: #4790FF; border-color: #4790FF; color: #fff; }
         /* LUR Modal */
         .lur-row { cursor: pointer; transition: background .15s; }
         .lur-row:hover { background: #F1F5F9; }
-        .lur-row.selected { background: #EFF6FF; }
+        .lur-row.selected { background: #F1FBFF; }
         .lur-row td { padding: 10px 12px; border-bottom: 1px solid #F1F5F9; }
         /* Status Dropdown for ถอยสัญญา */
         .status-option { display: flex; align-items: center; gap: 8px; padding: 8px 14px; cursor: pointer; transition: background .15s; border-radius: 6px; }
         .status-option:hover { background: #F1F5F9; }
-        .status-option.selected { background: #EFF6FF; }
+        .status-option.selected { background: #F1FBFF; }
     </style>
 </head>
 <body>
@@ -66,9 +66,20 @@
     <div class="flex justify-between items-start mb-6 max-md:flex-col max-md:gap-3">
         <div>
             <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl">
-                <i data-lucide="notebook-pen" class="w-6 h-6" style="color:#2563EB;"></i> สร้างบันทึกข้อความ
+                <i data-lucide="notebook-pen" class="w-6 h-6" style="color:#4790FF;"></i> สร้างบันทึกข้อความ
             </h1>
             <p class="text-slate-500 text-sm mt-1">ขั้นตอนที่ 1: ผู้ใช้งานกรอกข้อมูลเพื่อสร้างบันทึกข้อความ</p>
+        </div>
+        <div class="flex gap-2.5 items-center shrink-0" id="headerActions">
+            <button class="inline-flex items-center justify-center gap-2 px-4.5 py-2.5 rounded-lg text-sm font-medium bg-white border border-slate-300 text-slate-500 hover:bg-slate-50 hover:border-slate-400 transition-all cursor-pointer whitespace-nowrap font-[inherit]" onclick="toggleHistory()" id="historyInlineBtn">
+                <i data-lucide="history" class="w-4 h-4"></i>
+                <span>ประวัติ</span>
+                <span class="bg-[#4790FF] text-white text-[11px] px-2 py-px rounded-lg font-bold" id="historyInlineCount">0</span>
+            </button>
+            <a href="memo-repository.html" class="inline-flex items-center justify-center gap-2 px-4.5 py-2.5 rounded-lg text-sm font-medium bg-white border border-slate-300 text-slate-500 hover:bg-slate-50 hover:border-slate-400 transition-all no-underline whitespace-nowrap">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                <span>ย้อนกลับ</span>
+            </a>
         </div>
     </div>
 
@@ -91,7 +102,7 @@
     <!-- ส่วนที่ 1: ข้อมูลผู้ส่งคำขอ              -->
     <!-- ═══════════════════════════════════════ -->
     <div class="bg-white rounded-xl p-6 shadow-sm mb-5">
-        <h2 class="text-[16px] font-bold text-[#1B3A6B] mb-5 pb-3 border-b border-slate-200 flex items-center gap-2.5">
+        <h2 class="text-[16px] font-bold text-[#022867] mb-5 pb-3 border-b border-slate-200 flex items-center gap-2.5">
             <i data-lucide="user" class="w-5 h-5 text-blue-600"></i> ข้อมูลผู้ส่งคำขอ
         </h2>
         <div class="space-y-4 mt-2">
@@ -133,7 +144,7 @@
     <!-- ส่วนที่ 2: ประเภทบันทึก                   -->
     <!-- ═══════════════════════════════════════ -->
     <div class="bg-white rounded-xl p-6 shadow-sm mb-5">
-        <h2 class="text-[16px] font-bold text-[#1B3A6B] mb-5 pb-3 border-b border-slate-200 flex items-center gap-2.5">
+        <h2 class="text-[16px] font-bold text-[#022867] mb-5 pb-3 border-b border-slate-200 flex items-center gap-2.5">
             <i data-lucide="list-checks" class="w-5 h-5 text-blue-600"></i> ประเภทบันทึก
         </h2>
 
@@ -226,12 +237,20 @@
         <!-- ผู้รับผิดชอบสัญญา (เฉพาะขอทำสัญญาย้อนหลัง) -->
         <div id="backdateOwnerSection" class="field-row mb-5 is-hidden">
             <div class="field-label">ผู้รับผิดชอบสัญญา <span class="req">*</span></div>
-            <select class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm focus:border-blue-500 outline-none bg-white">
+            <select id="backdateOwner" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm focus:border-blue-500 outline-none bg-white" onchange="updateBackdateApprover()">
                 <option value="">— เลือกผู้รับผิดชอบ —</option>
                 <option>นางสาววิภา สุขใจ</option>
                 <option>นายสมชาย ใจดี</option>
                 <option>นางสาวพิมพ์ใจ สุขสม</option>
                 <option>นายอนุชา วงศ์ดี</option>
+            </select>
+        </div>
+
+        <!-- หัวหน้าผู้อนุมัติ (เฉพาะขอทำสัญญาย้อนหลัง, auto-fill ตามผู้รับผิดชอบ) -->
+        <div id="backdateApproverSection" class="field-row mb-5 is-hidden">
+            <div class="field-label">หัวหน้าผู้อนุมัติ <span class="req">*</span></div>
+            <select id="backdateApprover" class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm focus:border-blue-500 outline-none bg-white" disabled>
+                <option value="">— เลือกผู้รับผิดชอบสัญญาก่อน —</option>
             </select>
         </div>
     </div>
@@ -240,7 +259,7 @@
     <!-- ส่วนที่ 3: รายละเอียดและเอกสาร            -->
     <!-- ═══════════════════════════════════════ -->
     <div class="bg-white rounded-xl p-6 shadow-sm mb-5">
-        <h2 class="text-[16px] font-bold text-[#1B3A6B] mb-5 pb-3 border-b border-slate-200 flex items-center gap-2.5">
+        <h2 class="text-[16px] font-bold text-[#022867] mb-5 pb-3 border-b border-slate-200 flex items-center gap-2.5">
             <i data-lucide="file-text" class="w-5 h-5 text-blue-600"></i> รายละเอียดและเอกสาร
         </h2>
         <div class="space-y-4 mt-2">
@@ -291,15 +310,12 @@
     <!-- ═══════════════════════════════════════ -->
     <!-- Action Buttons                          -->
     <!-- ═══════════════════════════════════════ -->
-    <div class="border-t border-slate-200 pt-5 mt-2 flex items-center justify-between flex-wrap gap-3">
-        <a href="memo-repository.html" class="inline-flex items-center gap-2 px-5 py-2.5 border border-slate-300 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
-            <i data-lucide="arrow-left" class="w-4 h-4"></i> ย้อนกลับ
-        </a>
+    <div class="border-t border-slate-200 pt-5 mt-2 flex items-center justify-end flex-wrap gap-3">
         <div class="flex items-center gap-3">
             <button type="button" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-colors" style="background:#FFC567;color:#7C4A00;">
                 <i data-lucide="save" class="w-4 h-4"></i> บันทึกแบบร่าง
             </button>
-            <button type="button" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-[#1B3A6B] transition-colors" style="background:#88D2F2;" onclick="alert('ส่งคำขอเรียบร้อย')">
+            <button type="button" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-[#022867] transition-colors" style="background:#B9DDFF;" onclick="alert('ส่งคำขอเรียบร้อย')">
                 <i data-lucide="send" class="w-4 h-4"></i> ส่งคำขอ
             </button>
         </div>
@@ -312,7 +328,7 @@
     <div class="absolute inset-0 bg-black/50" onclick="closeLURModal()"></div>
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl w-[90vw] max-w-[900px] max-h-[85vh] flex flex-col">
         <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200">
-            <h2 class="text-lg font-bold text-[#1B3A6B] flex items-center gap-2"><i data-lucide="file-search" class="w-5 h-5 text-blue-600"></i> ค้นหา LUR อ้างอิง</h2>
+            <h2 class="text-lg font-bold text-[#022867] flex items-center gap-2"><i data-lucide="file-search" class="w-5 h-5 text-blue-600"></i> ค้นหา LUR อ้างอิง</h2>
             <button onclick="closeLURModal()" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors text-xl">&times;</button>
         </div>
         <div class="px-6 py-3 border-b border-slate-100 flex items-center justify-between gap-4 flex-wrap">
@@ -455,6 +471,34 @@
         toggle('backdateYearSection', type === 'backdate');
         toggle('backdateCountSection', type === 'backdate');
         toggle('backdateOwnerSection', type === 'backdate');
+        toggle('backdateApproverSection', type === 'backdate');
+    }
+
+    /* ── Owner → Approver mapping (mock) ── */
+    const BACKDATE_APPROVER_MAP = {
+        'นางสาววิภา สุขใจ':       ['คุณสมศักดิ์ ผู้จัดการฝ่ายเทคโนโลยี'],
+        'นายสมชาย ใจดี':         ['คุณนพรัตน์ ผู้จัดการฝ่ายการตลาด', 'คุณพีรพล รองผู้จัดการ'],
+        'นางสาวพิมพ์ใจ สุขสม':    ['คุณกุลธิดา ผู้จัดการฝ่ายบัญชี'],
+        'นายอนุชา วงศ์ดี':        ['คุณธนพล ผู้จัดการฝ่ายปฏิบัติการ', 'คุณวิชัย รองผู้จัดการ']
+    };
+    function updateBackdateApprover() {
+        const owner = document.getElementById('backdateOwner').value;
+        const sel = document.getElementById('backdateApprover');
+        if (!owner) {
+            sel.innerHTML = '<option value="">— เลือกผู้รับผิดชอบสัญญาก่อน —</option>';
+            sel.disabled = true;
+            return;
+        }
+        const approvers = BACKDATE_APPROVER_MAP[owner] || [];
+        sel.disabled = false;
+        if (approvers.length === 0) {
+            sel.innerHTML = '<option value="">— ไม่มีหัวหน้าผู้อนุมัติที่กำหนด —</option>';
+        } else if (approvers.length === 1) {
+            sel.innerHTML = `<option value="${approvers[0]}" selected>${approvers[0]}</option>`;
+        } else {
+            sel.innerHTML = '<option value="">— เลือกหัวหน้าผู้อนุมัติ —</option>' +
+                approvers.map(a => `<option value="${a}">${a}</option>`).join('');
+        }
     }
 
     /* ── Company Multi-Select ── */
@@ -582,19 +626,17 @@
 
         const panel = document.createElement('div');
         panel.innerHTML = `
-        <button class="history-btn" onclick="toggleHistory()">
-            <i data-lucide="history" class="w-4 h-4"></i> History
-            <span class="bg-blue-600 text-white text-[11px] px-2 py-px rounded-lg font-bold">${items.length}</span>
-        </button>
         <div class="history-overlay" id="historyOverlay" onclick="toggleHistory()"></div>
         <div class="history-panel" id="historyPanel">
-            <div class="flex items-center justify-between px-6 py-5 border-b border-slate-200 bg-gradient-to-br from-[#1B3A6B] to-[#234E8E] text-white">
+            <div class="flex items-center justify-between px-6 py-5 border-b border-slate-200 bg-gradient-to-br from-[#022867] to-[#213268] text-white">
                 <h3 class="text-[17px] font-bold flex items-center gap-2.5"><i data-lucide="history" class="w-5 h-5"></i> ประวัติการดำเนินการ</h3>
                 <button class="bg-white/15 border-none text-white w-8 h-8 rounded-lg cursor-pointer flex items-center justify-center hover:bg-white/30 transition-colors" onclick="toggleHistory()"><i data-lucide="x" class="w-4 h-4"></i></button>
             </div>
             <div class="flex-1 overflow-y-auto p-6">${timelineHtml}</div>
         </div>`;
         document.body.appendChild(panel);
+        const cnt = document.getElementById('historyInlineCount');
+        if (cnt) cnt.textContent = items.length;
     }
 
     function toggleHistory() {
@@ -610,7 +652,7 @@
         jpg: 'image', jpeg: 'image', png: 'image'
     };
     const FILE_COLORS = {
-        pdf: '#EF4444', doc: '#2563EB', docx: '#2563EB',
+        pdf: '#EF4444', doc: '#4790FF', docx: '#4790FF',
         xls: '#16A34A', xlsx: '#16A34A',
         jpg: '#F59E0B', jpeg: '#F59E0B', png: '#F59E0B'
     };

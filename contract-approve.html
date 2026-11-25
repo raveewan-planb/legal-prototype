@@ -13,7 +13,7 @@
         /* ── Table ── */
         .data-table { width: 100%; border-collapse: collapse; }
         .data-table thead th {
-            background: #1B3A6B; color: #fff; font-weight: 600; font-size: 13px;
+            background: #022867; color: #fff; font-weight: 600; font-size: 13px;
             padding: 14px 16px; text-align: left; white-space: nowrap;
         }
         .data-table tbody td {
@@ -32,7 +32,7 @@
         }
         .filter-badge:hover { background: #E2E8F0; }
         .filter-badge.active { border-color: transparent; }
-        .filter-badge[data-filter="all"].active { background: #88D2F2; color: #1B3A6B; }
+        .filter-badge[data-filter="all"].active { background: #B9DDFF; color: #022867; }
         .filter-badge[data-filter="pending"].active { background: #FEF3C7; color: #92400E; }
         .filter-badge[data-filter="approved"].active { background: #D1FAE5; color: #065F46; }
         .filter-badge[data-filter="rejected"].active { background: #FEE2E2; color: #991B1B; }
@@ -50,8 +50,8 @@
         /* ── Action Buttons ── */
         .action-btns { display: flex; gap: 6px; justify-content: center; }
         .action-btn { width: 30px; height: 30px; border-radius: 6px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; }
-        .action-btn.view { background: #EFF6FF; color: #2563EB; }
-        .action-btn.view:hover { background: #DBEAFE; }
+        .action-btn.view { background: #F1FBFF; color: #4790FF; }
+        .action-btn.view:hover { background: #B9DDFF; }
         .action-btn.edit { background: #FFF7ED; color: #C2410C; }
         .action-btn.edit:hover { background: #FFEDD5; }
 
@@ -68,7 +68,7 @@
     <div class="flex justify-between items-start mb-5 max-md:flex-col max-md:gap-3">
         <div>
             <h1 class="text-[26px] font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl max-[480px]:text-lg">
-                <i data-lucide="circle-check-big" class="w-5.5 h-5.5 text-[#2563EB]"></i>
+                <i data-lucide="circle-check-big" class="w-5.5 h-5.5 text-[#4790FF]"></i>
                 <span>อนุมัติสัญญา</span>
             </h1>
             <p class="text-slate-500 text-sm mt-1">รายการสัญญาที่รอการอนุมัติจากหัวหน้าฝ่าย</p>
@@ -105,13 +105,12 @@
                     <tr>
                         <th style="width:70px">จัดการ</th>
                         <th>เลขสัญญา</th>
-                        <th>สถานะ</th>
+                        <th>สถานะในระบบ</th>
                         <th>ชื่อสัญญา</th>
                         <th>ประเภทสัญญา</th>
                         <th>คู่สัญญา</th>
                         <th>บริษัท</th>
                         <th>ระยะเวลาสัญญา</th>
-                        <th>สถานะสัญญา</th>
                         <th>วันที่สร้างคำขอ</th>
                         <th>ผู้รับผิดชอบ</th>
                     </tr>
@@ -283,10 +282,12 @@
         </div>
 
         <!-- Table Footer -->
-        <div class="px-5 py-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-            <span id="footerCount">แสดง 5 จาก 12 รายการ</span>
-            <div class="flex items-center gap-1">
-                <button class="px-2.5 py-1 rounded bg-[#88D2F2] text-[#1B3A6B] font-semibold">1</button>
+        <div class="table-footer">
+            <div class="table-footer-info"><span id="footerCount">แสดง <b>5</b> จาก <b>12</b> รายการ</span></div>
+            <div class="table-footer-pager">
+                <button class="pg-nav" aria-label="ก่อนหน้า" disabled><i data-lucide="chevron-left"></i></button>
+                <button class="pg-num pg-active">1</button>
+                <button class="pg-nav" aria-label="ถัดไป" disabled><i data-lucide="chevron-right"></i></button>
             </div>
         </div>
     </div>
@@ -302,6 +303,11 @@
         if (el.textContent.trim().includes('อนุมัติสัญญา')) el.classList.add('active');
     });
     lucide.createIcons();
+
+    /* Remove สถานะสัญญา column (td index 8 of each row) */
+    document.querySelectorAll('#dataTable tbody tr').forEach(row => {
+        if (row.children.length > 8) row.children[8].remove();
+    });
 
     // Hide edit button for non-pending rows
     document.querySelectorAll('#tableBody tr').forEach(row => {

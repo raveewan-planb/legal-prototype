@@ -10,8 +10,6 @@
     <link rel="stylesheet" href="shared-styles.css">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <!-- Flatpickr Date Picker -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <style>
         /* ══════════════════════════════════════
            KANBAN BOARD & TABLE STYLES
@@ -19,7 +17,7 @@
 
         /* ── Lane (Column) ── */
         .lane {
-            min-width: 260px; max-width: 280px; flex-shrink: 0;
+            min-width: 0; flex-shrink: 1;
             background: #F1F5F9; border-radius: 12px;
             display: flex; flex-direction: column; max-height: calc(100vh - 230px);
         }
@@ -64,11 +62,11 @@
             cursor: pointer; transition: all .2s; position: relative;
         }
         .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.1); border-color: #CBD5E1; transform: translateY(-1px); }
-        .card-ref { font-size: 12px; font-weight: 700; color: #2563EB; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+        .card-ref { font-size: 12px; font-weight: 700; color: #4790FF; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
         .card-title { font-size: 13px; font-weight: 600; color: #1E293B; margin-bottom: 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .card-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
         .card-tag { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 4px; }
-        .card-tag.type { background: #EFF6FF; color: #2563EB; }
+        .card-tag.type { background: #F1FBFF; color: #4790FF; }
         .card-tag.company { background: #F1F5F9; color: #475569; }
         .card-tag.dept { background: #F5F3FF; color: #7C3AED; }
         .card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 8px; border-top: 1px solid #F1F5F9; }
@@ -102,7 +100,7 @@
         .table-wrapper { overflow-x: auto; overflow-y: auto; max-height: calc(100vh - 260px); }
         table { width: 100%; border-collapse: collapse; }
         thead th {
-            background: #1B3A6B; color: #fff; font-weight: 600; font-size: 13px;
+            background: #022867; color: #fff; font-weight: 600; font-size: 13px;
             padding: 14px 16px; text-align: left; white-space: nowrap;
             position: sticky; top: 0; z-index: 2;
         }
@@ -120,7 +118,7 @@
         .badge-wait .dot { background: #F59E0B; }
         .badge-no { background: #FEE2E2; color: #991B1B; }
         .badge-no .dot { background: #EF4444; }
-        .badge-inprogress { background: #DBEAFE; color: #1D4ED8; }
+        .badge-inprogress { background: #B9DDFF; color: #1D4ED8; }
         .badge-inprogress .dot { background: #3B82F6; }
         .badge-notyet { background: #F1F5F9; color: #64748B; }
         .badge-notyet .dot { background: #94A3B8; }
@@ -130,8 +128,8 @@
         /* ── Action Buttons ── */
         .action-btns { display: flex; gap: 6px; }
         .action-btn { width: 30px; height: 30px; border-radius: 6px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; }
-        .action-btn.view { background: #EFF6FF; color: #2563EB; }
-        .action-btn.view:hover { background: #DBEAFE; }
+        .action-btn.view { background: #F1FBFF; color: #4790FF; }
+        .action-btn.view:hover { background: #B9DDFF; }
         .action-btn.edit { background: #FFF7ED; color: #C2410C; }
         .action-btn.edit:hover { background: #FFEDD5; }
 
@@ -163,7 +161,7 @@
             border: 1px solid #E2E8F0; border-radius: 10px; padding: 8px 12px;
             display: flex; align-items: center; gap: 8px; min-height: 44px; transition: border-color .2s;
         }
-        .rm-ref-search-box:focus-within { border-color: #88D2F2; box-shadow: 0 0 0 3px rgba(136,210,242,.2); }
+        .rm-ref-search-box:focus-within { border-color: #B9DDFF; box-shadow: 0 0 0 3px rgba(136,210,242,.2); }
         .rm-ref-search-box input { border: none; outline: none; flex: 1; font-size: 13px; padding: 2px 0; font-family: inherit; }
         .rm-ref-selected {
             display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 12px;
@@ -199,18 +197,11 @@
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             font-family: inherit; transition: all .2s;
         }
-        .pagination button:hover { background: #EFF6FF; border-color: #2563EB; color: #2563EB; }
-        .pagination button.pg-active { background: #2563EB; color: #fff; border-color: #2563EB; }
+        .pagination button:hover { background: #F1FBFF; border-color: #4790FF; color: #4790FF; }
+        .pagination button.pg-active { background: #4790FF; color: #fff; border-color: #4790FF; }
         .pagination button.nav { font-size: 12px; }
 
         /* ── Scrollbar ── */
-        .lane-body::-webkit-scrollbar { width: 4px; }
-        .lane-body::-webkit-scrollbar-track { background: transparent; }
-        .lane-body::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
-        .board-wrapper::-webkit-scrollbar { height: 8px; }
-        .board-wrapper::-webkit-scrollbar-track { background: #E2E8F0; border-radius: 4px; }
-        .board-wrapper::-webkit-scrollbar-thumb { background: #94A3B8; border-radius: 4px; min-width: 60px; }
-        .board-wrapper::-webkit-scrollbar-thumb:hover { background: #64748B; }
         .board-wrapper { scrollbar-width: thin; scrollbar-color: #94A3B8 #E2E8F0; }
 
         .is-hidden { display: none !important; }
@@ -221,7 +212,7 @@
             font-size: 13px; font-family: inherit; color: #475569; background: #fff;
             outline: none; transition: all .2s; width: 130px;
         }
-        .filter-date:focus { border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+        .filter-date:focus { border-color: #4790FF; box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
         .filter-date::placeholder { color: #94A3B8; }
         .filter-date.has-icon { padding-left: 34px; cursor: pointer; }
         .date-input-wrap {
@@ -249,11 +240,11 @@
             background-repeat: no-repeat; background-position: right 10px center;
         }
         .multi-select-btn:focus, .multi-select-btn.is-open {
-            border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+            border-color: #4790FF; box-shadow: 0 0 0 3px rgba(37,99,235,.1);
         }
         .multi-select-btn .ms-count {
             display: inline-flex; align-items: center; justify-content: center;
-            background: #2563EB; color: #fff; font-size: 10px; font-weight: 700;
+            background: #4790FF; color: #fff; font-size: 10px; font-weight: 700;
             padding: 1px 6px; border-radius: 10px; margin-left: 6px;
         }
         .multi-select-dropdown {
@@ -269,13 +260,13 @@
         }
         .multi-select-dropdown label:hover { background: #F8FAFC; }
         .multi-select-dropdown input[type="checkbox"] {
-            width: 16px; height: 16px; accent-color: #2563EB; cursor: pointer; flex-shrink: 0;
+            width: 16px; height: 16px; accent-color: #4790FF; cursor: pointer; flex-shrink: 0;
         }
 
         /* ── Flatpickr overrides ── */
         .flatpickr-calendar { font-family: 'Kanit', sans-serif !important; }
         .flatpickr-day.selected, .flatpickr-day.selected:hover {
-            background: #2563EB; border-color: #2563EB;
+            background: #4790FF; border-color: #4790FF;
         }
 
         /* ── Filter Row 2 ── */
@@ -283,10 +274,21 @@
             display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
         }
 
+        /* ── Board grid (responsive, full width) ── */
+        .board {
+            display: grid !important;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 16px;
+            min-height: calc(100vh - 230px);
+            align-items: flex-start;
+        }
+        @media (max-width: 1280px) { .board { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+        @media (max-width: 900px)  { .board { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @media (max-width: 560px)  { .board { grid-template-columns: 1fr; } .lane { max-height: none; } }
+
         /* ── Responsive ── */
-        @media (max-width: 1024px) { .lane { min-width: 230px; max-width: 250px; } }
+        @media (max-width: 1024px) { .lane-title { font-size: 13px; } }
         @media (max-width: 768px) {
-            .lane { min-width: 220px; max-width: 240px; }
             .lane-title { font-size: 12px; }
             .card-title { font-size: 12px; }
             .card-ref { font-size: 11px; }
@@ -296,7 +298,7 @@
             tbody td { font-size: 12px; padding: 10px 12px; }
             thead th { font-size: 12px; padding: 10px 12px; }
         }
-        @media (max-width: 480px) { .lane { min-width: 200px; max-width: 220px; } .card { padding: 10px 12px; } }
+        @media (max-width: 480px) { .card { padding: 10px 12px; } }
     </style>
 </head>
 <body>
@@ -309,15 +311,19 @@
     <div class="flex justify-between items-start mb-5 max-md:flex-col max-md:gap-3">
         <div>
             <h1 class="text-[26px] font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl max-[480px]:text-lg">
-                <i data-lucide="refresh-cw" class="w-5.5 h-5.5 text-[#2563EB]"></i>
+                <i data-lucide="refresh-cw" class="w-5.5 h-5.5 text-[#4790FF]"></i>
                 <span>ต่ออายุสัญญา</span>
             </h1>
             <p class="text-slate-500 text-sm mt-1">จัดการและติดตามสถานะการต่ออายุสัญญาทั้งหมด — <strong>15</strong> รายการ</p>
         </div>
         <div class="flex gap-2.5 items-center shrink-0">
-            <button class="inline-flex items-center justify-center gap-2 px-4.5 py-2.5 rounded-lg text-sm font-medium bg-white border border-slate-300 text-slate-500 hover:bg-slate-50 hover:border-slate-400 transition-all cursor-pointer font-[inherit] whitespace-nowrap">
+            <button class="inline-flex items-center justify-center gap-2 px-4.5 py-2.5 rounded-lg text-sm font-semibold bg-[#F97316] text-white border border-[#F97316] hover:bg-[#EA580C] transition-all cursor-pointer font-[inherit] whitespace-nowrap">
+                <i data-lucide="file-down" class="w-4 h-4"></i>
+                <span>Import</span>
+            </button>
+            <button class="inline-flex items-center justify-center gap-2 px-4.5 py-2.5 rounded-lg text-sm font-semibold bg-[#4790FF] text-white border border-[#4790FF] hover:bg-[#2D56D2] transition-all cursor-pointer font-[inherit] whitespace-nowrap">
                 <i data-lucide="file-up" class="w-4 h-4"></i>
-                <span>ส่งออก</span>
+                <span>Export</span>
             </button>
         </div>
     </div>
@@ -350,11 +356,11 @@
                     <option>ฝ่ายบัญชีและการเงิน</option>
                 </select>
                 <div class="view-toggle flex bg-slate-200 rounded-lg p-[3px] shrink-0 max-md:ml-auto">
-                    <button class="active" onclick="switchView('kanban')" id="btnKanban" style="padding:7px 16px;border:none;background:#fff;border-radius:6px;font-size:13px;font-weight:600;color:#2563EB;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.1);">
+                    <button onclick="switchView('kanban')" id="btnKanban" style="padding:7px 16px;border:none;background:transparent;border-radius:6px;font-size:13px;font-weight:600;color:#64748B;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:all .2s;">
                         <i data-lucide="columns-3" class="w-3.5 h-3.5"></i>
                         <span>Board</span>
                     </button>
-                    <button onclick="switchView('table')" id="btnTable" style="padding:7px 16px;border:none;background:transparent;border-radius:6px;font-size:13px;font-weight:600;color:#64748B;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:all .2s;">
+                    <button class="active" onclick="switchView('table')" id="btnTable" style="padding:7px 16px;border:none;background:#fff;border-radius:6px;font-size:13px;font-weight:600;color:#4790FF;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.1);">
                         <i data-lucide="table" class="w-3.5 h-3.5"></i>
                         <span>Table</span>
                     </button>
@@ -379,17 +385,7 @@
                 <option>เสร็จสิ้น</option>
             </select>
             <!-- ระยะเวลาสัญญา (Date Range) -->
-            <div class="date-range-group">
-                <div class="date-input-wrap">
-                    <i data-lucide="calendar" class="date-icon"></i>
-                    <input type="text" class="filter-date has-icon" placeholder="วันเริ่มต้นสัญญา" id="filterDateStart" readonly>
-                </div>
-                <span class="date-sep">—</span>
-                <div class="date-input-wrap">
-                    <i data-lucide="calendar" class="date-icon"></i>
-                    <input type="text" class="filter-date has-icon" placeholder="วันสิ้นสุดสัญญา" id="filterDateEnd" readonly>
-                </div>
-            </div>
+            <div data-ldp-range data-from="filterDateStart" data-to="filterDateEnd" data-ph-start="วันเริ่มต้นสัญญา" data-ph-end="วันสิ้นสุดสัญญา"></div>
             <!-- คู่สัญญา -->
             <select class="filter-select py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27%2364748B%27%20stroke-width=%272%27%3E%3Cpolyline%20points=%276%209%2012%2015%2018%209%27/%3E%3C/svg%3E')] bg-no-repeat bg-[right_10px_center]">
                 <option>คู่สัญญาทั้งหมด</option>
@@ -440,8 +436,8 @@
     </div>
 
     <!-- ══════════ KANBAN BOARD — 5 Lanes ══════════ -->
-    <div class="board-wrapper" id="kanbanView" style="flex:1;overflow-x:auto;padding-bottom:16px;scroll-behavior:smooth;">
-        <div class="board" style="display:flex;gap:16px;min-height:calc(100vh - 230px);align-items:flex-start;">
+    <div class="board-wrapper" id="kanbanView" style="flex:1;padding-bottom:16px;width:100%;display:none;">
+        <div class="board">
 
             <!-- 1. รอต่อสัญญา -->
             <div class="lane lane-wait">
@@ -647,7 +643,7 @@
     </div>
 
     <!-- ══════════ TABLE VIEW ══════════ -->
-    <div class="table-view" id="tableView">
+    <div class="table-view active" id="tableView" style="display:block;">
         <div class="table-card">
             <div class="table-wrapper">
                 <table>
@@ -655,12 +651,16 @@
                         <tr>
                             <th>จัดการ</th>
                             <th>เลขสัญญา</th>
+                            <th>ระดับความเสี่ยง</th>
                             <th>ชื่อสัญญา</th>
                             <th>ประเภทสัญญา</th>
+                            <th>มูลค่าสัญญา</th>
                             <th>คู่สัญญา</th>
                             <th>บริษัท</th>
                             <th>ระยะเวลาสัญญา</th>
+                            <th>จำนวนวันคงเหลือ</th>
                             <th>สถานะการต่อสัญญา</th>
+                            <th>หมายเหตุ</th>
                             <th>วันที่ปรับสถานะ</th>
                             <th>แผนก</th>
                             <th>ผู้รับผิดชอบ</th>
@@ -670,7 +670,7 @@
                         <!-- รอต่อสัญญา (4) -->
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">PB2026/002</td>
+                            <td style="font-weight:700;color:#4790FF;">PB2026/002</td>
                             <td>สัญญาจ้างพัฒนาระบบ ERP</td>
                             <td>สัญญาจ้างบริการ</td>
                             <td>บริษัท เทคโนโลยี จำกัด</td>
@@ -683,7 +683,7 @@
                         </tr>
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">PB2026/005</td>
+                            <td style="font-weight:700;color:#4790FF;">PB2026/005</td>
                             <td>สัญญาเช่าพื้นที่โฆษณา ถ.สุขุมวิท</td>
                             <td>สัญญาเช่า</td>
                             <td>นายสมศักดิ์ พรหมมา</td>
@@ -696,7 +696,7 @@
                         </tr>
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">PB2026/011</td>
+                            <td style="font-weight:700;color:#4790FF;">PB2026/011</td>
                             <td>สัญญาบริการ Cloud Computing</td>
                             <td>สัญญาบริการ SaaS</td>
                             <td>AWS Thailand</td>
@@ -709,7 +709,7 @@
                         </tr>
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">PB2026/018</td>
+                            <td style="font-weight:700;color:#4790FF;">PB2026/018</td>
                             <td>สัญญาจ้างบริการรักษาความปลอดภัย</td>
                             <td>สัญญาจ้างบริการ</td>
                             <td>บริษัท การ์ด ซิเคียวริตี้</td>
@@ -724,7 +724,7 @@
                         <!-- ไม่ต่อสัญญา (2) -->
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">PB2026/007</td>
+                            <td style="font-weight:700;color:#4790FF;">PB2026/007</td>
                             <td>สัญญาบริการขนส่งสินค้า</td>
                             <td>สัญญาจ้างบริการ</td>
                             <td>บริษัท โลจิสติกส์ จำกัด</td>
@@ -737,7 +737,7 @@
                         </tr>
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">PB2026/009</td>
+                            <td style="font-weight:700;color:#4790FF;">PB2026/009</td>
                             <td>สัญญาจ้างทำป้ายโฆษณา LED</td>
                             <td>สัญญาผลิตงาน</td>
                             <td>บริษัท แอลอีดี ไทย จำกัด</td>
@@ -752,7 +752,7 @@
                         <!-- อยู่ระหว่างดำเนินการ (3) -->
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">PB2026/001</td>
+                            <td style="font-weight:700;color:#4790FF;">PB2026/001</td>
                             <td>สัญญาเช่าพื้นที่โฆษณา ถ.พหลโยธิน</td>
                             <td>สัญญาเช่า</td>
                             <td>นายประสิทธิ์ แสงทอง</td>
@@ -765,7 +765,7 @@
                         </tr>
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">PB2026/006</td>
+                            <td style="font-weight:700;color:#4790FF;">PB2026/006</td>
                             <td>สัญญาผลิตงานป้าย Billboard</td>
                             <td>สัญญาผลิตงาน</td>
                             <td>บริษัท ไบร์ท ไซน์ จำกัด</td>
@@ -778,7 +778,7 @@
                         </tr>
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">PB2026/015</td>
+                            <td style="font-weight:700;color:#4790FF;">PB2026/015</td>
                             <td>สัญญาจ้างบริการทำความสะอาด</td>
                             <td>สัญญาจ้างบริการ</td>
                             <td>บริษัท คลีน จำกัด</td>
@@ -793,7 +793,7 @@
                         <!-- ยังไม่ได้ดำเนินการ (3) -->
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">PB2026/020</td>
+                            <td style="font-weight:700;color:#4790FF;">PB2026/020</td>
                             <td>สัญญาเช่าที่ดินเปล่า ลาดพร้าว</td>
                             <td>สัญญาเช่า</td>
                             <td>นายวิชัย เจริญสุข</td>
@@ -806,7 +806,7 @@
                         </tr>
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">PB2026/022</td>
+                            <td style="font-weight:700;color:#4790FF;">PB2026/022</td>
                             <td>สัญญาจัดซื้ออุปกรณ์สำนักงาน</td>
                             <td>สัญญาจัดซื้อ</td>
                             <td>บริษัท ออฟฟิศเมท จำกัด</td>
@@ -819,7 +819,7 @@
                         </tr>
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">PB2026/025</td>
+                            <td style="font-weight:700;color:#4790FF;">PB2026/025</td>
                             <td>สัญญาบริการ Internet Leased Line</td>
                             <td>สัญญาบริการ SaaS</td>
                             <td>TRUE Corp.</td>
@@ -834,7 +834,7 @@
                         <!-- ต่อสัญญาแล้ว (3) -->
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">PB2026/003</td>
+                            <td style="font-weight:700;color:#4790FF;">PB2026/003</td>
                             <td>สัญญาจ้างบริการทำความสะอาด (ต่อ)</td>
                             <td>สัญญาจ้างบริการ</td>
                             <td>บริษัท คลีน จำกัด</td>
@@ -847,7 +847,7 @@
                         </tr>
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">PB2026/004</td>
+                            <td style="font-weight:700;color:#4790FF;">PB2026/004</td>
                             <td>สัญญาเช่าที่ดินเปล่า ลาดพร้าว (ต่อ)</td>
                             <td>สัญญาเช่า</td>
                             <td>นายวิชัย เจริญสุข</td>
@@ -860,7 +860,7 @@
                         </tr>
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">PB2025/301</td>
+                            <td style="font-weight:700;color:#4790FF;">PB2025/301</td>
                             <td>สัญญาบริการ Data Center (ต่อ)</td>
                             <td>สัญญาบริการ SaaS</td>
                             <td>INET Thailand</td>
@@ -874,12 +874,15 @@
                     </tbody>
                 </table>
             </div>
-            <div class="pagination">
-                <button class="nav"><i data-lucide="chevron-left" class="w-3 h-3"></i></button>
-                <button class="pg-active">1</button>
-                <button>2</button>
-                <button class="nav"><i data-lucide="chevron-right" class="w-3 h-3"></i></button>
+            <div class="table-footer">
+            <div class="table-footer-info">แสดง <b>1-10</b> จาก <b>23</b> รายการ</div>
+            <div class="table-footer-pager">
+                <button class="pg-nav" aria-label="ก่อนหน้า"><i data-lucide="chevron-left"></i></button>
+                <button class="pg-num pg-active">1</button>
+                <button class="pg-num">2</button>
+                <button class="pg-nav" aria-label="ถัดไป"><i data-lucide="chevron-right"></i></button>
             </div>
+        </div>
         </div>
     </div>
 </div>
@@ -915,9 +918,9 @@
 
             <!-- สถานะ -->
             <div class="field-row">
-                <label class="field-label">สถานะ <span class="req">*</span></label>
-                <select id="rmSelStatus" onchange="onRenewStatusChange()" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#88D2F2] focus:ring-2 focus:ring-[#88D2F2]/20 transition-all font-[inherit]">
-                    <option value="">-- เลือกสถานะ --</option>
+                <label class="field-label">สถานะการต่อสัญญา <span class="req">*</span></label>
+                <select id="rmSelStatus" onchange="onRenewStatusChange()" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#B9DDFF] focus:ring-2 focus:ring-[#B9DDFF]/20 transition-all font-[inherit]">
+                    <option value="">-- เลือกสถานะการต่อสัญญา --</option>
                     <option value="ยังไม่ได้ดำเนินการ">ยังไม่ได้ดำเนินการ</option>
                     <option value="รอการตรวจสอบ">รอการตรวจสอบ (รอตัดสินใจว่าจะต่อหรือไม่)</option>
                     <option value="อยู่ระหว่างเจรจาสัญญา">อยู่ระหว่างเจรจาสัญญา</option>
@@ -929,13 +932,13 @@
             <!-- หมายเหตุ -->
             <div class="field-row">
                 <label class="field-label">หมายเหตุ</label>
-                <textarea id="rmRemark" rows="3" placeholder="กรอกหมายเหตุเพิ่มเติม (ถ้ามี)..." class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#88D2F2] focus:ring-2 focus:ring-[#88D2F2]/20 transition-all resize-none font-[inherit]"></textarea>
+                <textarea id="rmRemark" rows="3" placeholder="กรอกหมายเหตุเพิ่มเติม (ถ้ามี)..." class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#B9DDFF] focus:ring-2 focus:ring-[#B9DDFF]/20 transition-all resize-none font-[inherit]"></textarea>
             </div>
         </div>
         <!-- Footer -->
         <div class="px-6 py-4 border-t border-slate-200 flex items-center justify-end gap-3">
             <button onclick="closeRenewModal()" class="px-5 py-2.5 rounded-lg font-semibold text-sm bg-white border border-slate-300 text-slate-600 hover:bg-slate-50 transition-colors font-[inherit] cursor-pointer">ยกเลิก</button>
-            <button onclick="saveRenewStatus()" class="px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#88D2F2] text-[#1B3A6B] hover:bg-[#6BBFE0] transition-colors inline-flex items-center gap-2 font-[inherit] cursor-pointer border-none">
+            <button onclick="saveRenewStatus()" class="px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#B9DDFF] text-[#022867] hover:bg-[#7FC0FB] transition-colors inline-flex items-center gap-2 font-[inherit] cursor-pointer border-none">
                 <i data-lucide="save" class="w-4 h-4"></i> บันทึก
             </button>
         </div>
@@ -950,6 +953,55 @@
         item.classList.remove('active');
         if (item.textContent.trim().includes('ต่ออายุสัญญา')) item.classList.add('active');
     });
+
+    /* ─── Inject 4 extra table columns: ระดับความเสี่ยง, มูลค่าสัญญา, จำนวนวันคงเหลือ, หมายเหตุ ─── */
+    (function injectExtraCols(){
+        const risks = [
+            {t:'สูง',    bg:'#FEE2E2', c:'#991B1B'},
+            {t:'ปานกลาง', bg:'#FEF3C7', c:'#92400E'},
+            {t:'ต่ำ',    bg:'#DCFCE7', c:'#166534'}
+        ];
+        const riskSeq = [0,1,2,1,0,2,1,0,2,1,0,1,2,0,1];
+        const amounts = ['฿ 2,500,000','฿ 1,800,000','฿ 850,000','฿ 3,200,000','฿ 1,200,000','฿ 450,000','฿ 5,500,000','฿ 980,000','฿ 1,650,000','฿ 2,100,000','฿ 760,000','฿ 4,300,000','฿ 1,450,000','฿ 920,000','฿ 3,800,000'];
+        const notes = ['ติดต่อคู่สัญญาแล้ว','รอตรวจสอบเงื่อนไข','เสนอราคาใหม่','รอฝ่ายกฎหมาย','ส่งเอกสารต่ออายุ','รอตัดสินใจ','-','อยู่ระหว่างเจรจา','-','รอการอนุมัติ','ผ่านการพิจารณา','-','รอฝ่ายกฎหมายร่าง','-','ต่ออายุเรียบร้อย'];
+        const today = new Date(); today.setHours(0,0,0,0);
+        const rows = document.querySelectorAll('.table-view tbody tr');
+        rows.forEach((row, idx) => {
+            const cells = row.children;
+            if (cells.length < 11 || row.dataset.augmented === '1') return;
+            row.dataset.augmented = '1';
+            // (0) ระดับความเสี่ยง — after index 1 (เลขสัญญา)
+            const r = risks[riskSeq[idx % riskSeq.length]];
+            const riskTd = document.createElement('td');
+            riskTd.innerHTML = `<span style="display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;background:${r.bg};color:${r.c};font-weight:700;font-size:12px;">${r.t}</span>`;
+            row.insertBefore(riskTd, cells[2]);
+            // (A) มูลค่าสัญญา — after index 4 (ประเภทสัญญา, shifted by +1)
+            const amtTd = document.createElement('td');
+            amtTd.style.fontWeight = '600'; amtTd.style.color = '#1E293B';
+            amtTd.textContent = amounts[idx % amounts.length];
+            row.insertBefore(amtTd, cells[5]);
+            // (B) จำนวนวันคงเหลือ — after period (now index 8)
+            const periodText = cells[8].textContent.trim();
+            const m = periodText.match(/(\d{2})\/(\d{2})\/(\d{4})\s*-\s*(\d{2})\/(\d{2})\/(\d{4})/);
+            let diffHtml = '<span style="color:#94A3B8;">-</span>';
+            if (m) {
+                const end = new Date(+m[6], +m[5]-1, +m[4]); end.setHours(0,0,0,0);
+                const diff = Math.ceil((end - today) / 86400000);
+                const col = diff >= 0 ? '#16A34A' : '#DC2626';
+                const bg  = diff >= 0 ? '#DCFCE7' : '#FEE2E2';
+                const label = (diff >= 0 ? '+' : '') + diff.toLocaleString() + ' วัน';
+                diffHtml = `<span style="display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;background:${bg};color:${col};font-weight:700;font-size:12px;">${label}</span>`;
+            }
+            const diffTd = document.createElement('td');
+            diffTd.innerHTML = diffHtml;
+            row.insertBefore(diffTd, cells[9]);
+            // (C) หมายเหตุ — after สถานะการต่อสัญญา (now index 10)
+            const noteTd = document.createElement('td');
+            noteTd.style.color = '#475569';
+            noteTd.textContent = notes[idx % notes.length];
+            row.insertBefore(noteTd, cells[11]);
+        });
+    })();
     if (typeof lucide !== 'undefined') lucide.createIcons();
 
     function switchView(mode) {
@@ -962,21 +1014,21 @@
             table.style.display = 'block';
             btnK.classList.remove('active');
             btnT.classList.add('active');
-            btnT.style.background = '#fff'; btnT.style.color = '#2563EB'; btnT.style.boxShadow = '0 1px 3px rgba(0,0,0,.1)';
+            btnT.style.background = '#fff'; btnT.style.color = '#4790FF'; btnT.style.boxShadow = '0 1px 3px rgba(0,0,0,.1)';
             btnK.style.background = 'transparent'; btnK.style.color = '#64748B'; btnK.style.boxShadow = 'none';
         } else {
             board.style.display = '';
             table.style.display = 'none';
             btnT.classList.remove('active');
             btnK.classList.add('active');
-            btnK.style.background = '#fff'; btnK.style.color = '#2563EB'; btnK.style.boxShadow = '0 1px 3px rgba(0,0,0,.1)';
+            btnK.style.background = '#fff'; btnK.style.color = '#4790FF'; btnK.style.boxShadow = '0 1px 3px rgba(0,0,0,.1)';
             btnT.style.background = 'transparent'; btnT.style.color = '#64748B'; btnT.style.boxShadow = 'none';
         }
     }
 
-    document.querySelectorAll('.pagination button:not(.nav)').forEach(btn => {
+    document.querySelectorAll('.table-footer-pager .pg-num, .pagination button:not(.pg-nav):not(.nav)').forEach(btn => {
         btn.addEventListener('click', function() {
-            document.querySelectorAll('.pagination button').forEach(b => b.classList.remove('pg-active'));
+            document.querySelectorAll('.table-footer-pager button, .pagination button').forEach(b => b.classList.remove('pg-active'));
             this.classList.add('pg-active');
         });
     });
@@ -990,12 +1042,12 @@
         let cNo='', cName='', cPartner='', cCompany='', cPeriod='';
         if (row) {
             const cells = row.querySelectorAll('td');
-            // Table columns: 0=จัดการ, 1=เลขสัญญา, 2=ชื่อสัญญา, 3=ประเภทสัญญา, 4=คู่สัญญา, 5=บริษัท, 6=ระยะเวลาสัญญา, 7=สถานะการต่อสัญญา, 8=วันที่ปรับสถานะ, 9=แผนก, 10=ผู้รับผิดชอบ
+            // Table columns after augmentation: 0=จัดการ, 1=เลขสัญญา, 2=ระดับความเสี่ยง, 3=ชื่อสัญญา, 4=ประเภทสัญญา, 5=มูลค่าสัญญา, 6=คู่สัญญา, 7=บริษัท, 8=ระยะเวลาสัญญา, 9=จำนวนวันคงเหลือ, 10=สถานะการต่อสัญญา, 11=หมายเหตุ, 12=วันที่ปรับสถานะ, 13=แผนก, 14=ผู้รับผิดชอบ
             cNo = cells[1].textContent.trim();
-            cName = cells[2].textContent.trim();
-            cPartner = cells[4].textContent.trim();
-            cCompany = cells[5].textContent.trim();
-            cPeriod = cells[6].textContent.trim();
+            cName = cells[3].textContent.trim();
+            cPartner = cells[6].textContent.trim();
+            cCompany = cells[7].textContent.trim();
+            cPeriod = cells[8].textContent.trim();
         } else if (card) {
             cNo = card.getAttribute('data-contract') || '';
             cName = card.getAttribute('data-name') || '';
@@ -1029,30 +1081,11 @@
 
     function saveRenewStatus() {
         const status = document.getElementById('rmSelStatus').value;
-        if (!status) { alert('กรุณาเลือกสถานะ'); return; }
+        if (!status) { alert('กรุณาเลือกสถานะการต่อสัญญา'); return; }
         alert('บันทึกการปรับสถานะเรียบร้อยแล้ว');
         closeRenewModal();
     }
 
-    // ── Flatpickr Date Picker: dd/mm/yyyy ──
-    flatpickr('#filterDateStart', {
-        dateFormat: 'd/m/Y',
-        allowInput: false,
-        disableMobile: true,
-        locale: { firstDayOfWeek: 1 },
-        onReady: function(selectedDates, dateStr, instance) {
-            instance.calendarContainer.style.fontFamily = "'Kanit', sans-serif";
-        }
-    });
-    flatpickr('#filterDateEnd', {
-        dateFormat: 'd/m/Y',
-        allowInput: false,
-        disableMobile: true,
-        locale: { firstDayOfWeek: 1 },
-        onReady: function(selectedDates, dateStr, instance) {
-            instance.calendarContainer.style.fontFamily = "'Kanit', sans-serif";
-        }
-    });
 
     // ── Multi-Select: บริษัทผู้ทำสัญญา ──
     function toggleMultiSelect() {

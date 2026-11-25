@@ -8,8 +8,7 @@
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <style type="text/tailwindcss">@theme { --font-sans: 'Kanit', sans-serif; }</style>
     <link rel="stylesheet" href="shared-styles.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+        <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
         /* ── Auto Badge ── */
         .auto-badge { display: inline-block; background: #E0E7FF; color: #4338CA; font-size: 10px; padding: 1px 8px; border-radius: 10px; font-weight: 600; margin-left: 6px; }
@@ -21,11 +20,11 @@
             min-height: 42px; padding: 6px 12px; border: 1px solid #CBD5E1; border-radius: 8px;
             background: #fff; cursor: pointer; transition: border .2s;
         }
-        .multi-select-trigger:focus-within, .multi-select-trigger.open { border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+        .multi-select-trigger:focus-within, .multi-select-trigger.open { border-color: #4790FF; box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
         .multi-select-trigger .placeholder { color: #94A3B8; font-size: 14px; }
         .ms-tag {
             display: inline-flex; align-items: center; gap: 4px;
-            background: #EFF6FF; color: #2563EB; font-size: 12px; font-weight: 600;
+            background: #F1FBFF; color: #4790FF; font-size: 12px; font-weight: 600;
             padding: 3px 10px; border-radius: 6px; white-space: nowrap;
         }
         .ms-tag .ms-rm { cursor: pointer; font-size: 14px; color: #93C5FD; font-weight: 700; margin-left: 2px; }
@@ -43,10 +42,10 @@
             cursor: pointer; font-size: 14px; color: #475569; transition: background .15s;
         }
         .ms-option:hover { background: #F8FAFC; }
-        .ms-option.selected { background: #EFF6FF; color: #2563EB; font-weight: 600; }
+        .ms-option.selected { background: #F1FBFF; color: #4790FF; font-weight: 600; }
         .ms-option .ms-check { width: 18px; height: 18px; border: 2px solid #CBD5E1; border-radius: 4px;
             display: flex; align-items: center; justify-content: center; font-size: 11px; color: transparent; flex-shrink: 0; }
-        .ms-option.selected .ms-check { background: #2563EB; border-color: #2563EB; color: #fff; }
+        .ms-option.selected .ms-check { background: #4790FF; border-color: #4790FF; color: #fff; }
     </style>
 </head>
 <body>
@@ -56,7 +55,7 @@
     <div class="flex justify-between items-start mb-6 max-md:flex-col max-md:gap-3">
         <div>
             <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl">
-                <i data-lucide="circle-plus" class="w-6 h-6" style="color:#2563EB;"></i> สร้างคำขอสัญญา
+                <i data-lucide="circle-plus" class="w-6 h-6" style="color:#4790FF;"></i> สร้างคำขอสัญญา
             </h1>
             <p>ขั้นตอนที่ 1: ผู้ใช้งานกรอกข้อมูลเพื่อสร้างคำขอสัญญา</p>
         </div>
@@ -68,7 +67,7 @@
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl w-[90vw] max-w-[900px] max-h-[85vh] flex flex-col">
             <!-- Modal Header -->
             <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200">
-                <h2 class="text-lg font-bold text-[#1B3A6B] flex items-center gap-2"><i data-lucide="file-search" class="w-5 h-5 text-blue-600"></i> แบบฟอร์มสรุปสัญญา</h2>
+                <h2 class="text-lg font-bold text-[#022867] flex items-center gap-2"><i data-lucide="file-search" class="w-5 h-5 text-blue-600"></i> แบบฟอร์มสรุปสัญญา</h2>
                 <button onclick="closeLURModal()" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors">&times;</button>
             </div>
             <!-- Modal Filter -->
@@ -178,7 +177,7 @@
             <!-- Modal Footer -->
             <div class="px-6 py-4 border-t border-slate-200 flex items-center justify-end gap-3">
                 <button onclick="closeLURModal()" class="px-5 py-2.5 rounded-lg font-semibold text-sm bg-white border border-slate-300 text-slate-600 hover:bg-slate-50 transition-colors">ยกเลิก</button>
-                <button id="btnConfirmLUR" onclick="confirmLURSelection()" class="px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#88D2F2] text-[#1B3A6B] hover:bg-[#6BBFE0] transition-colors inline-flex items-center gap-2 opacity-50 cursor-not-allowed" disabled>
+                <button id="btnConfirmLUR" onclick="confirmLURSelection()" class="px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#B9DDFF] text-[#022867] hover:bg-[#7FC0FB] transition-colors inline-flex items-center gap-2 opacity-50 cursor-not-allowed" disabled>
                     <i data-lucide="check" class="w-4 h-4"></i> เลือกหนังสือสัญญา
                 </button>
             </div>
@@ -195,7 +194,7 @@
                 <input type="checkbox" id="renewContract" onchange="toggleRenewContract(this.checked)" class="w-[18px] h-[18px] accent-blue-600 cursor-pointer">
                 <div class="text-sm font-semibold text-slate-700 flex items-center gap-2"><i data-lucide="refresh-cw" class="w-4 h-4 text-blue-600"></i> ต่ออายุสัญญา</div>
             </label>
-            <button type="button" id="btnSelectLUR" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm bg-[#88D2F2] text-[#1B3A6B] hover:bg-[#6BBFE0] transition-colors whitespace-nowrap is-hidden" onclick="openLURModal()">
+            <button type="button" id="btnSelectLUR" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm bg-[#B9DDFF] text-[#022867] hover:bg-[#7FC0FB] transition-colors whitespace-nowrap is-hidden" onclick="openLURModal()">
                 <i data-lucide="search" class="w-4 h-4"></i> เลือก LUR เดิม
             </button>
             <div id="selectedLURBadge" class="is-hidden inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-green-50 border border-green-300 text-green-700 font-semibold text-sm">
@@ -375,15 +374,15 @@
             <div id="newContractLabel" class="is-hidden mb-4">
                 <div class="bg-blue-50 rounded-xl px-5 py-3.5 shadow-sm border-2 border-blue-400 flex items-center gap-2.5">
                     <i data-lucide="file-plus-2" class="w-5 h-5 text-blue-600"></i>
-                    <span class="text-[15px] font-bold text-[#1B3A6B]">สัญญาใหม่</span>
+                    <span class="text-[15px] font-bold text-[#022867]">สัญญาใหม่</span>
                     <span class="text-[11px] font-medium text-blue-600 bg-blue-100 px-2.5 py-0.5 rounded-full">แก้ไขได้ — ข้อมูลจากสัญญาเดิมเป็นค่าเริ่มต้น</span>
                 </div>
             </div>
 
     <!-- ═══ ส่วนที่ 1: ข้อมูลผู้ส่งคำขอ ═══ -->
     <div class="bg-white rounded-xl p-6 mb-5 shadow-sm border-2 border-blue-600 shadow-md max-md:p-4">
-        <div class="text-base font-bold text-[#1B3A6B] mb-4 pb-3 border-b-2 border-blue-50 flex items-center gap-2.5 flex-wrap">
-            <i data-lucide="user" class="w-5 h-5" style="color:#2563EB;"></i> ข้อมูลผู้ส่งคำขอ
+        <div class="text-base font-bold text-[#022867] mb-4 pb-3 border-b-2 border-blue-50 flex items-center gap-2.5 flex-wrap">
+            <i data-lucide="user" class="w-5 h-5" style="color:#4790FF;"></i> ข้อมูลผู้ส่งคำขอ
         </div>
         <div class="grid grid-cols-2 gap-x-6 gap-y-4 max-md:grid-cols-1">
             <div class="flex flex-col gap-1.5">
@@ -426,8 +425,8 @@
 
     <!-- ═══ ส่วนที่ 2: ข้อมูลสัญญา ═══ -->
     <div class="bg-white rounded-xl p-6 mb-5 shadow-sm border-2 border-blue-600 shadow-md max-md:p-4">
-        <div class="text-base font-bold text-[#1B3A6B] mb-4 pb-3 border-b-2 border-blue-50 flex items-center gap-2.5 flex-wrap">
-            <i data-lucide="file-text" class="w-5 h-5" style="color:#2563EB;"></i> ข้อมูลสัญญา
+        <div class="text-base font-bold text-[#022867] mb-4 pb-3 border-b-2 border-blue-50 flex items-center gap-2.5 flex-wrap">
+            <i data-lucide="file-text" class="w-5 h-5" style="color:#4790FF;"></i> ข้อมูลสัญญา
             <button type="button" onclick="openOCRModal()" class="ml-auto inline-flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm bg-gradient-to-r from-violet-600 to-indigo-600 text-white hover:from-violet-700 hover:to-indigo-700 transition-all shadow-sm cursor-pointer border-none" style="font-family:inherit;">
                 <i data-lucide="scan-text" class="w-4 h-4"></i> OCR
             </button>
@@ -497,15 +496,15 @@
             </div>
             <div class="flex flex-col gap-1.5">
                 <label class="text-[13px] font-semibold text-slate-600">วันที่ทำสัญญา <span class="text-red-500">*</span></label>
-                <input type="text" id="contractDate" value="26/03/2026" class="date-pick px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 bg-white outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors" placeholder="dd/mm/yyyy">
+                <input type="text" id="contractDate" value="26/03/2026" data-ldp-title="เลือกวันที่ทำสัญญา" class="date-pick px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 bg-white outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors" placeholder="dd/mm/yyyy">
             </div>
             <div class="flex flex-col gap-1.5">
                 <label class="text-[13px] font-semibold text-slate-600">วันเริ่มต้นสัญญา <span class="text-red-500">*</span></label>
-                <input type="text" value="01/04/2026" id="startDate" class="date-pick px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 bg-white outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors" placeholder="dd/mm/yyyy">
+                <input type="text" value="01/04/2026" id="startDate" data-ldp-title="เลือกวันเริ่มต้นสัญญา" data-ldp-max="#endDate" class="date-pick px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 bg-white outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors" placeholder="dd/mm/yyyy">
             </div>
             <div class="flex flex-col gap-1.5">
                 <label class="text-[13px] font-semibold text-slate-600">วันสิ้นสุดสัญญา <span class="text-red-500">*</span></label>
-                <input type="text" value="31/03/2027" id="endDate" class="date-pick px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 bg-white outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors" placeholder="dd/mm/yyyy">
+                <input type="text" value="31/03/2027" id="endDate" data-ldp-title="เลือกวันสิ้นสุดสัญญา" data-ldp-min="#startDate" class="date-pick px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 bg-white outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors" placeholder="dd/mm/yyyy">
             </div>
             <!-- ไม่มีวันสิ้นสุด + เหตุผล (same row) -->
             <div class="col-span-full grid grid-cols-2 gap-4 items-start max-md:grid-cols-1">
@@ -538,8 +537,8 @@
 
     <!-- ═══ ส่วนที่ 3: มูลค่าและการชำระ ═══ -->
     <div class="bg-white rounded-xl p-6 mb-5 shadow-sm border-2 border-blue-600 shadow-md max-md:p-4">
-        <div class="text-base font-bold text-[#1B3A6B] mb-4 pb-3 border-b-2 border-blue-50 flex items-center gap-2.5 flex-wrap">
-            <i data-lucide="coins" class="w-5 h-5" style="color:#2563EB;"></i> มูลค่าและการชำระเงิน
+        <div class="text-base font-bold text-[#022867] mb-4 pb-3 border-b-2 border-blue-50 flex items-center gap-2.5 flex-wrap">
+            <i data-lucide="coins" class="w-5 h-5" style="color:#4790FF;"></i> มูลค่าและการชำระเงิน
         </div>
         <div class="grid grid-cols-2 gap-x-6 gap-y-4 max-md:grid-cols-1">
             <div class="flex flex-col gap-1.5">
@@ -624,8 +623,8 @@
 
     <!-- ═══ ส่วนที่ 4: หลักประกัน ═══ -->
     <div class="bg-white rounded-xl p-6 mb-5 shadow-sm border-2 border-blue-600 shadow-md max-md:p-4">
-        <div class="text-base font-bold text-[#1B3A6B] mb-4 pb-3 border-b-2 border-blue-50 flex items-center gap-2.5 flex-wrap">
-            <i data-lucide="shield" class="w-5 h-5" style="color:#2563EB;"></i> หลักประกันสัญญา
+        <div class="text-base font-bold text-[#022867] mb-4 pb-3 border-b-2 border-blue-50 flex items-center gap-2.5 flex-wrap">
+            <i data-lucide="shield" class="w-5 h-5" style="color:#4790FF;"></i> หลักประกันสัญญา
         </div>
         <div class="mb-3.5">
             <label class="font-semibold text-slate-700 block mb-2.5">มีหลักประกันสัญญา <span class="text-red-500">*</span></label>
@@ -664,7 +663,7 @@
                         <label class="flex items-start gap-3 px-4 py-3 border-2 border-slate-200 rounded-xl cursor-pointer transition-all hover:border-blue-400 has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50" onclick="selectRadioCard(this);toggleLUR('before')">
                             <input type="radio" name="lurTiming" value="before" class="mt-1 accent-blue-600">
                             <div>
-                                <div class="font-bold text-slate-800 text-sm flex items-center gap-1"><i data-lucide="arrow-left" class="w-4 h-4" style="color:#2563EB;"></i>ทำก่อนขอเลข LUR</div>
+                                <div class="font-bold text-slate-800 text-sm flex items-center gap-1"><i data-lucide="arrow-left" class="w-4 h-4" style="color:#4790FF;"></i>ทำก่อนขอเลข LUR</div>
                                 <div class="text-xs text-slate-500 mt-0.5">มี L/G อ้างอิงก่อนเข้าระบบ</div>
                             </div>
                         </label>
@@ -682,7 +681,7 @@
                     <label class="text-[13px] font-semibold text-slate-600">เลขอ้างอิง L/G <span class="text-red-500">*</span></label>
                     <div class="flex gap-2 items-center">
                         <input type="text" id="lgRefInput" placeholder="กรอกเลขอ้างอิง L/G" class="flex-1 px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 bg-white outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors">
-                        <button type="button" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#88D2F2] text-[#1B3A6B] hover:bg-[#6BBFE0] transition-colors no-underline whitespace-nowrap" onclick="retrieveLGData()">
+                        <button type="button" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#B9DDFF] text-[#022867] hover:bg-[#7FC0FB] transition-colors no-underline whitespace-nowrap" onclick="retrieveLGData()">
                             <i data-lucide="refresh-cw" class="w-4 h-4"></i> Retrieve
                         </button>
                     </div>
@@ -711,8 +710,8 @@
 
     <!-- ═══ ส่วนที่ 5: เงื่อนไขการต่อสัญญา & เอกสาร ═══ -->
     <div class="bg-white rounded-xl p-6 mb-5 shadow-sm border-2 border-blue-600 shadow-md max-md:p-4">
-        <div class="text-base font-bold text-[#1B3A6B] mb-4 pb-3 border-b-2 border-blue-50 flex items-center gap-2.5 flex-wrap">
-            <i data-lucide="settings" class="w-5 h-5" style="color:#2563EB;"></i> เงื่อนไขการต่อสัญญาและเอกสาร
+        <div class="text-base font-bold text-[#022867] mb-4 pb-3 border-b-2 border-blue-50 flex items-center gap-2.5 flex-wrap">
+            <i data-lucide="settings" class="w-5 h-5" style="color:#4790FF;"></i> เงื่อนไขการต่อสัญญาและเอกสาร
         </div>
         <div class="grid grid-cols-2 gap-x-6 gap-y-4 max-md:grid-cols-1">
             <div class="col-span-full flex flex-col gap-1.5">
@@ -748,7 +747,7 @@
             </div>
             <div class="flex flex-col gap-1.5 is-hidden" id="notifyDate">
                 <label class="text-[13px] font-semibold text-slate-600">แจ้งเตือนภายในวันที่ <span class="text-red-500">*</span></label>
-                <input type="text" id="notifyDatePick" class="date-pick px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 bg-white outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors" placeholder="dd/mm/yyyy">
+                <input type="text" id="notifyDatePick" data-ldp-title="เลือกวันที่แจ้งเตือน" class="date-pick px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 bg-white outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-colors" placeholder="dd/mm/yyyy">
             </div>
         </div>
 
@@ -757,7 +756,7 @@
                 <label class="text-[13px] font-semibold text-slate-600">แนบไฟล์สัญญา <span class="text-red-500">*</span></label>
                 <div class="border-2 border-dashed border-slate-300 rounded-xl p-5 text-center cursor-pointer hover:border-blue-600 hover:bg-blue-50 transition-all bg-slate-50/50" onclick="this.querySelector('input').click()">
                     <input type="file" hidden multiple>
-                    <i data-lucide="cloud-upload" class="w-8 h-8 mx-auto mb-2" style="color:#2563EB;"></i>
+                    <i data-lucide="cloud-upload" class="w-8 h-8 mx-auto mb-2" style="color:#4790FF;"></i>
                     <p class="text-[13px] text-slate-700">ลากไฟล์มาวาง หรือ <span class="text-blue-600 font-semibold">เลือกไฟล์</span></p>
                     <p class="text-xs text-slate-400 mt-1">PDF, DOC, DOCX, JPG, PNG (สูงสุด 25MB)</p>
                 </div>
@@ -773,7 +772,7 @@
 
         <!-- ผู้ลงนามในสัญญา -->
         <div class="mt-4.5 border-t border-blue-100 pt-4.5">
-            <div class="font-bold text-[#1B3A6B] mb-2.5 flex items-center gap-2"><i data-lucide="pen-tool" class="w-5 h-5" style="color:#2563EB;"></i>ผู้ลงนามในสัญญา <span class="text-red-500">*</span></div>
+            <div class="font-bold text-[#022867] mb-2.5 flex items-center gap-2"><i data-lucide="pen-tool" class="w-5 h-5" style="color:#4790FF;"></i>ผู้ลงนามในสัญญา <span class="text-red-500">*</span></div>
             <table class="w-full text-sm border-collapse">
                 <thead>
                     <tr class="bg-slate-50">
@@ -795,7 +794,7 @@
 
         <!-- ผู้ลงนามในเอกสารประกอบสัญญา -->
         <div class="mt-4.5 border-t border-blue-100 pt-4.5">
-            <div class="font-bold text-[#1B3A6B] mb-2.5 flex items-center gap-2"><i data-lucide="file-pen" class="w-5 h-5" style="color:#2563EB;"></i>ผู้ลงนามในเอกสารประกอบสัญญา <span class="text-red-500">*</span></div>
+            <div class="font-bold text-[#022867] mb-2.5 flex items-center gap-2"><i data-lucide="file-pen" class="w-5 h-5" style="color:#4790FF;"></i>ผู้ลงนามในเอกสารประกอบสัญญา <span class="text-red-500">*</span></div>
             <table class="w-full text-sm border-collapse">
                 <thead>
                     <tr class="bg-slate-50">
@@ -823,10 +822,10 @@
                 <i data-lucide="arrow-left" class="w-4 h-4"></i> ย้อนกลับ
             </a>
             <div class="flex items-center gap-3 max-md:gap-2">
-            <a href="step2-assign.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#88D2F2] text-[#1B3A6B] hover:bg-[#6BBFE0] transition-colors no-underline whitespace-nowrap max-md:px-3 max-md:py-2 max-md:text-xs max-md:gap-1.5 max-[480px]:px-2.5 max-[480px]:text-[11px]">
+            <a href="step2-assign.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#B9DDFF] text-[#022867] hover:bg-[#7FC0FB] transition-colors no-underline whitespace-nowrap max-md:px-3 max-md:py-2 max-md:text-xs max-md:gap-1.5 max-[480px]:px-2.5 max-[480px]:text-[11px]">
                 <i data-lucide="send" class="w-4 h-4 max-md:w-3.5 max-md:h-3.5 max-[480px]:w-3 max-[480px]:h-3"></i> ส่งคำขอ
             </a>
-            <button class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#FFC567] text-[#1B3A6B] hover:bg-[#F0B050] transition-colors whitespace-nowrap max-md:px-3 max-md:py-2 max-md:text-xs max-md:gap-1.5 max-[480px]:px-2.5 max-[480px]:text-[11px]">
+            <button class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#FFC567] text-[#022867] hover:bg-[#F0B050] transition-colors whitespace-nowrap max-md:px-3 max-md:py-2 max-md:text-xs max-md:gap-1.5 max-[480px]:px-2.5 max-[480px]:text-[11px]">
                 <i data-lucide="save" class="w-4 h-4 max-md:w-3.5 max-md:h-3.5 max-[480px]:w-3 max-[480px]:h-3"></i> บันทึกฉบับร่าง
             </button>
 
@@ -847,26 +846,39 @@
     }
     .ocr-overlay.is-active { opacity: 1; visibility: visible; }
     .ocr-modal {
-        background: #fff; border-radius: 20px; width: 95%; max-width: 560px;
+        background: #fff; border-radius: 20px; width: 95%; max-width: 920px;
+        max-height: 92vh; display: flex; flex-direction: column;
         box-shadow: 0 25px 60px rgba(0,0,0,.18); overflow: hidden;
+    }
+    .ocr-body { padding: 28px 32px; flex: 1; overflow-y: auto; }
+    .ocr-dropzone {
+        border: 2px dashed #CBD5E1; border-radius: 16px; padding: 64px 20px;
+        text-align: center; cursor: pointer; transition: all .2s;
+        background: #F8FAFC;
+    }
+    .ocr-extracted-list {
+        text-align: left; margin-top: 18px; max-height: 420px; overflow-y: auto;
+        border: 1px solid #E2E8F0; border-radius: 12px;
+    }
+    .ocr-extracted-item {
+        display: flex; justify-content: space-between; padding: 12px 18px;
+        font-size: 13px; border-bottom: 1px solid #F1F5F9;
     }
     .ocr-header {
         padding: 20px 24px; border-bottom: 1px solid #E2E8F0;
         display: flex; align-items: center; justify-content: space-between;
     }
     .ocr-header h3 {
-        font-size: 17px; font-weight: 700; color: #1B3A6B;
+        font-size: 17px; font-weight: 700; color: #022867;
         display: flex; align-items: center; gap: 10px;
     }
     .ocr-header .ocr-badge {
         background: linear-gradient(135deg, #7C3AED, #4F46E5); color: #fff;
         font-size: 10px; font-weight: 700; padding: 2px 10px; border-radius: 20px;
     }
-    .ocr-body { padding: 24px; }
-    .ocr-dropzone {
-        border: 2px dashed #CBD5E1; border-radius: 16px; padding: 40px 20px;
-        text-align: center; cursor: pointer; transition: all .2s;
-        background: #F8FAFC;
+    .ocr-body-pad { padding: 0; }
+    .ocr-dropzone-vars {
+        /* consolidated above */
     }
     .ocr-dropzone:hover, .ocr-dropzone.dragover {
         border-color: #7C3AED; background: #F5F3FF;
@@ -915,14 +927,7 @@
         display: flex; align-items: center; justify-content: center;
         background: #DCFCE7;
     }
-    .ocr-extracted-list {
-        text-align: left; margin-top: 16px; max-height: 220px; overflow-y: auto;
-        border: 1px solid #E2E8F0; border-radius: 12px;
-    }
-    .ocr-extracted-item {
-        display: flex; justify-content: space-between; padding: 8px 14px;
-        font-size: 12px; border-bottom: 1px solid #F1F5F9;
-    }
+    .ocr-extracted-list-vars { }
     .ocr-extracted-item:last-child { border-bottom: none; }
     .ocr-extracted-item .oe-label { color: #64748B; font-weight: 600; min-width: 140px; }
     .ocr-extracted-item .oe-value { color: #1E293B; font-weight: 500; text-align: right; flex: 1; }
@@ -990,22 +995,10 @@
 </div>
 
 <script src="shared-layout.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
 <script>
     initPage(1);
 
-    /* ── Flatpickr Date Pickers (dd/mm/yyyy) ── */
-    const fpConfig = {
-        dateFormat: 'd/m/Y',
-        locale: 'th',
-        allowInput: true,
-        disableMobile: true
-    };
-    flatpickr('#contractDate', fpConfig);
-    const fpStart = flatpickr('#startDate', { ...fpConfig, onChange: function(selDates) { validateDateRange(); calcDuration(); calcEnforcement(); } });
-    const fpEnd   = flatpickr('#endDate',   { ...fpConfig, onChange: function(selDates) { validateDateRange(); calcDuration(); calcEnforcement(); } });
-    flatpickr('#notifyDatePick', fpConfig);
+    ['startDate', 'endDate'].forEach(id => document.getElementById(id).addEventListener('change', () => { validateDateRange(); calcDuration(); calcEnforcement(); }));
 
     calcDuration(); // คำนวณครั้งแรกตอนโหลดหน้า
     calcEnforcement();
@@ -1658,15 +1651,15 @@
 
         // 5. วันที่ทำสัญญา
         const cdEl = document.getElementById('contractDate');
-        if (cdEl) { cdEl.value = d.contractDate; cdEl._flatpickr && cdEl._flatpickr.setDate(d.contractDate, true, 'd/m/Y'); }
+        if (cdEl) { cdEl.value = d.contractDate; cdEl.dispatchEvent(new Event('change')); }
 
         // 6. วันเริ่มต้นสัญญา
         const sdEl = document.getElementById('startDate');
-        if (sdEl) { sdEl.value = d.startDate; sdEl._flatpickr && sdEl._flatpickr.setDate(d.startDate, true, 'd/m/Y'); }
+        if (sdEl) { sdEl.value = d.startDate; sdEl.dispatchEvent(new Event('change')); }
 
         // 7. วันสิ้นสุดสัญญา
         const edEl = document.getElementById('endDate');
-        if (edEl) { edEl.value = d.endDate; edEl._flatpickr && edEl._flatpickr.setDate(d.endDate, true, 'd/m/Y'); }
+        if (edEl) { edEl.value = d.endDate; edEl.dispatchEvent(new Event('change')); }
 
         // Trigger duration calc if function exists
         if (typeof calcDuration === 'function') calcDuration();

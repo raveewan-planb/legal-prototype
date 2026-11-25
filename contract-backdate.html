@@ -10,6 +10,78 @@
         @theme {
             --font-sans: 'Kanit', sans-serif;
         }
+        /* ═══ Standardized Modal Styles ═══ */
+        .std-close-btn {
+            position: absolute; top: 14px; right: 14px;
+            width: 32px; height: 32px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: #F1F5F9; border: none; color: #64748B;
+            cursor: pointer; transition: all .2s ease; z-index: 2;
+        }
+        .std-close-btn:hover { background: #FEE2E2; color: #DC2626; transform: rotate(90deg); }
+        .std-close-btn svg { width: 16px; height: 16px; }
+
+        .confirm-card, .cn-card, .rv-card, .bd-modal-box { position: relative; }
+
+        .btn-cancel-confirm, .btn-cancel, .btn-cancel-dismiss {
+            padding: 10px 24px !important; border-radius: 10px !important;
+            border: none !important; background: #DC2626 !important;
+            color: #fff !important; font-size: 14px !important; font-weight: 600 !important;
+            cursor: pointer; font-family: inherit !important; transition: all .2s !important;
+            display: inline-flex !important; align-items: center !important; gap: 6px !important;
+            box-shadow: 0 2px 6px rgba(220,38,38,.3) !important;
+        }
+        .btn-cancel-confirm:hover, .btn-cancel:hover, .btn-cancel-dismiss:hover {
+            background: #B91C1C !important; transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220,38,38,.4) !important;
+        }
+        .btn-do-confirm, .btn-confirm {
+            padding: 10px 24px !important; border-radius: 10px !important; border: none !important;
+            background: #B9DDFF !important; color: #022867 !important;
+            font-size: 14px !important; font-weight: 600 !important;
+            cursor: pointer; font-family: inherit !important; transition: all .2s !important;
+            display: inline-flex !important; align-items: center !important; gap: 6px !important;
+            box-shadow: 0 2px 6px rgba(136,210,242,.4) !important;
+        }
+        .btn-do-confirm:hover, .btn-confirm:hover {
+            background: #7FC0FB !important; transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(136,210,242,.5) !important;
+        }
+        .btn-danger-confirm {
+            padding: 10px 24px !important; border-radius: 10px !important; border: none !important;
+            background: #DC2626 !important; color: #fff !important;
+            font-size: 14px !important; font-weight: 600 !important;
+            cursor: pointer; font-family: inherit !important; transition: all .2s !important;
+            display: inline-flex !important; align-items: center !important; gap: 6px !important;
+            box-shadow: 0 2px 6px rgba(220,38,38,.3) !important;
+        }
+        .btn-danger-confirm:hover {
+            background: #B91C1C !important; transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220,38,38,.4) !important;
+        }
+
+        /* ═══ ไม่อนุมัติ Remark ═══ */
+        .std-reject-remark {
+            margin: 0 24px 16px 24px; padding: 14px 16px;
+            background: #FEF2F2; border: 1px solid #FECACA; border-radius: 10px;
+            display: none;
+        }
+        .std-reject-remark.show { display: block; animation: rjSlideIn .25s ease; }
+        @keyframes rjSlideIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+        .std-reject-remark label {
+            display: block; font-size: 13px; font-weight: 600; color: #991B1B; margin-bottom: 6px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .std-reject-remark textarea {
+            width: 100%; min-height: 72px; padding: 9px 12px;
+            border: 1.5px solid #FECACA; border-radius: 8px; font-size: 13px;
+            font-family: inherit; color: #334155; background: #fff;
+            outline: none; transition: border-color .15s, box-shadow .15s; resize: vertical;
+        }
+        .std-reject-remark textarea:focus { border-color: #DC2626; box-shadow: 0 0 0 3px rgba(220,38,38,.1); }
+        .std-reject-remark textarea.is-invalid { border-color: #DC2626; animation: rjShake .3s; }
+        @keyframes rjShake { 25%,75% { transform: translateX(-3px); } 50% { transform: translateX(3px); } }
+
     </style>
     <link rel="stylesheet" href="shared-styles.css">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
@@ -22,7 +94,7 @@
         .table-wrapper { overflow-x: auto; overflow-y: auto; max-height: calc(100vh - 260px); }
         table { width: 100%; border-collapse: collapse; }
         thead th {
-            background: #1B3A6B; color: #fff; font-weight: 600; font-size: 13px;
+            background: #022867; color: #fff; font-weight: 600; font-size: 13px;
             padding: 14px 16px; text-align: left; white-space: nowrap;
             position: sticky; top: 0; z-index: 2;
         }
@@ -97,7 +169,7 @@
             padding: 10px 14px; font-size: 13px; color: #334155; border-bottom: 1px solid #F1F5F9;
         }
         .bd-contract-list tbody tr:last-child td { border-bottom: none; }
-        .bd-contract-no { font-weight: 700; color: #2563EB; }
+        .bd-contract-no { font-weight: 700; color: #4790FF; }
 
         /* ── Buttons ── */
         .btn-cancel {
@@ -133,8 +205,8 @@
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             font-family: inherit; transition: all .2s;
         }
-        .pagination button:hover { background: #EFF6FF; border-color: #2563EB; color: #2563EB; }
-        .pagination button.pg-active { background: #2563EB; color: #fff; border-color: #2563EB; }
+        .pagination button:hover { background: #F1FBFF; border-color: #4790FF; color: #4790FF; }
+        .pagination button.pg-active { background: #4790FF; color: #fff; border-color: #4790FF; }
 
         /* ── Responsive ── */
         @media (max-width: 768px) {
@@ -223,7 +295,7 @@
                         </td>
                         <td style="font-weight:600;color:#1E293B;">บ. แพลนบี มีเดีย จำกัด (มหาชน)</td>
                         <td>2025</td>
-                        <td><span style="font-weight:700;color:#2563EB;">5</span> ฉบับ</td>
+                        <td><span style="font-weight:700;color:#4790FF;">5</span> ฉบับ</td>
                         <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
                         <td>นางสาววิภา สุขใจ</td>
                         <td>ฝ่ายกฎหมาย</td>
@@ -240,7 +312,7 @@
                         </td>
                         <td style="font-weight:600;color:#1E293B;">บ. เทคโนโลยี แอดวานซ์ จำกัด</td>
                         <td>2024</td>
-                        <td><span style="font-weight:700;color:#2563EB;">3</span> ฉบับ</td>
+                        <td><span style="font-weight:700;color:#4790FF;">3</span> ฉบับ</td>
                         <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
                         <td>นายสมชาย โชดี</td>
                         <td>IT Department</td>
@@ -257,7 +329,7 @@
                         </td>
                         <td style="font-weight:600;color:#1E293B;">บ. ไบร์ท ไซน์ จำกัด</td>
                         <td>2025</td>
-                        <td><span style="font-weight:700;color:#2563EB;">2</span> ฉบับ</td>
+                        <td><span style="font-weight:700;color:#4790FF;">2</span> ฉบับ</td>
                         <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
                         <td>นายวิชัย เจริญสุข</td>
                         <td>Marketing</td>
@@ -274,7 +346,7 @@
                         </td>
                         <td style="font-weight:600;color:#1E293B;">TRUE Corp. จำกัด (มหาชน)</td>
                         <td>2024</td>
-                        <td><span style="font-weight:700;color:#2563EB;">4</span> ฉบับ</td>
+                        <td><span style="font-weight:700;color:#4790FF;">4</span> ฉบับ</td>
                         <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
                         <td>นางสาววิภา สุขใจ</td>
                         <td>IT Department</td>
@@ -291,7 +363,7 @@
                         </td>
                         <td style="font-weight:600;color:#1E293B;">บ. การ์ด ซิเคียวริตี้ จำกัด</td>
                         <td>2023</td>
-                        <td><span style="font-weight:700;color:#2563EB;">2</span> ฉบับ</td>
+                        <td><span style="font-weight:700;color:#4790FF;">2</span> ฉบับ</td>
                         <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
                         <td>นายสมชาย โชดี</td>
                         <td>Operations</td>
@@ -306,11 +378,11 @@
                         </td>
                         <td style="font-weight:600;color:#1E293B;">บ. คลีนเซอร์วิส จำกัด</td>
                         <td>2025</td>
-                        <td><span style="font-weight:700;color:#2563EB;">3</span> ฉบับ</td>
+                        <td><span style="font-weight:700;color:#4790FF;">3</span> ฉบับ</td>
                         <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
                         <td>นายวิชัย เจริญสุข</td>
                         <td>Operations</td>
-                        <td style="font-weight:600;color:#2563EB;">PB2025/201, PB2025/202, PB2025/203</td>
+                        <td style="font-weight:600;color:#4790FF;">PB2025/201, PB2025/202, PB2025/203</td>
                         <td>05/03/2026</td>
                         <td>01/04/2026</td>
                     </tr>
@@ -321,11 +393,11 @@
                         </td>
                         <td style="font-weight:600;color:#1E293B;">AWS Thailand จำกัด</td>
                         <td>2024</td>
-                        <td><span style="font-weight:700;color:#2563EB;">2</span> ฉบับ</td>
+                        <td><span style="font-weight:700;color:#4790FF;">2</span> ฉบับ</td>
                         <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
                         <td>นางสาววิภา สุขใจ</td>
                         <td>IT Department</td>
-                        <td style="font-weight:600;color:#2563EB;">PB2024/150, PB2024/151</td>
+                        <td style="font-weight:600;color:#4790FF;">PB2024/150, PB2024/151</td>
                         <td>28/02/2026</td>
                         <td>25/03/2026</td>
                     </tr>
@@ -336,11 +408,11 @@
                         </td>
                         <td style="font-weight:600;color:#1E293B;">บ. ออฟฟิศ ซัพพลาย จำกัด</td>
                         <td>2023</td>
-                        <td><span style="font-weight:700;color:#2563EB;">1</span> ฉบับ</td>
+                        <td><span style="font-weight:700;color:#4790FF;">1</span> ฉบับ</td>
                         <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
                         <td>นายสมชาย โชดี</td>
                         <td>Operations</td>
-                        <td style="font-weight:600;color:#2563EB;">PB2023/088</td>
+                        <td style="font-weight:600;color:#4790FF;">PB2023/088</td>
                         <td>20/02/2026</td>
                         <td>15/03/2026</td>
                     </tr>
@@ -348,11 +420,14 @@
             </table>
         </div>
         <!-- Pagination -->
-        <div class="pagination">
-            <button class="nav" title="ก่อนหน้า"><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i></button>
-            <button class="pg-active">1</button>
-            <button>2</button>
-            <button class="nav" title="ถัดไป"><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></button>
+        <div class="table-footer">
+            <div class="table-footer-info">แสดง <b>1-10</b> จาก <b>23</b> รายการ</div>
+            <div class="table-footer-pager">
+                <button class="pg-nav" aria-label="ก่อนหน้า"><i data-lucide="chevron-left"></i></button>
+                <button class="pg-num pg-active">1</button>
+                <button class="pg-num">2</button>
+                <button class="pg-nav" aria-label="ถัดไป"><i data-lucide="chevron-right"></i></button>
+            </div>
         </div>
     </div>
 </div>
@@ -397,9 +472,13 @@
             <div style="font-size:13px;color:#64748B;" id="bdSuccessText">สร้างเลขสัญญาเรียบร้อยแล้ว</div>
         </div>
 
+        <div id="rj_remarkWrap" class="std-reject-remark">
+            <label><i data-lucide="alert-circle" style="width:14px;height:14px;color:#DC2626"></i>หมายเหตุการไม่อนุมัติ <span style="color:#DC2626">*</span></label>
+            <textarea id="rj_remark" placeholder="ระบุสาเหตุที่ไม่อนุมัติ..." rows="3"></textarea>
+        </div>
         <div class="bd-modal-footer" id="bdModalFooter">
-            <button class="btn-cancel" onclick="closeBackdateModal()">ยกเลิก</button>
-            <button class="btn-confirm" onclick="confirmBackdate()"><i data-lucide="check" class="w-4 h-4" style="margin-right:4px;"></i> ยืนยัน</button>
+            <button class="btn-cancel" onclick="rj_closeBackdateModal()"><i data-lucide="x" class="w-4 h-4"></i>ไม่อนุมัติ</button>
+            <button class="btn-confirm" onclick="confirmBackdate()"><i data-lucide="check" class="w-4 h-4" style="margin-right:4px;"></i> อนุมัติ</button>
         </div>
     </div>
 </div>
@@ -524,7 +603,7 @@
         document.getElementById('bdSuccessText').textContent =
             'สร้างเลขสัญญา ' + data._generatedNos.join(', ') + ' เรียบร้อยแล้ว';
         document.getElementById('bdModalFooter').innerHTML =
-            '<button class="btn-confirm" onclick="closeBackdateModal()" style="background:#2563EB;"><i data-lucide="check" class="w-4 h-4" style="margin-right:4px;"></i> ปิด</button>';
+            '<button class="btn-confirm" onclick="closeBackdateModal()"><i data-lucide="check" class="w-4 h-4" style="margin-right:4px;"></i> ปิด</button>';
         if (typeof lucide !== 'undefined') lucide.createIcons();
 
         // Get today's date as dd/mm/yyyy
@@ -542,7 +621,7 @@
             cells[4].innerHTML = '<span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span>';
             // Update contract numbers
             cells[7].style.fontWeight = '600';
-            cells[7].style.color = '#2563EB';
+            cells[7].style.color = '#4790FF';
             cells[7].textContent = data._generatedNos.join(', ');
             // Update วันที่ดำเนินการ
             cells[9].style.color = '#475569';
@@ -557,15 +636,33 @@
     });
 
     // Pagination
-    document.querySelectorAll('.pagination button').forEach(function(btn) {
+    document.querySelectorAll('.table-footer-pager button, .pagination button').forEach(function(btn) {
         btn.addEventListener('click', function() {
-            document.querySelectorAll('.pagination button').forEach(b => b.classList.remove('pg-active'));
+            document.querySelectorAll('.table-footer-pager button, .pagination button').forEach(b => b.classList.remove('pg-active'));
             if (!this.classList.contains('nav')) this.classList.add('pg-active');
         });
     });
 
     // Init Lucide
     if (typeof lucide !== 'undefined') lucide.createIcons();
+
+    function rj_closeBackdateModal() {
+        const wrap = document.getElementById('rj_remarkWrap');
+        const ta = document.getElementById('rj_remark');
+        if (!wrap) return;
+        if (!wrap.classList.contains('show')) {
+            wrap.classList.add('show');
+            if (ta) { ta.value=''; ta.focus(); }
+            return;
+        }
+        if (!ta || !ta.value.trim()) {
+            if (ta) { ta.classList.remove('is-invalid'); void ta.offsetWidth; ta.classList.add('is-invalid'); ta.focus(); }
+            return;
+        }
+        closeBackdateModal();
+        setTimeout(() => { wrap.classList.remove('show'); if (ta) { ta.value=''; ta.classList.remove('is-invalid'); } }, 250);
+    }
+    
 </script>
 </body>
 </html>

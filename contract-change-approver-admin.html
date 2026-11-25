@@ -50,7 +50,7 @@
         .badge-cs.draft { background: #F1F5F9; color: #64748B; }
         .badge-cs.return { background: #FFF7ED; color: #C2410C; }
         .badge-cs.legal { background: #F5F3FF; color: #7C3AED; }
-        .badge-cs.review { background: #EFF6FF; color: #2563EB; }
+        .badge-cs.review { background: #F1FBFF; color: #4790FF; }
         .badge-cs.approve { background: #FFFBEB; color: #A16207; }
         .badge-cs.sign { background: #FDF2F8; color: #BE185D; }
         .badge-cs.complete { background: #F0FDF4; color: #15803D; }
@@ -74,7 +74,7 @@
             display: flex; align-items: center; justify-content: center;
             background: #F5F3FF; color: #7C3AED;
         }
-        .confirm-card h3 { font-size: 18px; font-weight: 700; color: #1B3A6B; margin-bottom: 8px; text-align: center; }
+        .confirm-card h3 { font-size: 18px; font-weight: 700; color: #022867; margin-bottom: 8px; text-align: center; }
         .confirm-info-table {
             width: 100%; border-collapse: collapse; margin: 16px 0;
             border: 1px solid #E2E8F0; border-radius: 10px; overflow: hidden;
@@ -116,7 +116,7 @@
             display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
             min-height: 44px; cursor: text; transition: border-color .2s;
         }
-        .contract-search-box:focus-within { border-color: #88D2F2; box-shadow: 0 0 0 3px rgba(136,210,242,.2); }
+        .contract-search-box:focus-within { border-color: #B9DDFF; box-shadow: 0 0 0 3px rgba(136,210,242,.2); }
         .contract-search-box input {
             border: none; outline: none; flex: 1; min-width: 120px; font-size: 13px; padding: 2px 0;
         }
@@ -152,6 +152,288 @@
         .field-label .req { color: #EF4444; font-size: 14px; }
 
         .is-hidden { display: none !important; }
+        /* ── Date Filter (split start/end + preset, compact) ── */
+        .date-filter-group {
+            display: inline-flex; align-items: stretch; gap: 2px;
+            background: #fff; border: 1px solid #E2E8F0; border-radius: 8px;
+            padding: 2px; box-shadow: 0 1px 2px rgba(15,23,42,.04);
+            transition: border-color .18s ease, box-shadow .18s ease; height: 38px;
+        }
+        .date-filter-group:hover { border-color: #B9DDFF; box-shadow: 0 2px 8px rgba(111,197,234,.15); }
+        .date-filter-group:focus-within { border-color: #4790FF; box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+        .date-filter-group > i[data-lucide] { align-self: center; width: 10px; height: 10px; }
+        .date-single {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 4px 8px; border-radius: 5px; cursor: pointer;
+            transition: background .18s ease;
+        }
+        .date-single:hover, .date-single.is-open { background: #F1FBFF; }
+        .date-single.is-open { outline: 1.5px solid #4790FF; outline-offset: -1px; }
+        .date-single > i[data-lucide] { width: 12px; height: 12px; }
+        .date-single input {
+            width: 86px; font: inherit; font-size: 12px; color: #334155;
+            background: transparent; border: none; outline: none; padding: 0; cursor: pointer;
+        }
+        .date-single input::placeholder { color: #94A3B8; font-size: 11.5px; }
+        .date-preset-wrap {
+            display: inline-flex; align-items: center; padding: 0 8px;
+            background: linear-gradient(135deg, #F0F9FF, #F1FBFF);
+            border-radius: 5px; transition: background .18s;
+        }
+        .date-preset-wrap:hover { background: linear-gradient(135deg, #E0F2FE, #B9DDFF); }
+        .date-preset-wrap::before {
+            content: ''; display: inline-block; width: 12px; height: 12px; margin-right: 4px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="%232563EB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>') no-repeat center;
+        }
+        .date-preset-wrap select {
+            font: inherit; font-size: 12px; font-weight: 600; color: #022867;
+            background: transparent; border: none; outline: none; padding: 0;
+            padding-right: 14px; width: 60px; cursor: pointer; appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="%232563EB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>');
+            background-repeat: no-repeat; background-position: right 2px center;
+        }
+        .date-clear-btn {
+            display: none; align-items: center; justify-content: center;
+            width: 20px; align-self: center;
+            background: #F1F5F9; border: none; color: #64748B; cursor: pointer; border-radius: 50%; height: 20px;
+            transition: background .15s, color .15s;
+        }
+        .date-clear-btn:hover { background: #FEE2E2; color: #DC2626; }
+        .date-clear-btn svg { width: 11px; height: 11px; }
+        .date-filter-group.has-value .date-clear-btn { display: inline-flex; }
+
+        /* ── Litepicker theme override ── */
+        .litepicker {
+            font-family: 'Kanit', sans-serif;
+            border-radius: 14px; box-shadow: 0 20px 50px rgba(15,23,42,.18);
+            border: 1px solid #E2E8F0; overflow: hidden;
+        }
+        .litepicker .container__main { background: #fff; }
+        .litepicker .container__months { padding: 14px; }
+        .litepicker .container__months .month-item-header { font-weight: 600; color: #022867; font-size: 14px; }
+        .litepicker .container__days .day-item {
+            color: #475569; font-weight: 500; font-size: 13px;
+            border-radius: 50%; transition: background .15s, color .15s;
+        }
+        .litepicker .container__days .day-item:hover { background: #F1FBFF; color: #4790FF; }
+        .litepicker .container__days .day-item.is-today { color: #4790FF; font-weight: 700; }
+        .litepicker .container__days .day-item.is-start-date,
+        .litepicker .container__days .day-item.is-end-date {
+            background: #4790FF !important; color: #fff !important; border-radius: 50%;
+        }
+        .litepicker .container__days .day-item.is-locked { color: #CBD5E1; }
+
+        /* ── Segmented radio (สถานะการเปลี่ยนผู้อนุมัติ) ── */
+        .seg-radio {
+            display: inline-flex; align-items: center; gap: 4px;
+            background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px;
+            padding: 4px; box-shadow: 0 1px 3px rgba(15,23,42,.05);
+        }
+        .seg-radio label {
+            position: relative; cursor: pointer; user-select: none;
+            padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 600;
+            color: #64748B; transition: all .25s cubic-bezier(.16,1,.3,1);
+            display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
+        }
+        .seg-radio label:hover { color: #022867; background: #fff; }
+        .seg-radio input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
+        .seg-radio label .sr-dot {
+            width: 8px; height: 8px; border-radius: 50%; display: inline-block;
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+        .seg-radio label[data-status="all"]     .sr-dot { background: #94A3B8; }
+        .seg-radio label[data-status="pending"] .sr-dot { background: #F59E0B; }
+        .seg-radio label[data-status="done"]    .sr-dot { background: #22C55E; }
+        .seg-radio label:has(input:checked) { color: #fff; transform: translateY(-1px); }
+        .seg-radio label:has(input:checked) .sr-dot {
+            background: #fff !important;
+            box-shadow: 0 0 0 3px rgba(255,255,255,.35);
+            transform: scale(1.1);
+        }
+        .seg-radio label[data-status="all"]:has(input:checked)     { background: linear-gradient(120deg, #022867, #334155); box-shadow: 0 4px 12px rgba(27,58,107,.3); }
+        .seg-radio label[data-status="pending"]:has(input:checked) { background: linear-gradient(120deg, #D97706, #F59E0B); box-shadow: 0 4px 12px rgba(245,158,11,.35); }
+        .seg-radio label[data-status="done"]:has(input:checked)    { background: linear-gradient(120deg, #15803D, #22C55E); box-shadow: 0 4px 12px rgba(34,197,94,.3); }
+
+        /* ── Change mode radio cards ── */
+        .transfer-mode-wrap {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+        }
+        .transfer-mode-card { display: block; cursor: pointer; position: relative; }
+        .transfer-mode-card input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
+        .transfer-mode-card .tm-body {
+            display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px;
+            border: 1.5px solid #E2E8F0; border-radius: 10px; background: #fff;
+            transition: all .18s ease;
+        }
+        .transfer-mode-card:hover .tm-body { border-color: #B9DDFF; background: #F8FAFC; }
+        .transfer-mode-card input:checked + .tm-body {
+            border-color: #4790FF; background: linear-gradient(135deg, #F1FBFF, #F0F9FF);
+            box-shadow: 0 0 0 3px rgba(37,99,235,.08);
+        }
+        .transfer-mode-card .tm-body i { color: #94A3B8; flex-shrink: 0; margin-top: 2px; }
+        .transfer-mode-card input:checked + .tm-body i { color: #4790FF; }
+        .transfer-mode-card .tm-title { font-size: 13px; font-weight: 600; color: #022867; margin-bottom: 2px; }
+        .transfer-mode-card .tm-sub   { font-size: 11.5px; color: #64748B; line-height: 1.45; }
+
+        /* ── Owner contracts collapsible pane ── */
+        .owner-contracts-box {
+            border: 1px solid #E2E8F0; border-radius: 10px; background: #F8FAFC; overflow: hidden;
+        }
+        .owner-contracts-empty { text-align: center; padding: 36px 16px; color: #94A3B8; font-size: 13px; }
+        .owner-contract-row {
+            display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+            border-bottom: 1px solid #F1F5F9; font-size: 13px;
+        }
+        .owner-contract-row:last-child { border-bottom: none; }
+        .owner-contract-row .oc-no { font-weight: 700; color: #4790FF; min-width: 110px; font-size: 12.5px; }
+        .owner-contract-row .oc-name { flex: 1; color: #334155; }
+        .owner-contract-row .oc-type { font-size: 11px; color: #64748B; background: #fff; padding: 2px 8px; border-radius: 6px; border: 1px solid #E2E8F0; }
+        .owner-contracts-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 11px 14px; background: #fff; border-bottom: 1px solid #E2E8F0;
+            font-size: 12.5px; color: #475569; font-weight: 600;
+            cursor: pointer; user-select: none; transition: background .15s;
+        }
+        .owner-contracts-header:hover { background: #F1F5F9; }
+        .owner-contracts-header .oc-head-left { display: flex; align-items: center; gap: 10px; }
+        .owner-contracts-header .oc-chev {
+            width: 16px; height: 16px; color: #64748B;
+            transition: transform .25s cubic-bezier(.2,.8,.2,1);
+        }
+        .owner-contracts-header .oc-count {
+            background: #B9DDFF; color: #1E40AF; padding: 2px 10px; border-radius: 20px; font-size: 11.5px;
+        }
+        .owner-contracts-body {
+            max-height: 320px; overflow-y: auto;
+            transition: max-height .3s cubic-bezier(.2,.8,.2,1), opacity .2s ease;
+        }
+        .owner-contracts-box.is-collapsed .owner-contracts-header { border-bottom-color: transparent; }
+        .owner-contracts-box.is-collapsed .owner-contracts-header .oc-chev { transform: rotate(-90deg); }
+        .owner-contracts-box.is-collapsed .owner-contracts-body { max-height: 0; opacity: 0; overflow: hidden; }
+
+        /* ── Contract dropdown — redesigned list item (override shared) ── */
+        .contract-dropdown-item {
+            padding: 12px 14px !important;
+            display: flex !important; align-items: flex-start !important; gap: 12px !important;
+            border-bottom: 1px solid #F1F5F9;
+        }
+        .contract-dropdown-item:last-child { border-bottom: none; }
+        .contract-dropdown-item.selected { background: #F1FBFF !important; }
+        .contract-dropdown-item.selected .cd-no { background: #4790FF; color: #fff; }
+        .contract-dropdown-item .cd-no {
+            font-weight: 700 !important; color: #4790FF !important; font-size: 11.5px !important;
+            min-width: 0 !important; flex: 0 0 auto;
+            background: #B9DDFF; padding: 4px 10px; border-radius: 6px; align-self: flex-start;
+            white-space: nowrap;
+        }
+        .contract-dropdown-item .cd-body {
+            flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px;
+        }
+        .contract-dropdown-item .cd-name {
+            color: #022867 !important; font-size: 13.5px !important; font-weight: 600;
+            white-space: normal !important; overflow: visible !important;
+            text-overflow: unset !important; flex: unset !important;
+            line-height: 1.35;
+        }
+        .contract-dropdown-item .cd-meta {
+            display: flex !important; align-items: center; gap: 10px; flex-wrap: wrap;
+            font-size: 11.5px; color: #64748B; margin-top: 0 !important;
+        }
+        .contract-dropdown-item .cd-meta .cm-chip {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: #F8FAFC; border: 1px solid #E2E8F0; padding: 2px 8px; border-radius: 20px;
+            font-weight: 500;
+        }
+        .contract-dropdown-item .cd-meta .cm-chip i { width: 11px; height: 11px; color: #94A3B8; }
+        .contract-dropdown-item .cd-meta .cm-chip.cm-dept { background: #F5F3FF; border-color: #E9D5FF; color: #6B21A8; }
+        .contract-dropdown-item .cd-meta .cm-chip.cm-dept i { color: #7C3AED; }
+        .contract-dropdown-item .cd-check {
+            margin-left: 0 !important; align-self: center; color: #22C55E !important;
+            background: #DCFCE7; padding: 4px; border-radius: 50%;
+            width: 22px !important; height: 22px !important;
+        }
+        .contract-dropdown {
+            max-height: 340px !important; overflow-y: auto;
+            position: fixed !important; top: auto; left: auto; right: auto;
+            z-index: 1000 !important;
+        }
+
+        @media (max-width: 640px) {
+            .transfer-mode-wrap { grid-template-columns: 1fr; }
+        }
+
+        /* ═══ Standardized Modal Styles ═══ */
+        .std-close-btn {
+            position: absolute; top: 14px; right: 14px;
+            width: 32px; height: 32px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: #F1F5F9; border: none; color: #64748B;
+            cursor: pointer; transition: all .2s ease; z-index: 2;
+        }
+        .std-close-btn:hover { background: #FEE2E2; color: #DC2626; transform: rotate(90deg); }
+        .std-close-btn svg { width: 16px; height: 16px; }
+
+        .confirm-card, .cn-card, .rv-card, .bd-modal-box { position: relative; }
+
+        .btn-cancel-confirm, .btn-cancel, .btn-cancel-dismiss {
+            padding: 10px 24px !important; border-radius: 10px !important;
+            border: none !important; background: #DC2626 !important;
+            color: #fff !important; font-size: 14px !important; font-weight: 600 !important;
+            cursor: pointer; font-family: inherit !important; transition: all .2s !important;
+            display: inline-flex !important; align-items: center !important; gap: 6px !important;
+            box-shadow: 0 2px 6px rgba(220,38,38,.3) !important;
+        }
+        .btn-cancel-confirm:hover, .btn-cancel:hover, .btn-cancel-dismiss:hover {
+            background: #B91C1C !important; transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220,38,38,.4) !important;
+        }
+        .btn-do-confirm, .btn-confirm {
+            padding: 10px 24px !important; border-radius: 10px !important; border: none !important;
+            background: #B9DDFF !important; color: #022867 !important;
+            font-size: 14px !important; font-weight: 600 !important;
+            cursor: pointer; font-family: inherit !important; transition: all .2s !important;
+            display: inline-flex !important; align-items: center !important; gap: 6px !important;
+            box-shadow: 0 2px 6px rgba(136,210,242,.4) !important;
+        }
+        .btn-do-confirm:hover, .btn-confirm:hover {
+            background: #7FC0FB !important; transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(136,210,242,.5) !important;
+        }
+        .btn-danger-confirm {
+            padding: 10px 24px !important; border-radius: 10px !important; border: none !important;
+            background: #DC2626 !important; color: #fff !important;
+            font-size: 14px !important; font-weight: 600 !important;
+            cursor: pointer; font-family: inherit !important; transition: all .2s !important;
+            display: inline-flex !important; align-items: center !important; gap: 6px !important;
+            box-shadow: 0 2px 6px rgba(220,38,38,.3) !important;
+        }
+        .btn-danger-confirm:hover {
+            background: #B91C1C !important; transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220,38,38,.4) !important;
+        }
+
+        /* ═══ ไม่อนุมัติ Remark ═══ */
+        .std-reject-remark {
+            margin: 0 24px 16px 24px; padding: 14px 16px;
+            background: #FEF2F2; border: 1px solid #FECACA; border-radius: 10px;
+            display: none;
+        }
+        .std-reject-remark.show { display: block; animation: rjSlideIn .25s ease; }
+        @keyframes rjSlideIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+        .std-reject-remark label {
+            display: block; font-size: 13px; font-weight: 600; color: #991B1B; margin-bottom: 6px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .std-reject-remark textarea {
+            width: 100%; min-height: 72px; padding: 9px 12px;
+            border: 1.5px solid #FECACA; border-radius: 8px; font-size: 13px;
+            font-family: inherit; color: #334155; background: #fff;
+            outline: none; transition: border-color .15s, box-shadow .15s; resize: vertical;
+        }
+        .std-reject-remark textarea:focus { border-color: #DC2626; box-shadow: 0 0 0 3px rgba(220,38,38,.1); }
+        .std-reject-remark textarea.is-invalid { border-color: #DC2626; animation: rjShake .3s; }
+        @keyframes rjShake { 25%,75% { transform: translateX(-3px); } 50% { transform: translateX(3px); } }
+
     </style>
 </head>
 <body class="bg-slate-100 min-h-screen font-sans">
@@ -181,13 +463,61 @@
         <!-- Modal Body -->
         <div class="px-6 py-5 space-y-5 overflow-y-auto flex-1">
 
-            <!-- 1. เลือกสัญญา (Multi-select search) -->
+            <!-- 0. เลือกรูปแบบการเปลี่ยน -->
             <div>
+                <label class="field-label mb-2">รูปแบบการเปลี่ยนผู้อนุมัติ <span class="req">*</span></label>
+                <div class="transfer-mode-wrap">
+                    <label class="transfer-mode-card">
+                        <input type="radio" name="changeMode" value="all" onchange="switchChangeMode(this.value)">
+                        <div class="tm-body">
+                            <i data-lucide="layers" class="w-4.5 h-4.5"></i>
+                            <div class="tm-text">
+                                <div class="tm-title">เปลี่ยนสัญญาทั้งหมด</div>
+                                <div class="tm-sub">เปลี่ยนผู้อนุมัติทุกฉบับของผู้รับผิดชอบที่เลือก</div>
+                            </div>
+                        </div>
+                    </label>
+                    <label class="transfer-mode-card">
+                        <input type="radio" name="changeMode" value="select" checked onchange="switchChangeMode(this.value)">
+                        <div class="tm-body">
+                            <i data-lucide="list-checks" class="w-4.5 h-4.5"></i>
+                            <div class="tm-text">
+                                <div class="tm-title">เลือกสัญญา</div>
+                                <div class="tm-sub">เลือกเฉพาะสัญญาที่ต้องการเปลี่ยนผู้อนุมัติ</div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Mode: เปลี่ยนทั้งหมด → เลือก User + collapse pane -->
+            <div id="allContractsSection" class="is-hidden">
+                <label class="field-label mb-2">ผู้รับผิดชอบปัจจุบัน <span class="req">*</span></label>
+                <select id="selCurrentOwner" onchange="renderOwnerContracts()" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#B9DDFF] focus:ring-2 focus:ring-[#B9DDFF]/20 transition-all font-[inherit] mb-3">
+                    <option value="">-- เลือกผู้รับผิดชอบ --</option>
+                    <option>Jiraporn Sangsuppakorn</option>
+                    <option>Nattapong Worawit</option>
+                    <option>Siriporn Chairat</option>
+                    <option>Thanaporn Sukjai</option>
+                    <option>Wichai Rattanawong</option>
+                    <option>Kamonwan Petcharat</option>
+                    <option>Piyawat Somboon</option>
+                </select>
+                <div class="owner-contracts-box" id="ownerContractsBox">
+                    <div class="owner-contracts-empty">
+                        <i data-lucide="file-search" class="w-6 h-6 text-slate-300 mx-auto mb-1"></i>
+                        <div>เลือกผู้รับผิดชอบด้านบนเพื่อแสดงรายการสัญญา</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mode: เลือกสัญญา (Multi-select search พร้อมข้อมูลผู้รับผิดชอบ + แผนก) -->
+            <div id="selectContractsSection">
                 <label class="field-label mb-2">เลือกสัญญาที่ต้องการเปลี่ยนผู้อนุมัติ <span class="req">*</span></label>
                 <div class="relative" id="contractSelectWrap">
                     <div class="contract-search-box" id="contractSearchBox" onclick="document.getElementById('contractSearchInput').focus()">
                         <div id="selectedContractTags"></div>
-                        <input type="text" id="contractSearchInput" placeholder="ค้นหาเลขสัญญา หรือชื่อสัญญา..." oninput="filterContracts(this.value)" onfocus="showContractDropdown()">
+                        <input type="text" id="contractSearchInput" placeholder="ค้นหาเลขสัญญา, ชื่อสัญญา, ผู้รับผิดชอบ..." oninput="filterContracts(this.value)" onfocus="showContractDropdown()">
                     </div>
                     <div id="contractDropdown" class="contract-dropdown is-hidden"></div>
                 </div>
@@ -196,7 +526,7 @@
             <!-- 2. ผู้อนุมัติสัญญาใหม่ -->
             <div class="field-row">
                 <label class="field-label">ผู้อนุมัติสัญญาใหม่ <span class="req">*</span></label>
-                <select id="selNewApprover" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#88D2F2] focus:ring-2 focus:ring-[#88D2F2]/20 transition-all">
+                <select id="selNewApprover" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#B9DDFF] focus:ring-2 focus:ring-[#B9DDFF]/20 transition-all">
                     <option value="">-- เลือกผู้อนุมัติ --</option>
                     <option value="Somchai Prasert">Somchai Prasert</option>
                     <option value="Pichit Thongkam">Pichit Thongkam</option>
@@ -214,7 +544,7 @@
         <!-- Modal Footer -->
         <div class="px-6 py-4 border-t border-slate-200 flex items-center justify-end gap-3">
             <button onclick="closeModal()" class="px-5 py-2.5 rounded-lg font-semibold text-sm bg-white border border-slate-300 text-slate-600 hover:bg-slate-50 transition-colors">ยกเลิก</button>
-            <button onclick="saveApproverChange()" class="px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#88D2F2] text-[#1B3A6B] hover:bg-[#6BBFE0] transition-colors inline-flex items-center gap-2">
+            <button onclick="saveApproverChange()" class="px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#B9DDFF] text-[#022867] hover:bg-[#7FC0FB] transition-colors inline-flex items-center gap-2">
                 <i data-lucide="save" class="w-4 h-4"></i> บันทึก
             </button>
         </div>
@@ -226,7 +556,7 @@
     <div class="flex justify-between items-start mb-5 max-md:flex-col max-md:gap-3">
         <div>
             <h1 class="text-[26px] font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl max-[480px]:text-lg">
-                <i data-lucide="user-cog" class="w-5.5 h-5.5 text-[#2563EB]"></i>
+                <i data-lucide="user-cog" class="w-5.5 h-5.5 text-[#4790FF]"></i>
                 <span>เปลี่ยนผู้อนุมัติสัญญา</span>
             </h1>
             <p class="text-slate-500 text-sm mt-1">รายการเปลี่ยนผู้อนุมัติสัญญาทั้งหมด — <strong>8</strong> รายการ</p>
@@ -236,7 +566,7 @@
                 <i data-lucide="arrow-left" class="w-4 h-4"></i>
                 <span>ย้อนกลับ</span>
             </a>
-            <button onclick="openModal()" class="inline-flex items-center justify-center gap-2 px-5.5 py-2.5 rounded-lg text-sm font-semibold bg-[#88D2F2] text-[#1B3A6B] hover:bg-[#6BBFE0] transition-all whitespace-nowrap cursor-pointer border-none">
+            <button onclick="openModal()" class="inline-flex items-center justify-center gap-2 px-5.5 py-2.5 rounded-lg text-sm font-semibold bg-[#B9DDFF] text-[#022867] hover:bg-[#7FC0FB] transition-all whitespace-nowrap cursor-pointer border-none">
                 <i data-lucide="plus" class="w-4 h-4"></i>
                 <span>เปลี่ยนผู้อนุมัติ</span>
             </button>
@@ -249,6 +579,30 @@
             <i data-lucide="search" class="icon w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
             <input type="text" id="searchTable" oninput="filterTable()" placeholder="ค้นหาเลขสัญญา, ผู้อนุมัติ..." class="w-full py-2.5 pl-9 pr-3.5 border border-slate-300 rounded-lg text-sm font-[inherit] text-slate-600 bg-white outline-none transition-all focus:border-blue-500 focus:ring-3 focus:ring-blue-500/10">
         </div>
+        <div class="seg-radio" role="radiogroup" aria-label="สถานะการเปลี่ยนผู้อนุมัติ">
+            <label data-status="all"><input type="radio" name="filterChangeStatus" value="" checked onchange="filterTable()"><span class="sr-dot"></span>ทั้งหมด</label>
+            <label data-status="pending"><input type="radio" name="filterChangeStatus" value="รอดำเนินการ" onchange="filterTable()"><span class="sr-dot"></span>รอดำเนินการ</label>
+            <label data-status="done"><input type="radio" name="filterChangeStatus" value="ดำเนินการแล้ว" onchange="filterTable()"><span class="sr-dot"></span>ดำเนินการแล้ว</label>
+        </div>
+        <select id="filterDept" onchange="filterTable()" class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27%2364748B%27%20stroke-width=%272%27%3E%3Cpolyline%20points=%276%209%2012%2015%2018%209%27/%3E%3C/svg%3E')] bg-no-repeat bg-[right_10px_center] min-w-[160px]">
+            <option value="">แผนกทั้งหมด</option>
+            <option>ฝ่ายจัดซื้อ</option>
+            <option>ฝ่ายขาย</option>
+            <option>ฝ่ายการตลาด</option>
+            <option>ฝ่ายปฏิบัติการ</option>
+            <option>ฝ่ายบัญชีและการเงิน</option>
+            <option>ฝ่ายทรัพยากรบุคคล</option>
+        </select>
+        <select id="filterContractType" onchange="filterTable()" class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27%2364748B%27%20stroke-width=%272%27%3E%3Cpolyline%20points=%276%209%2012%2015%2018%209%27/%3E%3C/svg%3E')] bg-no-repeat bg-[right_10px_center] min-w-[160px]">
+            <option value="">ประเภทสัญญาทั้งหมด</option>
+            <option>สัญญาจ้างบริการ</option>
+            <option>สัญญาเช่า</option>
+            <option>สัญญาจัดซื้อ</option>
+            <option>สัญญาบริการ SaaS</option>
+            <option>สัญญาผลิตงาน</option>
+            <option>สัญญาจ้างที่ปรึกษา</option>
+        </select>
+        <div data-ldp-range data-from="filterDateFrom" data-to="filterDateTo" data-ph-start="วันเริ่มต้น" data-ph-end="วันสิ้นสุด" data-onchange="filterTable"></div>
         <div class="text-xs text-slate-400" id="rowCount">แสดง 8 รายการ</div>
     </div>
 
@@ -260,15 +614,16 @@
                     <tr>
                         <th>จัดการ</th>
                         <th>เลขสัญญา</th>
+                        <th>สถานะในระบบ</th>
                         <th>ชื่อสัญญา</th>
                         <th>ประเภทสัญญา</th>
-                        <th>สถานะ</th>
+                        <th>ผู้รับผิดชอบ</th>
                         <th>ผู้อนุมัติเดิม</th>
                         <th>ผู้อนุมัติใหม่</th>
+                        <th>สถานะการเปลี่ยนผู้อนุมัติ</th>
                         <th>แผนก</th>
-                        <th>สถานะสัญญา</th>
                         <th>วันที่สร้างคำขอ</th>
-                        <th>วันที่ดำเนินการ</th>
+                        <th>วันที่เปลี่ยนผู้อนุมัติ</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -381,10 +736,12 @@
         </div>
 
         <!-- Table Footer -->
-        <div class="px-5 py-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-            <span>ทั้งหมด 8 รายการ</span>
-            <div class="flex items-center gap-1">
-                <button class="px-2.5 py-1 rounded bg-[#88D2F2] text-[#1B3A6B] font-semibold">1</button>
+        <div class="table-footer">
+            <div class="table-footer-info">ทั้งหมด <b>8</b> รายการ</div>
+            <div class="table-footer-pager">
+                <button class="pg-nav" aria-label="ก่อนหน้า" disabled><i data-lucide="chevron-left"></i></button>
+                <button class="pg-num pg-active">1</button>
+                <button class="pg-nav" aria-label="ถัดไป" disabled><i data-lucide="chevron-right"></i></button>
             </div>
         </div>
     </div>
@@ -394,6 +751,7 @@
 <!-- ═══ Confirm Change Approver Modal ═══ -->
 <div class="confirm-overlay" id="confirmChangeOverlay" onclick="if(event.target===this)closeConfirmChange()">
     <div class="confirm-card">
+        <button class="std-close-btn" onclick="closeConfirmChange()" aria-label="ปิด"><i data-lucide="x"></i></button>
         <div class="confirm-icon">
             <i data-lucide="user-cog" class="w-7 h-7"></i>
         </div>
@@ -406,10 +764,14 @@
             <tr><td>แผนก</td><td id="cfmDept">—</td></tr>
             <tr><td>สถานะสัญญา</td><td id="cfmContractStatus">—</td></tr>
         </table>
+        <div id="rj_remarkWrap" class="std-reject-remark">
+            <label><i data-lucide="alert-circle" style="width:14px;height:14px;color:#DC2626"></i>หมายเหตุการไม่อนุมัติ <span style="color:#DC2626">*</span></label>
+            <textarea id="rj_remark" placeholder="ระบุสาเหตุที่ไม่อนุมัติ..." rows="3"></textarea>
+        </div>
         <div class="confirm-btns">
-            <button class="btn-cancel-confirm" onclick="closeConfirmChange()">ยกเลิก</button>
+            <button class="btn-cancel-confirm" onclick="rj_closeConfirmChange()"><i data-lucide="x" class="w-4 h-4"></i>ไม่อนุมัติ</button>
             <button class="btn-do-confirm" onclick="doConfirmChange()">
-                <i data-lucide="check" class="w-4 h-4"></i> ยืนยัน
+                <i data-lucide="check" class="w-4 h-4"></i> อนุมัติ
             </button>
         </div>
     </div>
@@ -431,29 +793,137 @@
     });
     lucide.createIcons();
 
+    /* ─── Reorder columns to new layout ───
+       Original: 0=จัดการ, 1=เลขสัญญา, 2=ชื่อสัญญา, 3=ประเภท, 4=สถานะ(การเปลี่ยน), 5=ผู้อนุมัติเดิม,
+                 6=ผู้อนุมัติใหม่, 7=แผนก, 8=สถานะสัญญา, 9=วันที่สร้าง, 10=วันที่ดำเนินการ
+       New:      0=จัดการ, 1=เลขสัญญา, 2=สถานะในระบบ(จาก 8), 3=ชื่อสัญญา, 4=ประเภท, 5=ผู้อนุมัติเดิม,
+                 6=ผู้อนุมัติใหม่, 7=สถานะการเปลี่ยน(จาก 4), 8=แผนก, 9=วันที่สร้าง, 10=วันที่เปลี่ยน
+    ───────────────────────────────────── */
+    (function reorderCols(){
+        const map = [0, 1, 8, 2, 3, 5, 6, 4, 7, 9, 10];
+        document.querySelectorAll('#dataTable tbody tr').forEach(row => {
+            if (row.dataset.reordered === '1') return;
+            row.dataset.reordered = '1';
+            const tds = Array.from(row.children);
+            if (tds.length < map.length) return;
+            const sorted = map.map(i => tds[i]);
+            row.innerHTML = '';
+            sorted.forEach(td => row.appendChild(td));
+        });
+    })();
+
+    /* ─── Inject ผู้รับผิดชอบ column at index 5 (หลัง ประเภทสัญญา) ─── */
+    (function injectOwnerCol(){
+        const owners = [
+            'Jiraporn Sangsuppakorn','Nattapong Worawit','Siriporn Chairat','Thanaporn Sukjai',
+            'Wichai Rattanawong','Kamonwan Petcharat','Piyawat Somboon','Chotika Kanchanakat'
+        ];
+        document.querySelectorAll('#dataTable tbody tr').forEach((row, idx) => {
+            if (row.dataset.ownerInjected === '1') return;
+            row.dataset.ownerInjected = '1';
+            const cells = row.children;
+            if (cells.length < 6) return;
+            const td = document.createElement('td');
+            td.style.color = '#334155';
+            td.style.fontWeight = '500';
+            td.textContent = owners[idx % owners.length];
+            row.insertBefore(td, cells[5]);
+        });
+    })();
+
     /* ══════════════════════════════════════
-       CONTRACT MULTI-SELECT SEARCH
+       CONTRACT MULTI-SELECT SEARCH (enriched)
        ══════════════════════════════════════ */
     const ALL_CONTRACTS = [
-        { no: 'LUR-202601001', name: 'สัญญาเช่าพื้นที่โฆษณา ถ.พหลโยธิน' },
-        { no: 'LUR-202601005', name: 'สัญญาจ้างบริการทำความสะอาด' },
-        { no: 'LUR-202602003', name: 'สัญญาเช่าที่ดินเปล่า ลาดพร้าว' },
-        { no: 'LUR-202603002', name: 'สัญญาบริการขนส่ง' },
-        { no: 'LUR-202509001', name: 'สัญญาจ้างที่ปรึกษาด้านกฎหมาย' },
-        { no: 'LUR-202510006', name: 'สัญญาเช่าอุปกรณ์สำนักงาน' },
-        { no: 'LUR-202511004', name: 'สัญญาจ้างพัฒนาระบบ IT' },
-        { no: 'LUR-202512008', name: 'สัญญาเช่าพื้นที่สำนักงาน อาคาร A' },
-        { no: 'VS2024/013', name: 'บันทึกข้อตกลงแนบท้ายสัญญาเช่าที่ดิน (ฉบับที่ 5)' },
-        { no: 'VS2024/007', name: 'สัญญาเช่าที่ดิน' },
-        { no: 'VS2024/003', name: 'บันทึกข้อตกลงแนบท้ายสัญญาเช่าที่ดิน (ฉบับที่ 4)' },
-        { no: 'VS2023/018', name: 'สัญญาจ้างทำป้ายโฆษณา LED' },
+        { no: 'LUR-202601001', name: 'สัญญาเช่าพื้นที่โฆษณา ถ.พหลโยธิน',  type: 'สัญญาเช่า',          owner: 'Jiraporn Sangsuppakorn', dept: 'ฝ่ายการตลาด' },
+        { no: 'LUR-202601005', name: 'สัญญาจ้างบริการทำความสะอาด',        type: 'สัญญาจ้างบริการ',   owner: 'Jiraporn Sangsuppakorn', dept: 'ฝ่ายปฏิบัติการ' },
+        { no: 'LUR-202602003', name: 'สัญญาเช่าที่ดินเปล่า ลาดพร้าว',      type: 'สัญญาเช่า',          owner: 'Thanaporn Sukjai',       dept: 'ฝ่ายขาย' },
+        { no: 'LUR-202603002', name: 'สัญญาบริการขนส่ง',                   type: 'สัญญาจ้างบริการ',   owner: 'Nattapong Worawit',      dept: 'ฝ่ายปฏิบัติการ' },
+        { no: 'LUR-202509001', name: 'สัญญาจ้างที่ปรึกษาด้านกฎหมาย',       type: 'สัญญาจ้างที่ปรึกษา', owner: 'Siriporn Chairat',       dept: 'ฝ่ายทรัพยากรบุคคล' },
+        { no: 'LUR-202510006', name: 'สัญญาเช่าอุปกรณ์สำนักงาน',           type: 'สัญญาเช่า',          owner: 'Wichai Rattanawong',     dept: 'ฝ่ายจัดซื้อ' },
+        { no: 'LUR-202511004', name: 'สัญญาจ้างพัฒนาระบบ IT',              type: 'สัญญาจ้างบริการ',   owner: 'Wichai Rattanawong',     dept: 'ฝ่ายจัดซื้อ' },
+        { no: 'LUR-202512008', name: 'สัญญาเช่าพื้นที่สำนักงาน อาคาร A',   type: 'สัญญาเช่า',          owner: 'Kamonwan Petcharat',     dept: 'ฝ่ายบัญชีและการเงิน' },
+        { no: 'VS2024/013',   name: 'บันทึกข้อตกลงแนบท้ายสัญญาเช่าที่ดิน (ฉบับที่ 5)', type: 'สัญญาเช่า', owner: 'Jiraporn Sangsuppakorn', dept: 'ฝ่ายการตลาด' },
+        { no: 'VS2024/007',   name: 'สัญญาเช่าที่ดิน',                      type: 'สัญญาเช่า',          owner: 'Jiraporn Sangsuppakorn', dept: 'ฝ่ายการตลาด' },
+        { no: 'VS2024/003',   name: 'บันทึกข้อตกลงแนบท้ายสัญญาเช่าที่ดิน (ฉบับที่ 4)', type: 'สัญญาเช่า', owner: 'Wichai Rattanawong',     dept: 'ฝ่ายจัดซื้อ' },
+        { no: 'VS2023/018',   name: 'สัญญาจ้างทำป้ายโฆษณา LED',            type: 'สัญญาผลิตงาน',      owner: 'Nattapong Worawit',      dept: 'ฝ่ายปฏิบัติการ' }
     ];
-    let selectedContracts = [];
+    const OWNER_CONTRACTS = (() => {
+        const m = {};
+        ALL_CONTRACTS.forEach(c => { (m[c.owner] = m[c.owner] || []).push(c); });
+        return m;
+    })();
 
+    let selectedContracts = [];
+    let changeMode = 'select';
+
+    function switchChangeMode(mode) {
+        changeMode = mode;
+        const allSec = document.getElementById('allContractsSection');
+        const selSec = document.getElementById('selectContractsSection');
+        if (mode === 'all') {
+            allSec.classList.remove('is-hidden');
+            selSec.classList.add('is-hidden');
+        } else {
+            allSec.classList.add('is-hidden');
+            selSec.classList.remove('is-hidden');
+        }
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function renderOwnerContracts() {
+        const owner = document.getElementById('selCurrentOwner').value;
+        const box = document.getElementById('ownerContractsBox');
+        box.classList.remove('is-collapsed');
+        if (!owner) {
+            box.innerHTML = '<div class="owner-contracts-empty"><i data-lucide="file-search" class="w-6 h-6 text-slate-300 mx-auto mb-1"></i><div>เลือกผู้รับผิดชอบด้านบนเพื่อแสดงรายการสัญญา</div></div>';
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            return;
+        }
+        const list = OWNER_CONTRACTS[owner] || [];
+        if (list.length === 0) {
+            box.innerHTML = '<div class="owner-contracts-empty"><i data-lucide="inbox" class="w-6 h-6 text-slate-300 mx-auto mb-1"></i><div>ไม่มีสัญญาอยู่ภายใต้ผู้รับผิดชอบรายนี้</div></div>';
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            return;
+        }
+        box.innerHTML =
+            `<div class="owner-contracts-header" onclick="toggleOwnerContracts()">
+                <div class="oc-head-left">
+                    <i data-lucide="chevron-down" class="oc-chev"></i>
+                    <span>สัญญาที่จะถูกเปลี่ยนผู้อนุมัติทั้งหมด</span>
+                </div>
+                <span class="oc-count">${list.length} ฉบับ</span>
+            </div>
+            <div class="owner-contracts-body">` +
+            list.map(c => `<div class="owner-contract-row">
+                <span class="oc-no">${c.no}</span>
+                <span class="oc-name">${c.name}</span>
+                <span class="oc-type">${c.type}</span>
+            </div>`).join('') +
+            `</div>`;
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function toggleOwnerContracts() {
+        document.getElementById('ownerContractsBox').classList.toggle('is-collapsed');
+    }
+
+    function positionContractDropdown() {
+        const dd = document.getElementById('contractDropdown');
+        const box = document.getElementById('contractSearchBox');
+        if (!dd || !box) return;
+        const r = box.getBoundingClientRect();
+        dd.style.top = (r.bottom + 4) + 'px';
+        dd.style.left = r.left + 'px';
+        dd.style.width = r.width + 'px';
+    }
     function showContractDropdown() {
         filterContracts(document.getElementById('contractSearchInput').value);
         document.getElementById('contractDropdown').classList.remove('is-hidden');
+        positionContractDropdown();
     }
+    window.addEventListener('scroll',  positionContractDropdown, true);
+    window.addEventListener('resize',  positionContractDropdown);
     document.addEventListener('click', e => {
         if (!document.getElementById('contractSelectWrap').contains(e.target)) {
             document.getElementById('contractDropdown').classList.add('is-hidden');
@@ -464,20 +934,28 @@
         const q = query.toLowerCase();
         const dd = document.getElementById('contractDropdown');
         const filtered = ALL_CONTRACTS.filter(c =>
-            c.no.toLowerCase().includes(q) || c.name.toLowerCase().includes(q)
+            c.no.toLowerCase().includes(q) || c.name.toLowerCase().includes(q) ||
+            (c.owner || '').toLowerCase().includes(q) || (c.dept || '').toLowerCase().includes(q)
         );
         dd.innerHTML = filtered.map(c => {
             const sel = selectedContracts.includes(c.no);
             return `<div class="contract-dropdown-item ${sel ? 'selected' : ''}" onclick="toggleContract('${c.no}')">
                 <span class="cd-no">${c.no}</span>
-                <span class="cd-name">${c.name}</span>
-                ${sel ? '<i data-lucide="check" class="w-4 h-4 cd-check"></i>' : ''}
+                <div class="cd-body">
+                    <span class="cd-name">${c.name}</span>
+                    <div class="cd-meta">
+                        <span class="cm-chip"><i data-lucide="user"></i>${c.owner || '-'}</span>
+                        <span class="cm-chip cm-dept"><i data-lucide="building-2"></i>${c.dept || '-'}</span>
+                    </div>
+                </div>
+                ${sel ? '<i data-lucide="check" class="cd-check"></i>' : ''}
             </div>`;
         }).join('');
         if (filtered.length === 0) {
             dd.innerHTML = '<div class="px-4 py-3 text-sm text-slate-400 text-center">ไม่พบสัญญาที่ค้นหา</div>';
         }
         dd.classList.remove('is-hidden');
+        positionContractDropdown();
         lucide.createIcons();
     }
 
@@ -510,6 +988,10 @@
         renderContractTags();
         document.getElementById('contractSearchInput').value = '';
         document.getElementById('selNewApprover').value = '';
+        document.querySelector('input[name="changeMode"][value="select"]').checked = true;
+        switchChangeMode('select');
+        document.getElementById('selCurrentOwner').value = '';
+        renderOwnerContracts();
         document.getElementById('approverModal').classList.remove('is-hidden');
         lucide.createIcons();
     }
@@ -518,7 +1000,14 @@
     }
 
     function saveApproverChange() {
-        if (selectedContracts.length === 0) { alert('กรุณาเลือกสัญญาอย่างน้อย 1 รายการ'); return; }
+        if (changeMode === 'all') {
+            const owner = document.getElementById('selCurrentOwner').value;
+            if (!owner) { alert('กรุณาเลือกผู้รับผิดชอบปัจจุบัน'); return; }
+            const list = OWNER_CONTRACTS[owner] || [];
+            if (list.length === 0) { alert('ผู้รับผิดชอบรายนี้ไม่มีสัญญาให้เปลี่ยนผู้อนุมัติ'); return; }
+        } else {
+            if (selectedContracts.length === 0) { alert('กรุณาเลือกสัญญาอย่างน้อย 1 รายการ'); return; }
+        }
         if (!document.getElementById('selNewApprover').value) { alert('กรุณาเลือกผู้อนุมัติสัญญาใหม่'); return; }
         alert('บันทึกการเปลี่ยนผู้อนุมัติสัญญาเรียบร้อยแล้ว');
         closeModal();
@@ -533,11 +1022,12 @@
         const row = btn.closest('tr');
         _confirmRow = row;
         const cells = row.querySelectorAll('td');
+        // After reorder + owner injection: 0=จัดการ, 1=เลขสัญญา, 2=สถานะในระบบ, 3=ชื่อสัญญา, 4=ประเภท, 5=ผู้รับผิดชอบ, 6=ผู้อนุมัติเดิม, 7=ผู้อนุมัติใหม่, 8=สถานะการเปลี่ยนผู้อนุมัติ, 9=แผนก, 10=วันที่สร้าง, 11=วันที่เปลี่ยน
         document.getElementById('cfmContractNo').textContent   = cells[1].textContent.trim();
-        document.getElementById('cfmOldApprover').textContent   = cells[5].textContent.trim();
-        document.getElementById('cfmNewApprover').textContent   = cells[6].textContent.trim();
-        document.getElementById('cfmDept').textContent          = cells[7].textContent.trim();
-        document.getElementById('cfmContractStatus').textContent = cells[8].textContent.trim();
+        document.getElementById('cfmOldApprover').textContent   = cells[6].textContent.trim();
+        document.getElementById('cfmNewApprover').textContent   = cells[7].textContent.trim();
+        document.getElementById('cfmDept').textContent          = cells[9].textContent.trim();
+        document.getElementById('cfmContractStatus').textContent = cells[2].textContent.trim();
         document.getElementById('confirmChangeOverlay').classList.add('is-active');
         lucide.createIcons();
     }
@@ -553,13 +1043,13 @@
         // Clear action button
         cells[0].innerHTML = '';
         // Update status badge to done
-        cells[4].innerHTML = '<span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span>';
+        cells[8].innerHTML = '<span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span>';
         // Set วันที่ดำเนินการ to today
         const now = new Date();
         const dd = String(now.getDate()).padStart(2, '0');
         const mm = String(now.getMonth() + 1).padStart(2, '0');
         const yyyy = now.getFullYear() + 543; // Buddhist year
-        cells[10].textContent = `${dd}/${mm}/${yyyy - 543}`;
+        cells[11].textContent = `${dd}/${mm}/${yyyy - 543}`;
         // Add done class
         _confirmRow.classList.add('row-done');
         _confirmRow.setAttribute('data-status', 'done');
@@ -577,18 +1067,68 @@
     /* ══════════════════════════════════════
        TABLE FILTER
        ══════════════════════════════════════ */
+    function fmtISO(d) {
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${dd}`;
+    }
+    function fmtDisplay(d) {
+        const dd = String(d.getDate()).padStart(2, '0');
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const yy = d.getFullYear();
+        return `${dd}/${mm}/${yy}`;
+    }
+    
     function filterTable() {
-        const q = document.getElementById('searchTable').value.toLowerCase();
+        const q  = document.getElementById('searchTable').value.toLowerCase();
+        const cs = (document.querySelector('input[name="filterChangeStatus"]:checked')?.value || '').toLowerCase();
+        const dept = (document.getElementById('filterDept').value || '').toLowerCase();
+        const type = (document.getElementById('filterContractType').value || '').toLowerCase();
+        const dFrom = document.getElementById('filterDateFrom').value;
+        const dTo   = document.getElementById('filterDateTo').value;
+        function toDate(s){ const m = (s || '').match(/\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}/); return m ? LDP.parse(m[0]) : null; }
+        const from = dFrom ? LDP.parse(dFrom) : null;
+        const to   = dTo   ? LDP.parse(dTo)   : null;
         const rows = document.querySelectorAll('#dataTable tbody tr');
         let count = 0;
         rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
             const text = row.textContent.toLowerCase();
-            const show = text.includes(q);
+            const rStatus = (cells[8]?.textContent || '').toLowerCase();
+            const rType   = (cells[4]?.textContent || '').toLowerCase();
+            const rDept   = (cells[9]?.textContent || '').toLowerCase();
+            const rDate   = [...cells].reverse().map(c => toDate(c.textContent)).find(Boolean) || null;
+            let show = true;
+            if (q && !text.includes(q)) show = false;
+            if (show && cs && !rStatus.includes(cs)) show = false;
+            if (show && dept && !rDept.includes(dept)) show = false;
+            if (show && type && !rType.includes(type)) show = false;
+            if (show && from && rDate && rDate < from) show = false;
+            if (show && to   && rDate && rDate > to)   show = false;
             row.style.display = show ? '' : 'none';
             if (show) count++;
         });
         document.getElementById('rowCount').textContent = `แสดง ${count} รายการ`;
     }
+
+    function rj_closeConfirmChange() {
+        const wrap = document.getElementById('rj_remarkWrap');
+        const ta = document.getElementById('rj_remark');
+        if (!wrap) return;
+        if (!wrap.classList.contains('show')) {
+            wrap.classList.add('show');
+            if (ta) { ta.value=''; ta.focus(); }
+            return;
+        }
+        if (!ta || !ta.value.trim()) {
+            if (ta) { ta.classList.remove('is-invalid'); void ta.offsetWidth; ta.classList.add('is-invalid'); ta.focus(); }
+            return;
+        }
+        closeConfirmChange();
+        setTimeout(() => { wrap.classList.remove('show'); if (ta) { ta.value=''; ta.classList.remove('is-invalid'); } }, 250);
+    }
+    
 </script>
 </body>
 </html>

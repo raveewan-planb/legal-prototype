@@ -9,8 +9,8 @@
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
 :root{
---navy:#1B3A6B;--navy2:#0A1B3A;--navy3:#2B4E8C;--sky:#6fc5ea;--sky2:#88D2F2;--gold:#FCD34D;
---bg:#F0F4F8;--text:#334155;--muted:#64748B;--border:#E2E8F0;--success:#10B981
+--navy:#022867;--navy2:#0A1B3A;--navy3:#2B4E8C;--sky:#4790FF;--sky2:#B9DDFF;--gold:#FCD34D;
+--bg:#F7F7F7;--text:#334155;--muted:#64748B;--border:#E2E8F0;--success:#10B981
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;font-family:'Kanit',system-ui,sans-serif;color:var(--text);overflow-x:hidden}
@@ -19,13 +19,13 @@ body{min-height:100vh;background:#0A1B3A}
 .brand{flex:1.15;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;
 padding:clamp(36px,6vw,80px);color:#fff;
 background:radial-gradient(ellipse at 20% 10%,#3E67AE 0%,transparent 55%),
-radial-gradient(ellipse at 85% 90%,#6fc5ea 0%,transparent 45%),
+radial-gradient(ellipse at 85% 90%,#4790FF 0%,transparent 45%),
 linear-gradient(135deg,var(--navy2) 0%,var(--navy) 45%,var(--navy3) 100%)}
 .brand::before{content:'';position:absolute;inset:0;
 background-image:radial-gradient(circle,rgba(255,255,255,.08) 1px,transparent 1px);
 background-size:32px 32px;opacity:.5;pointer-events:none}
 .blob{position:absolute;border-radius:50%;filter:blur(50px);opacity:.35;pointer-events:none}
-.b1{width:420px;height:420px;top:-120px;left:-120px;background:#6fc5ea;animation:floatBlob 12s ease-in-out infinite}
+.b1{width:420px;height:420px;top:-120px;left:-120px;background:#4790FF;animation:floatBlob 12s ease-in-out infinite}
 .b2{width:340px;height:340px;bottom:-100px;right:-80px;background:#3E67AE;animation:floatBlob 14s ease-in-out infinite reverse}
 .b3{width:220px;height:220px;top:40%;right:15%;background:#FCD34D;opacity:.15;animation:floatBlob 10s ease-in-out infinite 2s}
 @keyframes floatBlob{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-40px) scale(1.15)}}
@@ -34,10 +34,10 @@ background-image:linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),linea
 background-size:60px 60px;animation:gridShift 30s linear infinite}
 @keyframes gridShift{to{background-position:60px 60px}}
 .orbit{position:absolute;pointer-events:none;z-index:1}
-.o1{width:8px;height:8px;border-radius:50%;background:#88D2F2;top:22%;left:12%;box-shadow:0 0 20px #88D2F2;animation:float1 8s ease-in-out infinite}
+.o1{width:8px;height:8px;border-radius:50%;background:#B9DDFF;top:22%;left:12%;box-shadow:0 0 20px #B9DDFF;animation:float1 8s ease-in-out infinite}
 .o2{width:6px;height:6px;border-radius:50%;background:#FCD34D;top:70%;left:8%;box-shadow:0 0 16px #FCD34D;animation:float2 11s ease-in-out infinite}
 .o3{width:10px;height:10px;border-radius:50%;background:#fff;top:15%;right:20%;box-shadow:0 0 24px rgba(255,255,255,.7);animation:float3 9s ease-in-out infinite}
-.o4{width:5px;height:5px;border-radius:50%;background:#88D2F2;bottom:20%;right:12%;box-shadow:0 0 14px #88D2F2;animation:float1 13s ease-in-out infinite reverse}
+.o4{width:5px;height:5px;border-radius:50%;background:#B9DDFF;bottom:20%;right:12%;box-shadow:0 0 14px #B9DDFF;animation:float1 13s ease-in-out infinite reverse}
 .o5{width:7px;height:7px;border-radius:50%;background:#FCD34D;top:50%;left:60%;box-shadow:0 0 18px #FCD34D;opacity:.6;animation:float2 10s ease-in-out infinite 1.5s}
 @keyframes float1{0%,100%{transform:translate(0,0)}50%{transform:translate(28px,-38px)}}
 @keyframes float2{0%,100%{transform:translate(0,0)}50%{transform:translate(-24px,-30px)}}

@@ -12,7 +12,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 .section-card{background:#fff;border-radius:14px;padding:20px 22px;box-shadow:0 1px 3px rgba(15,23,42,.05);border:1px solid #F1F5F9}
-.section-title{font-size:15px;font-weight:600;color:#1B3A6B;display:flex;align-items:center;gap:8px}
+.section-title{font-size:15px;font-weight:600;color:#022867;display:flex;align-items:center;gap:8px}
 .summary-card{background:#fff;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;
 box-shadow:0 1px 3px rgba(15,23,42,.05);border:1px solid #F1F5F9;transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .22s ease;
 opacity:0;animation:fadeUp .5s ease forwards}
@@ -24,15 +24,15 @@ opacity:0;animation:fadeUp .5s ease forwards}
 .summary-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
 .summary-icon i{width:22px;height:22px}
 .summary-label{font-size:12.5px;color:#64748B;font-weight:500;margin-bottom:2px}
-.summary-value{font-size:22px;font-weight:700;color:#1B3A6B;line-height:1.1}
+.summary-value{font-size:22px;font-weight:700;color:#022867;line-height:1.1}
 .summary-value small{font-size:14px;color:#64748B;font-weight:500;margin-left:3px}
 .filter-pill{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #E2E8F0;border-radius:10px;
 padding:8px 12px;font-size:13px;color:#334155;cursor:pointer;font-family:inherit;transition:border-color .2s,background .2s}
-.filter-pill:hover{border-color:#6fc5ea;background:#F8FAFC}
+.filter-pill:hover{border-color:#4790FF;background:#F8FAFC}
 .filter-pill i{width:14px;height:14px;color:#64748B}
 .icon-btn{width:36px;height:36px;border-radius:10px;background:#fff;border:1px solid #E2E8F0;display:flex;align-items:center;
 justify-content:center;cursor:pointer;color:#64748B;transition:all .2s;font-family:inherit}
-.icon-btn:hover{background:#F8FAFC;border-color:#6fc5ea;color:#1B3A6B;transform:rotate(45deg)}
+.icon-btn:hover{background:#F8FAFC;border-color:#4790FF;color:#022867;transform:rotate(45deg)}
 .icon-btn i{width:16px;height:16px}
 .bank-card{background:#fff;border-radius:14px;padding:18px 20px 20px;box-shadow:0 1px 3px rgba(15,23,42,.05);
 border:1px solid #F1F5F9;transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .22s ease;
@@ -43,18 +43,18 @@ display:flex;flex-direction:column;gap:14px;opacity:0;animation:fadeUp .5s ease 
 .bank-card:nth-child(3){animation-delay:.52s}
 .bank-card:nth-child(4){animation-delay:.58s}
 .bank-card:nth-child(5){animation-delay:.64s}
-.bank-name{font-size:14px;font-weight:600;color:#1B3A6B;text-align:center;padding-bottom:12px;border-bottom:1px dashed #E2E8F0}
+.bank-name{font-size:14px;font-weight:600;color:#022867;text-align:center;padding-bottom:12px;border-bottom:1px dashed #E2E8F0}
 .status-row{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-radius:10px;
 font-size:13px;font-weight:600;transition:transform .18s ease}
 .status-row:hover{transform:translateX(3px)}
 .status-active{background:#D1FAE5;color:#065F46}
-.status-returned{background:#DBEAFE;color:#1E40AF}
+.status-returned{background:#B9DDFF;color:#1E40AF}
 .status-expire{background:#FEF3C7;color:#92400E}
 .status-expired{background:#FEE2E2;color:#991B1B}
 .status-count{background:#fff;color:inherit;padding:2px 10px;border-radius:20px;font-size:13px;font-weight:700;min-width:32px;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,.05)}
 .metric{display:flex;justify-content:space-between;align-items:center;font-size:12.5px}
 .metric-label{color:#64748B}
-.metric-value{color:#1B3A6B;font-weight:700;font-size:14px}
+.metric-value{color:#022867;font-weight:700;font-size:14px}
 .metric-value.danger{color:#DC2626}
 .metric-value.warning{color:#D97706}
 .chart-card{opacity:0;animation:fadeUp .5s ease forwards}
@@ -66,17 +66,17 @@ box-shadow:0 1px 3px rgba(15,23,42,.04);opacity:0;animation:fadeUp .5s ease forw
 .tab-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border:none;border-radius:10px;
 font-family:inherit;font-size:13.5px;font-weight:600;color:#64748B;background:transparent;cursor:pointer;
 transition:all .25s cubic-bezier(.16,1,.3,1);position:relative;white-space:nowrap}
-.tab-btn:hover:not(.active){background:#F1F5F9;color:#1B3A6B}
+.tab-btn:hover:not(.active){background:#F1F5F9;color:#022867}
 .tab-btn i{width:15px;height:15px}
-.tab-btn.active{background:linear-gradient(120deg,#1B3A6B,#2f5da0);color:#fff;box-shadow:0 4px 12px rgba(27,58,107,.28)}
+.tab-btn.active{background:linear-gradient(120deg,#022867,#2f5da0);color:#fff;box-shadow:0 4px 12px rgba(27,58,107,.28)}
 .tab-btn .tab-count{background:rgba(255,255,255,.22);color:#fff;padding:1px 8px;border-radius:20px;font-size:11px;font-weight:700}
-.tab-btn:not(.active) .tab-count{background:#EEF2FF;color:#1B3A6B}
+.tab-btn:not(.active) .tab-count{background:#EEF2FF;color:#022867}
 .tab-panel{display:none;flex-direction:column;gap:20px}
 .tab-panel.active{display:flex;animation:fadeIn .3s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .empty-state{background:#fff;border-radius:14px;padding:60px 20px;text-align:center;border:1px dashed #CBD5E1}
 .empty-state i{width:56px;height:56px;color:#94A3B8;margin-bottom:14px}
-.empty-state h3{font-size:16px;font-weight:600;color:#1B3A6B;margin:0 0 6px}
+.empty-state h3{font-size:16px;font-weight:600;color:#022867;margin:0 0 6px}
 .empty-state p{font-size:13.5px;color:#64748B;margin:0}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 .legend-list{display:flex;flex-direction:column;gap:9px}
@@ -85,15 +85,33 @@ transition:all .25s cubic-bezier(.16,1,.3,1);position:relative;white-space:nowra
 .legend-dot{width:11px;height:11px;border-radius:50%;flex:0 0 auto}
 .chart-wrap{position:relative;height:280px}
 .donut-center{position:absolute;top:50%;left:38%;transform:translate(-50%,-50%);text-align:center;pointer-events:none}
-.donut-center b{display:block;font-size:26px;font-weight:700;color:#1B3A6B;line-height:1}
+.donut-center b{display:block;font-size:26px;font-weight:700;color:#022867;line-height:1}
 .donut-center span{font-size:11px;color:#64748B;font-weight:500}
+.pipeline-wrap{display:flex;gap:4px;overflow-x:auto;padding:4px 0 10px}
+.pipeline-step{flex:1;min-width:110px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:12px 10px;position:relative;transition:all .22s ease;cursor:default}
+.pipeline-step:hover{transform:translateY(-2px);box-shadow:0 8px 18px -8px rgba(71,144,255,.3);border-color:#B9DDFF}
+.pipeline-step .ps-num{font-size:10px;font-weight:700;color:#94A3B8;letter-spacing:.5px}
+.pipeline-step .ps-label{font-size:11.5px;font-weight:600;color:#334155;line-height:1.25;margin-top:2px;min-height:28px}
+.pipeline-step .ps-count{font-size:20px;font-weight:700;color:#022867;margin-top:6px;line-height:1}
+.pipeline-step .ps-count small{font-size:11px;color:#64748B;font-weight:500;margin-left:2px}
+.pipeline-step.hot{background:linear-gradient(135deg,#F1FBFF,#E0F2FE);border-color:#5FCBF9}
+.pipeline-step.hot .ps-count{color:#4790FF}
+.pipeline-step.done{background:linear-gradient(135deg,#ECFDF5,#D1FAE5);border-color:#A7F3D0}
+.pipeline-step.done .ps-count{color:#047857}
+.admin-req-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:#F8FAFC;border:1px solid #F1F5F9;transition:all .18s ease;text-decoration:none}
+.admin-req-row:hover{background:#F1FBFF;border-color:#B9DDFF;transform:translateX(3px)}
+.admin-req-ico{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.admin-req-ico i{width:16px;height:16px}
+.admin-req-title{flex:1;font-size:13px;font-weight:600;color:#022867}
+.admin-req-sub{font-size:11px;color:#64748B;font-weight:500;margin-top:1px}
+.admin-req-badge{min-width:30px;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;text-align:center}
 @media (max-width:768px){
 .chart-wrap{height:240px}
 .donut-center{left:50%}
 }
 </style>
 </head>
-<body class="font-sans bg-[#F0F4F8] m-0">
+<body class="font-sans bg-[#F7F7F7] m-0">
 <div id="topbar-container"></div>
 <div id="sidebar-container"></div>
 
@@ -102,7 +120,7 @@ transition:all .25s cubic-bezier(.16,1,.3,1);position:relative;white-space:nowra
     <div class="flex justify-between items-start mb-1 max-md:flex-col max-md:gap-3" style="opacity:0;animation:fadeUp .5s ease forwards">
         <div>
             <h1 class="text-[26px] font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl max-[480px]:text-lg">
-                <i data-lucide="layout-dashboard" class="w-5.5 h-5.5 text-[#2563EB]"></i>
+                <i data-lucide="layout-dashboard" class="w-5.5 h-5.5 text-[#4790FF]"></i>
                 <span>Dashboard</span>
             </h1>
             <p class="text-slate-500 text-sm mt-1">ภาพรวมข้อมูลทั้งหมดในระบบ Legal System</p>
@@ -116,12 +134,79 @@ transition:all .25s cubic-bezier(.16,1,.3,1);position:relative;white-space:nowra
         <button class="tab-btn" data-tab="policy"><i data-lucide="shield-check"></i>กรมธรรม์</button>
     </div>
 
-    <!-- Contract Tab (empty state placeholder) -->
+    <!-- Contract Tab -->
     <div class="tab-panel" id="panel-contract">
-        <div class="empty-state">
-            <i data-lucide="file-text"></i>
-            <h3>Dashboard เอกสารสัญญา</h3>
-            <p>ส่วนแสดงผลของเอกสารสัญญาจะแสดงที่นี่ในเวอร์ชันถัดไป</p>
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-4 gap-5 max-md:grid-cols-2 max-[480px]:grid-cols-1">
+            <a href="contract-repository.html" class="summary-card hover:no-underline">
+                <div class="summary-icon" style="background:linear-gradient(135deg,#B9DDFF,#5FCBF9)"><i data-lucide="folder-open" style="color:#022867"></i></div>
+                <div><div class="summary-label">สัญญาทั้งหมด</div><div class="summary-value">128<small> ฉบับ</small></div></div>
+            </a>
+            <a href="contract-approve.html" class="summary-card hover:no-underline">
+                <div class="summary-icon" style="background:linear-gradient(135deg,#FEF3C7,#FDE68A)"><i data-lucide="user-check" style="color:#A16207"></i></div>
+                <div><div class="summary-label">รออนุมัติ</div><div class="summary-value">12<small> รายการ</small></div></div>
+            </a>
+            <a href="contract-renew.html" class="summary-card hover:no-underline">
+                <div class="summary-icon" style="background:linear-gradient(135deg,#FEE2E2,#FECACA)"><i data-lucide="alarm-clock" style="color:#DC2626"></i></div>
+                <div><div class="summary-label">ใกล้หมดอายุ (90 วัน)</div><div class="summary-value">8<small> ฉบับ</small></div></div>
+            </a>
+            <div class="summary-card">
+                <div class="summary-icon" style="background:linear-gradient(135deg,#D1FAE5,#A7F3D0)"><i data-lucide="banknote" style="color:#047857"></i></div>
+                <div><div class="summary-label">มูลค่าสัญญารวม</div><div class="summary-value">285.5<small> ล้าน ฿</small></div></div>
+            </div>
+        </div>
+
+        <!-- Workflow Pipeline -->
+        <div class="section-card chart-card">
+            <div class="section-title mb-4"><i data-lucide="git-branch" class="w-4 h-4"></i>Pipeline การจัดทำสัญญา (10 ขั้นตอน)</div>
+            <div class="pipeline-wrap" id="pipelineWrap"></div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="grid grid-cols-2 gap-5 max-md:grid-cols-1">
+            <div class="section-card chart-card">
+                <div class="section-title mb-3"><i data-lucide="pie-chart" class="w-4 h-4"></i>ประเภทสัญญา</div>
+                <div class="grid grid-cols-2 gap-4 items-center max-[480px]:grid-cols-1">
+                    <div class="chart-wrap"><canvas id="contractTypeChart"></canvas><div class="donut-center"><b>128</b><span>สัญญาทั้งหมด</span></div></div>
+                    <div class="legend-list" id="contractTypeLegend"></div>
+                </div>
+            </div>
+            <div class="section-card chart-card">
+                <div class="section-title mb-3"><i data-lucide="shield-alert" class="w-4 h-4"></i>ระดับความเสี่ยง</div>
+                <div class="grid grid-cols-2 gap-4 items-center max-[480px]:grid-cols-1">
+                    <div class="chart-wrap"><canvas id="riskChart"></canvas><div class="donut-center"><b>128</b><span>ประเมินแล้ว</span></div></div>
+                    <div class="legend-list" id="riskLegend"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Line Chart: New Contracts by Month -->
+        <div class="section-card chart-card">
+            <div class="section-title mb-3"><i data-lucide="trending-up" class="w-4 h-4"></i>สัญญารายเดือน (6 เดือนย้อนหลัง)</div>
+            <div class="chart-wrap"><canvas id="contractMonthlyChart"></canvas></div>
+        </div>
+
+        <!-- Expiring Contracts + Admin Requests -->
+        <div class="grid grid-cols-5 gap-5 max-md:grid-cols-1">
+            <div class="section-card chart-card col-span-3 max-md:col-span-1">
+                <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
+                    <div class="section-title"><i data-lucide="clock" class="w-4 h-4"></i>สัญญาใกล้หมดอายุ Top 5</div>
+                    <a href="contract-renew.html" class="text-xs text-[#4790FF] font-semibold hover:underline">ดูทั้งหมด →</a>
+                </div>
+                <div class="overflow-x-auto"><table class="w-full text-sm">
+                    <thead><tr>
+                        <th class="px-3 py-2.5 text-left text-xs">เลขสัญญา</th>
+                        <th class="px-3 py-2.5 text-left text-xs">ชื่อสัญญา</th>
+                        <th class="px-3 py-2.5 text-left text-xs">วันหมดอายุ</th>
+                        <th class="px-3 py-2.5 text-center text-xs">คงเหลือ</th>
+                    </tr></thead>
+                    <tbody id="expiringBody"></tbody>
+                </table></div>
+            </div>
+            <div class="section-card chart-card col-span-2 max-md:col-span-1">
+                <div class="section-title mb-3"><i data-lucide="inbox" class="w-4 h-4"></i>คำขอดำเนินการพิเศษ</div>
+                <div class="flex flex-col gap-2.5" id="adminReqList"></div>
+            </div>
         </div>
     </div>
 
@@ -147,14 +232,14 @@ transition:all .25s cubic-bezier(.16,1,.3,1);position:relative;white-space:nowra
         </div>
         <div class="grid grid-cols-4 gap-4 max-md:grid-cols-2 max-[480px]:grid-cols-1">
             <div class="summary-card">
-                <div class="summary-icon" style="background:#DBEAFE"><i data-lucide="file-text" style="color:#2563EB"></i></div>
+                <div class="summary-icon" style="background:#B9DDFF"><i data-lucide="file-text" style="color:#4790FF"></i></div>
                 <div>
                     <div class="summary-label">LG ที่ใช้งานอยู่</div>
                     <div class="summary-value">9<small>ฉบับ</small></div>
                 </div>
             </div>
             <div class="summary-card">
-                <div class="summary-icon" style="background:#DBEAFE"><i data-lucide="banknote" style="color:#2563EB"></i></div>
+                <div class="summary-icon" style="background:#B9DDFF"><i data-lucide="banknote" style="color:#4790FF"></i></div>
                 <div>
                     <div class="summary-label">มูลค่า LG รวม</div>
                     <div class="summary-value">3,011,000<small>฿</small></div>
@@ -242,7 +327,7 @@ new Chart(document.getElementById('donutChart'), {
     },
     options: {
         cutout: '62%', responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1B3A6B', padding: 10, cornerRadius: 8 } },
+        plugins: { legend: { display: false }, tooltip: { backgroundColor: '#022867', padding: 10, cornerRadius: 8 } },
         animation: { animateRotate: true, duration: 1200, easing: 'easeOutQuart' }
     }
 });
@@ -271,7 +356,7 @@ new Chart(document.getElementById('lineChart'), {
         responsive: true, maintainAspectRatio: false,
         plugins: {
             legend: { position: 'top', align: 'end', labels: { boxWidth: 8, boxHeight: 8, usePointStyle: true, font: { size: 12, family: 'Kanit' } } },
-            tooltip: { backgroundColor: '#1B3A6B', padding: 10, cornerRadius: 8, callbacks: { label: c => c.dataset.label + ': ' + c.parsed.y.toLocaleString() } }
+            tooltip: { backgroundColor: '#022867', padding: 10, cornerRadius: 8, callbacks: { label: c => c.dataset.label + ': ' + c.parsed.y.toLocaleString() } }
         },
         scales: {
             x: { grid: { display: false }, ticks: { font: { size: 11, family: 'Kanit' }, maxRotation: 45, minRotation: 45, color: '#64748B' } },
@@ -333,8 +418,128 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.add('active');
         document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
         document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+        if (btn.dataset.tab === 'contract' && !window._contractInited) { initContractTab(); window._contractInited = true; }
     });
 });
+
+/* ══════════ CONTRACT TAB DASHBOARD ══════════ */
+function initContractTab() {
+    const PIPELINE = [
+        { label: 'สร้างคำขอ', count: 18, cls: 'hot' },
+        { label: 'จ่ายงาน', count: 7 },
+        { label: 'ตรวจสอบร่าง', count: 9 },
+        { label: 'หัวหน้าอนุมัติ', count: 12, cls: 'hot' },
+        { label: 'สรุปความเสี่ยง', count: 4 },
+        { label: 'เลือกการลงนาม', count: 3 },
+        { label: 'จัดทำสัญญา', count: 6 },
+        { label: 'แนบสัญญาสมบูรณ์', count: 5 },
+        { label: 'ตรวจสอบ', count: 3 },
+        { label: 'เสร็จสิ้น', count: 61, cls: 'done' }
+    ];
+    const pw = document.getElementById('pipelineWrap');
+    pw.innerHTML = PIPELINE.map((s, i) => `
+        <div class="pipeline-step ${s.cls || ''}">
+            <div class="ps-num">STEP ${String(i+1).padStart(2,'0')}</div>
+            <div class="ps-label">${s.label}</div>
+            <div class="ps-count">${s.count}<small>คำขอ</small></div>
+        </div>`).join('');
+
+    const TYPE_DATA = [
+        { label: 'สัญญาจ้างบริการ', value: 48, color: '#4790FF' },
+        { label: 'สัญญาจัดซื้อ-จัดจ้าง', value: 32, color: '#5FCBF9' },
+        { label: 'สัญญาที่ปรึกษา', value: 18, color: '#897FFF' },
+        { label: 'สัญญาเช่า', value: 15, color: '#10B981' },
+        { label: 'NDA / MOU', value: 10, color: '#F59E0B' },
+        { label: 'อื่นๆ', value: 5, color: '#94A3B8' }
+    ];
+    renderLegend('contractTypeLegend', TYPE_DATA);
+    new Chart(document.getElementById('contractTypeChart'), {
+        type: 'doughnut',
+        data: { labels: TYPE_DATA.map(d=>d.label), datasets: [{ data: TYPE_DATA.map(d=>d.value), backgroundColor: TYPE_DATA.map(d=>d.color), borderWidth: 2, borderColor: '#fff', hoverOffset: 8 }] },
+        options: { cutout: '62%', responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false }, tooltip: { backgroundColor: '#022867', padding: 10, cornerRadius: 8 } },
+            animation: { animateRotate: true, duration: 1100, easing: 'easeOutQuart' } }
+    });
+
+    const RISK_DATA = [
+        { label: 'ต่ำ (Low)', value: 72, color: '#10B981' },
+        { label: 'ปานกลาง (Medium)', value: 41, color: '#F59E0B' },
+        { label: 'สูง (High)', value: 15, color: '#DC2626' }
+    ];
+    renderLegend('riskLegend', RISK_DATA);
+    new Chart(document.getElementById('riskChart'), {
+        type: 'doughnut',
+        data: { labels: RISK_DATA.map(d=>d.label), datasets: [{ data: RISK_DATA.map(d=>d.value), backgroundColor: RISK_DATA.map(d=>d.color), borderWidth: 2, borderColor: '#fff', hoverOffset: 8 }] },
+        options: { cutout: '62%', responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false }, tooltip: { backgroundColor: '#022867', padding: 10, cornerRadius: 8 } },
+            animation: { animateRotate: true, duration: 1100, easing: 'easeOutQuart' } }
+    });
+
+    const MLabels = ['เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.'];
+    new Chart(document.getElementById('contractMonthlyChart'), {
+        type: 'bar',
+        data: { labels: MLabels, datasets: [
+            { label: 'สัญญาใหม่', data: [12,15,18,14,22,19], backgroundColor: '#4790FF', borderRadius: 6, maxBarThickness: 36 },
+            { label: 'ต่ออายุ', data: [5,8,6,11,9,13], backgroundColor: '#5FCBF9', borderRadius: 6, maxBarThickness: 36 },
+            { label: 'ยกเลิก', data: [2,1,3,2,1,2], backgroundColor: '#F87171', borderRadius: 6, maxBarThickness: 36 }
+        ]},
+        options: { responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { position: 'top', align: 'end', labels: { boxWidth: 8, boxHeight: 8, usePointStyle: true, font: { size: 12, family: 'Kanit' } } },
+                tooltip: { backgroundColor: '#022867', padding: 10, cornerRadius: 8 } },
+            scales: { x: { grid: { display: false }, ticks: { font: { family: 'Kanit', size: 11 }, color: '#64748B' } },
+                y: { grid: { color: '#F1F5F9' }, ticks: { font: { family: 'Kanit', size: 11 }, color: '#64748B' }, beginAtZero: true } },
+            animation: { duration: 1100, easing: 'easeOutQuart' } }
+    });
+
+    const EXPIRING = [
+        { no: 'PB2026/008', name: 'สัญญาจ้างพัฒนาระบบ ERP', date: '12/12/2026', days: 18 },
+        { no: 'PB2026/012', name: 'สัญญาจัดซื้อฮาร์ดแวร์ Server', date: '28/12/2026', days: 34 },
+        { no: 'PB2026/003', name: 'สัญญาที่ปรึกษากฎหมาย', date: '05/01/2027', days: 42 },
+        { no: 'PB2026/019', name: 'สัญญาเช่าพื้นที่สำนักงาน', date: '20/01/2027', days: 57 },
+        { no: 'PB2026/022', name: 'สัญญาบริการ Cloud Platform', date: '15/02/2027', days: 83 }
+    ];
+    const tbody = document.getElementById('expiringBody');
+    tbody.innerHTML = EXPIRING.map(r => {
+        const sev = r.days <= 30 ? 'bg-red-50 text-red-700' : r.days <= 60 ? 'bg-amber-50 text-amber-700' : 'bg-blue-50 text-blue-700';
+        return `<tr class="border-b border-slate-100 last:border-0">
+            <td class="px-3 py-2.5 text-[#022867] font-semibold">${r.no}</td>
+            <td class="px-3 py-2.5 text-slate-700">${r.name}</td>
+            <td class="px-3 py-2.5 text-slate-600">${r.date}</td>
+            <td class="px-3 py-2.5 text-center"><span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold ${sev}">${r.days} วัน</span></td>
+        </tr>`;
+    }).join('');
+
+    const ADMIN_REQ = [
+        { label: 'คำขอโอนย้ายสัญญา', sub: 'รอผู้ดูแลระบบอนุมัติ', count: 5, href: 'contract-transfer-admin.html', ico: 'arrow-left-right', bg: '#B9DDFF', fg: '#022867', badge: 'bg-blue-50 text-blue-700' },
+        { label: 'คำขอเปลี่ยนผู้อนุมัติ', sub: 'รอผู้ดูแลระบบอนุมัติ', count: 3, href: 'contract-change-approver-admin.html', ico: 'user-cog', bg: '#DDD6FE', fg: '#5B21B6', badge: 'bg-violet-50 text-violet-700' },
+        { label: 'คำขอทำสัญญาย้อนหลัง', sub: 'รอผู้ดูแลระบบอนุมัติ', count: 2, href: 'contract-backdate.html', ico: 'history', bg: '#FEF3C7', fg: '#92400E', badge: 'bg-amber-50 text-amber-700' },
+        { label: 'คำขอยกเลิกการต่อสัญญา', sub: 'รอผู้ดูแลระบบอนุมัติ', count: 1, href: 'contract-revert.html', ico: 'undo-2', bg: '#FECDD3', fg: '#9F1239', badge: 'bg-rose-50 text-rose-700' },
+        { label: 'คำขอยกเลิกสัญญา', sub: 'รอผู้ดูแลระบบอนุมัติ', count: 4, href: 'contract-cancel.html', ico: 'x-octagon', bg: '#FEE2E2', fg: '#991B1B', badge: 'bg-red-50 text-red-700' }
+    ];
+    const al = document.getElementById('adminReqList');
+    al.innerHTML = ADMIN_REQ.map(r => `
+        <a href="${r.href}" class="admin-req-row">
+            <div class="admin-req-ico" style="background:${r.bg};color:${r.fg}"><i data-lucide="${r.ico}"></i></div>
+            <div class="flex-1 min-w-0">
+                <div class="admin-req-title">${r.label}</div>
+                <div class="admin-req-sub">${r.sub}</div>
+            </div>
+            <div class="admin-req-badge ${r.badge}">${r.count}</div>
+        </a>`).join('');
+
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function renderLegend(elId, data) {
+    const el = document.getElementById(elId);
+    el.innerHTML = '';
+    data.forEach(d => {
+        const row = document.createElement('div');
+        row.className = 'legend-item';
+        row.innerHTML = `<span class="legend-dot" style="background:${d.color}"></span>${d.label}<span class="ml-auto font-semibold text-[#022867]">${d.value}</span>`;
+        el.appendChild(row);
+    });
+}
 
 if (typeof lucide !== 'undefined') lucide.createIcons();
 </script>

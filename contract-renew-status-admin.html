@@ -39,7 +39,7 @@
             display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
             min-height: 44px; cursor: text; transition: border-color .2s;
         }
-        .contract-search-box:focus-within { border-color: #88D2F2; box-shadow: 0 0 0 3px rgba(136,210,242,.2); }
+        .contract-search-box:focus-within { border-color: #B9DDFF; box-shadow: 0 0 0 3px rgba(136,210,242,.2); }
         .contract-search-box input {
             border: none; outline: none; flex: 1; min-width: 120px; font-size: 13px; padding: 2px 0;
         }
@@ -74,7 +74,7 @@
             border: 1px solid #E2E8F0; border-radius: 10px; padding: 8px 12px;
             display: flex; align-items: center; gap: 8px; min-height: 44px; transition: border-color .2s;
         }
-        .ref-search-box:focus-within { border-color: #88D2F2; box-shadow: 0 0 0 3px rgba(136,210,242,.2); }
+        .ref-search-box:focus-within { border-color: #B9DDFF; box-shadow: 0 0 0 3px rgba(136,210,242,.2); }
         .ref-search-box input {
             border: none; outline: none; flex: 1; font-size: 13px; padding: 2px 0;
         }
@@ -130,7 +130,7 @@
         /* ── Renew Status Badges ── */
         .badge-rn-wait { background: #FEF3C7; color: #92400E; }
         .badge-rn-no { background: #FEE2E2; color: #991B1B; }
-        .badge-rn-inprogress { background: #DBEAFE; color: #1E40AF; }
+        .badge-rn-inprogress { background: #B9DDFF; color: #1E40AF; }
         .badge-rn-notyet { background: #F1F5F9; color: #475569; }
         .badge-rn-done { background: #D1FAE5; color: #065F46; }
 
@@ -142,7 +142,7 @@
         .badge-cs.draft { background: #F1F5F9; color: #64748B; }
         .badge-cs.return { background: #FFF7ED; color: #C2410C; }
         .badge-cs.legal { background: #F5F3FF; color: #7C3AED; }
-        .badge-cs.review { background: #EFF6FF; color: #2563EB; }
+        .badge-cs.review { background: #F1FBFF; color: #4790FF; }
         .badge-cs.approve { background: #FFFBEB; color: #A16207; }
         .badge-cs.sign { background: #FDF2F8; color: #BE185D; }
         .badge-cs.complete { background: #F0FDF4; color: #15803D; }
@@ -166,7 +166,7 @@
             display: flex; align-items: center; justify-content: center;
             background: #FFFBEB; color: #D97706;
         }
-        .confirm-card h3 { font-size: 18px; font-weight: 700; color: #1B3A6B; margin-bottom: 8px; text-align: center; }
+        .confirm-card h3 { font-size: 18px; font-weight: 700; color: #022867; margin-bottom: 8px; text-align: center; }
         .confirm-info-table {
             width: 100%; border-collapse: collapse; margin: 16px 0;
             border: 1px solid #E2E8F0; border-radius: 10px; overflow: hidden;
@@ -192,6 +192,78 @@
         .btn-do-confirm:hover { background: #B45309; }
 
         .is-hidden { display: none !important; }
+        /* ═══ Standardized Modal Styles ═══ */
+        .std-close-btn {
+            position: absolute; top: 14px; right: 14px;
+            width: 32px; height: 32px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: #F1F5F9; border: none; color: #64748B;
+            cursor: pointer; transition: all .2s ease; z-index: 2;
+        }
+        .std-close-btn:hover { background: #FEE2E2; color: #DC2626; transform: rotate(90deg); }
+        .std-close-btn svg { width: 16px; height: 16px; }
+
+        .confirm-card, .cn-card, .rv-card, .bd-modal-box { position: relative; }
+
+        .btn-cancel-confirm, .btn-cancel, .btn-cancel-dismiss {
+            padding: 10px 24px !important; border-radius: 10px !important;
+            border: none !important; background: #DC2626 !important;
+            color: #fff !important; font-size: 14px !important; font-weight: 600 !important;
+            cursor: pointer; font-family: inherit !important; transition: all .2s !important;
+            display: inline-flex !important; align-items: center !important; gap: 6px !important;
+            box-shadow: 0 2px 6px rgba(220,38,38,.3) !important;
+        }
+        .btn-cancel-confirm:hover, .btn-cancel:hover, .btn-cancel-dismiss:hover {
+            background: #B91C1C !important; transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220,38,38,.4) !important;
+        }
+        .btn-do-confirm, .btn-confirm {
+            padding: 10px 24px !important; border-radius: 10px !important; border: none !important;
+            background: #B9DDFF !important; color: #022867 !important;
+            font-size: 14px !important; font-weight: 600 !important;
+            cursor: pointer; font-family: inherit !important; transition: all .2s !important;
+            display: inline-flex !important; align-items: center !important; gap: 6px !important;
+            box-shadow: 0 2px 6px rgba(136,210,242,.4) !important;
+        }
+        .btn-do-confirm:hover, .btn-confirm:hover {
+            background: #7FC0FB !important; transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(136,210,242,.5) !important;
+        }
+        .btn-danger-confirm {
+            padding: 10px 24px !important; border-radius: 10px !important; border: none !important;
+            background: #DC2626 !important; color: #fff !important;
+            font-size: 14px !important; font-weight: 600 !important;
+            cursor: pointer; font-family: inherit !important; transition: all .2s !important;
+            display: inline-flex !important; align-items: center !important; gap: 6px !important;
+            box-shadow: 0 2px 6px rgba(220,38,38,.3) !important;
+        }
+        .btn-danger-confirm:hover {
+            background: #B91C1C !important; transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220,38,38,.4) !important;
+        }
+
+        /* ═══ ไม่อนุมัติ Remark ═══ */
+        .std-reject-remark {
+            margin: 0 24px 16px 24px; padding: 14px 16px;
+            background: #FEF2F2; border: 1px solid #FECACA; border-radius: 10px;
+            display: none;
+        }
+        .std-reject-remark.show { display: block; animation: rjSlideIn .25s ease; }
+        @keyframes rjSlideIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+        .std-reject-remark label {
+            display: block; font-size: 13px; font-weight: 600; color: #991B1B; margin-bottom: 6px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .std-reject-remark textarea {
+            width: 100%; min-height: 72px; padding: 9px 12px;
+            border: 1.5px solid #FECACA; border-radius: 8px; font-size: 13px;
+            font-family: inherit; color: #334155; background: #fff;
+            outline: none; transition: border-color .15s, box-shadow .15s; resize: vertical;
+        }
+        .std-reject-remark textarea:focus { border-color: #DC2626; box-shadow: 0 0 0 3px rgba(220,38,38,.1); }
+        .std-reject-remark textarea.is-invalid { border-color: #DC2626; animation: rjShake .3s; }
+        @keyframes rjShake { 25%,75% { transform: translateX(-3px); } 50% { transform: translateX(3px); } }
+
     </style>
 </head>
 <body class="bg-slate-100 min-h-screen font-sans">
@@ -236,7 +308,7 @@
             <!-- 2. สถานะการต่อสัญญา -->
             <div class="field-row">
                 <label class="field-label">สถานะ <span class="req">*</span></label>
-                <select id="selStatus" onchange="onStatusChange()" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#88D2F2] focus:ring-2 focus:ring-[#88D2F2]/20 transition-all">
+                <select id="selStatus" onchange="onStatusChange()" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#B9DDFF] focus:ring-2 focus:ring-[#B9DDFF]/20 transition-all">
                     <option value="">-- เลือกสถานะ --</option>
                     <option value="รอต่อสัญญา">รอต่อสัญญา</option>
                     <option value="ไม่ต่อสัญญา">ไม่ต่อสัญญา</option>
@@ -249,7 +321,7 @@
             <!-- 3. Sub-status (แสดงเฉพาะ อยู่ระหว่างดำเนินการ) -->
             <div class="field-row is-hidden" id="subStatusRow">
                 <label class="field-label">รายละเอียดสถานะ <span class="req">*</span></label>
-                <select id="selSubStatus" onchange="onSubStatusChange()" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#88D2F2] focus:ring-2 focus:ring-[#88D2F2]/20 transition-all">
+                <select id="selSubStatus" onchange="onSubStatusChange()" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#B9DDFF] focus:ring-2 focus:ring-[#B9DDFF]/20 transition-all">
                     <option value="">-- เลือกรายละเอียด --</option>
                     <option value="รอหัวหน้าพิจารณาการต่อสัญญา">รอหัวหน้าพิจารณาการต่อสัญญา</option>
                     <option value="ส่งหนังสือขอต่อสัญญา">ส่งหนังสือขอต่อสัญญา</option>
@@ -266,11 +338,8 @@
             <div class="field-row is-hidden" id="sendDateRow">
                 <label class="field-label">วันที่ส่งหนังสือ <span class="req">*</span></label>
                 <div style="display:flex;gap:8px;align-items:center;">
-                    <input type="text" id="sendDateDisplay" placeholder="dd/mm/yyyy" maxlength="10" readonly style="cursor:pointer;flex:1;" onclick="document.getElementById('sendDatePicker').showPicker()" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#88D2F2] focus:ring-2 focus:ring-[#88D2F2]/20 transition-all">
-                    <input type="date" id="sendDatePicker" onchange="syncSendDate(this)" style="position:absolute;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;">
-                    <button type="button" onclick="document.getElementById('sendDatePicker').showPicker()" style="width:40px;height:40px;border-radius:8px;border:1px solid #CBD5E1;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#2563EB;transition:all .2s;flex-shrink:0;" onmouseover="this.style.background='#EFF6FF'" onmouseout="this.style.background='#fff'">
-                        <i data-lucide="calendar" class="w-4 h-4"></i>
-                    </button>
+                    <input type="text" id="sendDateDisplay" data-ldp data-ldp-iso="sendDatePicker" data-ldp-title="เลือกวันที่ส่งหนังสือ" placeholder="dd/mm/yyyy" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm">
+                    <input type="hidden" id="sendDatePicker">
                 </div>
             </div>
 
@@ -290,7 +359,7 @@
             <!-- 5. หมายเหตุ (แสดงเสมอ) -->
             <div class="field-row">
                 <label class="field-label">หมายเหตุ</label>
-                <textarea id="txtRemark" rows="3" placeholder="กรอกหมายเหตุเพิ่มเติม (ถ้ามี)..." class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#88D2F2] focus:ring-2 focus:ring-[#88D2F2]/20 transition-all resize-none"></textarea>
+                <textarea id="txtRemark" rows="3" placeholder="กรอกหมายเหตุเพิ่มเติม (ถ้ามี)..." class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#B9DDFF] focus:ring-2 focus:ring-[#B9DDFF]/20 transition-all resize-none"></textarea>
             </div>
 
         </div>
@@ -298,7 +367,7 @@
         <!-- Modal Footer -->
         <div class="px-6 py-4 border-t border-slate-200 flex items-center justify-end gap-3">
             <button onclick="closeModal()" class="px-5 py-2.5 rounded-lg font-semibold text-sm bg-white border border-slate-300 text-slate-600 hover:bg-slate-50 transition-colors">ยกเลิก</button>
-            <button onclick="saveStatus()" class="px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#88D2F2] text-[#1B3A6B] hover:bg-[#6BBFE0] transition-colors inline-flex items-center gap-2">
+            <button onclick="saveStatus()" class="px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#B9DDFF] text-[#022867] hover:bg-[#7FC0FB] transition-colors inline-flex items-center gap-2">
                 <i data-lucide="save" class="w-4 h-4"></i> บันทึก
             </button>
         </div>
@@ -310,7 +379,7 @@
     <div class="flex justify-between items-start mb-5 max-md:flex-col max-md:gap-3">
         <div>
             <h1 class="text-[26px] font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl max-[480px]:text-lg">
-                <i data-lucide="refresh-cw" class="w-5.5 h-5.5 text-[#2563EB]"></i>
+                <i data-lucide="refresh-cw" class="w-5.5 h-5.5 text-[#4790FF]"></i>
                 <span>ปรับสถานะการต่อสัญญา</span>
             </h1>
             <p class="text-slate-500 text-sm mt-1">รายการปรับสถานะการต่อสัญญาทั้งหมด — <strong>10</strong> รายการ</p>
@@ -320,7 +389,7 @@
                 <i data-lucide="arrow-left" class="w-4 h-4"></i>
                 <span>ย้อนกลับ</span>
             </a>
-            <button onclick="openModal()" class="inline-flex items-center justify-center gap-2 px-5.5 py-2.5 rounded-lg text-sm font-semibold bg-[#88D2F2] text-[#1B3A6B] hover:bg-[#6BBFE0] transition-all whitespace-nowrap cursor-pointer border-none">
+            <button onclick="openModal()" class="inline-flex items-center justify-center gap-2 px-5.5 py-2.5 rounded-lg text-sm font-semibold bg-[#B9DDFF] text-[#022867] hover:bg-[#7FC0FB] transition-all whitespace-nowrap cursor-pointer border-none">
                 <i data-lucide="plus" class="w-4 h-4"></i>
                 <span>ปรับสถานะ</span>
             </button>
@@ -502,10 +571,12 @@
         </div>
 
         <!-- Table Footer -->
-        <div class="px-5 py-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-            <span>ทั้งหมด 10 รายการ</span>
-            <div class="flex items-center gap-1">
-                <button class="px-2.5 py-1 rounded bg-[#88D2F2] text-[#1B3A6B] font-semibold">1</button>
+        <div class="table-footer">
+            <div class="table-footer-info">ทั้งหมด <b>10</b> รายการ</div>
+            <div class="table-footer-pager">
+                <button class="pg-nav" aria-label="ก่อนหน้า" disabled><i data-lucide="chevron-left"></i></button>
+                <button class="pg-num pg-active">1</button>
+                <button class="pg-nav" aria-label="ถัดไป" disabled><i data-lucide="chevron-right"></i></button>
             </div>
         </div>
     </div>
@@ -515,6 +586,7 @@
 <!-- ═══ Confirm Renew Status Modal ═══ -->
 <div class="confirm-overlay" id="confirmRenewOverlay" onclick="if(event.target===this)closeConfirmRenew()">
     <div class="confirm-card">
+        <button class="std-close-btn" onclick="closeConfirmRenew()" aria-label="ปิด"><i data-lucide="x"></i></button>
         <div class="confirm-icon">
             <i data-lucide="refresh-cw" class="w-7 h-7"></i>
         </div>
@@ -528,10 +600,14 @@
             <tr><td>แผนก</td><td id="cfmDept">—</td></tr>
             <tr><td>สถานะสัญญา</td><td id="cfmContractStatus">—</td></tr>
         </table>
+        <div id="rj_remarkWrap" class="std-reject-remark">
+            <label><i data-lucide="alert-circle" style="width:14px;height:14px;color:#DC2626"></i>หมายเหตุการไม่อนุมัติ <span style="color:#DC2626">*</span></label>
+            <textarea id="rj_remark" placeholder="ระบุสาเหตุที่ไม่อนุมัติ..." rows="3"></textarea>
+        </div>
         <div class="confirm-btns">
-            <button class="btn-cancel-confirm" onclick="closeConfirmRenew()">ยกเลิก</button>
+            <button class="btn-cancel-confirm" onclick="rj_closeConfirmRenew()"><i data-lucide="x" class="w-4 h-4"></i>ไม่อนุมัติ</button>
             <button class="btn-do-confirm" onclick="doConfirmRenew()">
-                <i data-lucide="check" class="w-4 h-4"></i> ยืนยัน
+                <i data-lucide="check" class="w-4 h-4"></i> อนุมัติ
             </button>
         </div>
     </div>
@@ -782,6 +858,24 @@
         });
         document.getElementById('rowCount').textContent = `แสดง ${count} รายการ`;
     }
+
+    function rj_closeConfirmRenew() {
+        const wrap = document.getElementById('rj_remarkWrap');
+        const ta = document.getElementById('rj_remark');
+        if (!wrap) return;
+        if (!wrap.classList.contains('show')) {
+            wrap.classList.add('show');
+            if (ta) { ta.value=''; ta.focus(); }
+            return;
+        }
+        if (!ta || !ta.value.trim()) {
+            if (ta) { ta.classList.remove('is-invalid'); void ta.offsetWidth; ta.classList.add('is-invalid'); ta.focus(); }
+            return;
+        }
+        closeConfirmRenew();
+        setTimeout(() => { wrap.classList.remove('show'); if (ta) { ta.value=''; ta.classList.remove('is-invalid'); } }, 250);
+    }
+    
 </script>
 </body>
 </html>

@@ -62,11 +62,11 @@
             cursor: pointer; transition: all .2s; position: relative;
         }
         .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.1); border-color: #CBD5E1; transform: translateY(-1px); }
-        .card-ref { font-size: 12px; font-weight: 700; color: #2563EB; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+        .card-ref { font-size: 12px; font-weight: 700; color: #4790FF; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
         .card-title { font-size: 13px; font-weight: 600; color: #1E293B; margin-bottom: 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .card-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
         .card-tag { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 4px; }
-        .card-tag.type { background: #EFF6FF; color: #2563EB; }
+        .card-tag.type { background: #F1FBFF; color: #4790FF; }
         .card-tag.ref { background: #F1F5F9; color: #475569; }
         .card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 8px; border-top: 1px solid #F1F5F9; }
         .card-assignee { display: flex; align-items: center; gap: 6px; }
@@ -106,7 +106,7 @@
         .table-wrapper { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; }
         thead th {
-            background: #1B3A6B; color: #fff; font-weight: 600; font-size: 13px;
+            background: #022867; color: #fff; font-weight: 600; font-size: 13px;
             padding: 14px 16px; text-align: left; white-space: nowrap;
         }
         tbody tr { border-bottom: 1px solid #F1F5F9; transition: background .15s; cursor: pointer; }
@@ -125,15 +125,15 @@
         .badge-boss-approve .dot { background: #F59E0B; }
         .badge-legal-approve { background: #F5F3FF; color: #7C3AED; }
         .badge-legal-approve .dot { background: #8B5CF6; }
-        .badge-legal-process { background: #EFF6FF; color: #2563EB; }
+        .badge-legal-process { background: #F1FBFF; color: #4790FF; }
         .badge-legal-process .dot { background: #3B82F6; }
         .badge-complete { background: #F0FDF4; color: #15803D; }
         .badge-complete .dot { background: #22C55E; }
 
         .action-btns { display: flex; gap: 6px; }
         .action-btn { width: 30px; height: 30px; border-radius: 6px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; transition: all .2s; }
-        .action-btn.view { background: #EFF6FF; color: #2563EB; }
-        .action-btn.view:hover { background: #DBEAFE; }
+        .action-btn.view { background: #F1FBFF; color: #4790FF; }
+        .action-btn.view:hover { background: #B9DDFF; }
         .action-btn.edit { background: #FFF7ED; color: #C2410C; }
         .action-btn.edit:hover { background: #FFEDD5; }
         .action-btn.delete { background: #FEF2F2; color: #DC2626; }
@@ -147,17 +147,11 @@
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             font-family: inherit; transition: all .2s;
         }
-        .pagination button:hover { background: #EFF6FF; border-color: #2563EB; color: #2563EB; }
-        .pagination button.pg-active { background: #2563EB; color: #fff; border-color: #2563EB; }
+        .pagination button:hover { background: #F1FBFF; border-color: #4790FF; color: #4790FF; }
+        .pagination button.pg-active { background: #4790FF; color: #fff; border-color: #4790FF; }
         .pagination button.nav { font-size: 12px; }
 
         /* ── Scrollbar ── */
-        .lane-body::-webkit-scrollbar { width: 4px; }
-        .lane-body::-webkit-scrollbar-track { background: transparent; }
-        .lane-body::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
-        .board-wrapper::-webkit-scrollbar { height: 6px; }
-        .board-wrapper::-webkit-scrollbar-track { background: transparent; }
-        .board-wrapper::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 6px; }
 
         /* ══════════════════════════════════════
            RESPONSIVE
@@ -198,7 +192,7 @@
     <div class="flex justify-between items-start mb-5 max-md:flex-col max-md:gap-3">
         <div>
             <h1 class="text-[26px] font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl max-[480px]:text-lg">
-                <i data-lucide="notebook-pen" class="w-5.5 h-5.5 text-[#2563EB]"></i>
+                <i data-lucide="notebook-pen" class="w-5.5 h-5.5 text-[#4790FF]"></i>
                 <span>บันทึกข้อความ</span>
             </h1>
             <p class="text-slate-500 text-sm mt-1">จัดการบันทึกข้อความทั้งหมดในระบบ — <strong>12</strong> รายการ</p>
@@ -208,7 +202,7 @@
                 <i data-lucide="file-up" class="w-4 h-4"></i>
                 <span>ส่งออก</span>
             </button>
-            <a href="memo-step1-create.html" class="inline-flex items-center justify-center gap-2 px-5.5 py-2.5 rounded-lg text-sm font-semibold bg-[#88D2F2] text-[#1B3A6B] hover:bg-[#6BBFE0] transition-all no-underline whitespace-nowrap">
+            <a href="memo-step1-create.html" class="inline-flex items-center justify-center gap-2 px-5.5 py-2.5 rounded-lg text-sm font-semibold bg-[#B9DDFF] text-[#022867] hover:bg-[#7FC0FB] transition-all no-underline whitespace-nowrap">
                 <i data-lucide="plus" class="w-4 h-4"></i>
                 <span>สร้างบันทึก</span>
             </a>
@@ -251,11 +245,11 @@
                 <option>เสร็จสิ้น</option>
             </select>
             <div class="view-toggle flex bg-slate-200 rounded-lg p-[3px] shrink-0 max-md:ml-auto">
-                <button class="active" onclick="switchView('kanban')" id="btnKanban" style="padding:7px 16px;border:none;background:transparent;border-radius:6px;font-size:13px;font-weight:600;color:#64748B;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:all .2s;">
+                <button onclick="switchView('kanban')" id="btnKanban" style="padding:7px 16px;border:none;background:transparent;border-radius:6px;font-size:13px;font-weight:600;color:#64748B;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:all .2s;">
                     <i data-lucide="columns-3" class="w-3.5 h-3.5"></i>
                     <span>Board</span>
                 </button>
-                <button onclick="switchView('table')" id="btnTable" style="padding:7px 16px;border:none;background:transparent;border-radius:6px;font-size:13px;font-weight:600;color:#64748B;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:all .2s;">
+                <button class="active" onclick="switchView('table')" id="btnTable" style="padding:7px 16px;border:none;background:#fff;border-radius:6px;font-size:13px;font-weight:600;color:#4790FF;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.1);">
                     <i data-lucide="table" class="w-3.5 h-3.5"></i>
                     <span>Table</span>
                 </button>
@@ -264,7 +258,7 @@
     </div>
 
     <!-- ══════════ KANBAN BOARD — 6 Lanes ══════════ -->
-    <div class="board-wrapper" id="kanbanView" style="flex:1;overflow-x:auto;padding-bottom:16px;">
+    <div class="board-wrapper" id="kanbanView" style="flex:1;overflow-x:auto;padding-bottom:16px;display:none;">
         <div class="board" style="display:flex;gap:16px;min-height:calc(100vh - 230px);align-items:flex-start;">
 
             <!-- 1. สร้างคำขอ (แบบร่าง) -->
@@ -427,7 +421,7 @@
     </div>
 
     <!-- ══════════ TABLE VIEW ══════════ -->
-    <div class="table-view" id="tableView">
+    <div class="table-view active" id="tableView" style="display:block;">
         <div class="table-card">
             <div class="table-wrapper">
                 <table>
@@ -446,7 +440,7 @@
                     <tbody>
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button><button class="action-btn delete" title="ลบ"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">MEMO-202604001</td>
+                            <td style="font-weight:700;color:#4790FF;">MEMO-202604001</td>
                             <td>ขอถอยสัญญา</td>
                             <td>ขออนุมัติจัดซื้อเครื่องคอมพิวเตอร์</td>
                             <td style="font-weight:600;color:#475569;">PB2026/002</td>
@@ -456,7 +450,7 @@
                         </tr>
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button><button class="action-btn delete" title="ลบ"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">MEMO-202604002</td>
+                            <td style="font-weight:700;color:#4790FF;">MEMO-202604002</td>
                             <td>ขอยกเลิกสัญญา</td>
                             <td>ขออนุมัติงบประมาณจ้างที่ปรึกษา</td>
                             <td style="font-weight:600;color:#475569;">PB2026/055</td>
@@ -466,7 +460,7 @@
                         </tr>
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">MEMO-202604003</td>
+                            <td style="font-weight:700;color:#4790FF;">MEMO-202604003</td>
                             <td>การแก้สัญญาฉบับสมบูรณ์</td>
                             <td>แจ้งเปลี่ยนแปลงเงื่อนไขสัญญา</td>
                             <td style="font-weight:600;color:#475569;">SD2026/001</td>
@@ -476,7 +470,7 @@
                         </tr>
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">MEMO-202604004</td>
+                            <td style="font-weight:700;color:#4790FF;">MEMO-202604004</td>
                             <td>ขอทำสัญญาย้อนหลัง</td>
                             <td>ขอความเห็นเรื่องข้อกำหนด NDA</td>
                             <td style="font-weight:600;color:#475569;">PB2026/028</td>
@@ -486,7 +480,7 @@
                         </tr>
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">MEMO-202603005</td>
+                            <td style="font-weight:700;color:#4790FF;">MEMO-202603005</td>
                             <td>ขอถอยสัญญา</td>
                             <td>ขออนุมัติต่อสัญญาเช่าพื้นที่</td>
                             <td style="font-weight:600;color:#475569;">SD2026/015</td>
@@ -496,7 +490,7 @@
                         </tr>
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">MEMO-202603006</td>
+                            <td style="font-weight:700;color:#4790FF;">MEMO-202603006</td>
                             <td>ขอทำสัญญาย้อนหลัง</td>
                             <td>ขออนุมัติจ้างพัฒนาระบบ CRM</td>
                             <td style="font-weight:600;color:#475569;">PB2026/076</td>
@@ -506,7 +500,7 @@
                         </tr>
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">MEMO-202603007</td>
+                            <td style="font-weight:700;color:#4790FF;">MEMO-202603007</td>
                             <td>ขอยกเลิกสัญญา</td>
                             <td>แจ้งกำหนดการประชุมทบทวนสัญญา</td>
                             <td style="font-weight:600;color:#475569;">RA2026/013</td>
@@ -516,7 +510,7 @@
                         </tr>
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">MEMO-202603008</td>
+                            <td style="font-weight:700;color:#4790FF;">MEMO-202603008</td>
                             <td>การแก้สัญญาฉบับสมบูรณ์</td>
                             <td>ขอความเห็นเรื่องค่าปรับตามสัญญา</td>
                             <td style="font-weight:600;color:#475569;">PB2026/045</td>
@@ -526,7 +520,7 @@
                         </tr>
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">MEMO-202602009</td>
+                            <td style="font-weight:700;color:#4790FF;">MEMO-202602009</td>
                             <td>อื่นๆ</td>
                             <td>ขออนุมัติจัดซื้อ License Software</td>
                             <td style="font-weight:600;color:#475569;">PB2026/098</td>
@@ -536,7 +530,7 @@
                         </tr>
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">MEMO-202602010</td>
+                            <td style="font-weight:700;color:#4790FF;">MEMO-202602010</td>
                             <td>ขอถอยสัญญา</td>
                             <td>ขออนุมัติงบประมาณจ้างพิมพ์สิ่งพิมพ์</td>
                             <td style="font-weight:600;color:#475569;">PB2026/051</td>
@@ -546,7 +540,7 @@
                         </tr>
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">MEMO-202601011</td>
+                            <td style="font-weight:700;color:#4790FF;">MEMO-202601011</td>
                             <td>การแก้สัญญาฉบับสมบูรณ์</td>
                             <td>ขออนุมัติจ้างบริการ Data Center</td>
                             <td style="font-weight:600;color:#475569;">PB2025/301</td>
@@ -556,7 +550,7 @@
                         </tr>
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button></div></td>
-                            <td style="font-weight:700;color:#2563EB;">MEMO-202601012</td>
+                            <td style="font-weight:700;color:#4790FF;">MEMO-202601012</td>
                             <td>ขอยกเลิกสัญญา</td>
                             <td>ขออนุมัติจ้างบริการ Cybersecurity เพิ่มเติม</td>
                             <td style="font-weight:600;color:#475569;">PB2026/033</td>
@@ -567,12 +561,15 @@
                     </tbody>
                 </table>
             </div>
-            <div class="pagination">
-                <button class="nav"><i data-lucide="chevron-left" class="w-3 h-3"></i></button>
-                <button class="pg-active">1</button>
-                <button>2</button>
-                <button class="nav"><i data-lucide="chevron-right" class="w-3 h-3"></i></button>
+            <div class="table-footer">
+            <div class="table-footer-info">แสดง <b>1-10</b> จาก <b>23</b> รายการ</div>
+            <div class="table-footer-pager">
+                <button class="pg-nav" aria-label="ก่อนหน้า"><i data-lucide="chevron-left"></i></button>
+                <button class="pg-num pg-active">1</button>
+                <button class="pg-num">2</button>
+                <button class="pg-nav" aria-label="ถัดไป"><i data-lucide="chevron-right"></i></button>
             </div>
+        </div>
         </div>
     </div>
 </div>
@@ -601,7 +598,7 @@
             btnK.classList.remove('active');
             btnT.classList.add('active');
             btnT.style.background = '#fff';
-            btnT.style.color = '#2563EB';
+            btnT.style.color = '#4790FF';
             btnT.style.boxShadow = '0 1px 3px rgba(0,0,0,.1)';
             btnK.style.background = 'transparent';
             btnK.style.color = '#64748B';
@@ -612,7 +609,7 @@
             btnT.classList.remove('active');
             btnK.classList.add('active');
             btnK.style.background = '#fff';
-            btnK.style.color = '#2563EB';
+            btnK.style.color = '#4790FF';
             btnK.style.boxShadow = '0 1px 3px rgba(0,0,0,.1)';
             btnT.style.background = 'transparent';
             btnT.style.color = '#64748B';
@@ -621,22 +618,13 @@
     }
 
     // Pagination
-    document.querySelectorAll('.pagination button:not(.nav)').forEach(btn => {
+    document.querySelectorAll('.table-footer-pager .pg-num, .pagination button:not(.pg-nav):not(.nav)').forEach(btn => {
         btn.addEventListener('click', function() {
-            document.querySelectorAll('.pagination button').forEach(b => b.classList.remove('pg-active'));
+            document.querySelectorAll('.table-footer-pager button, .pagination button').forEach(b => b.classList.remove('pg-active'));
             this.classList.add('pg-active');
         });
     });
 
-    // Initialize Kanban default active style
-    (function() {
-        const btnK = document.getElementById('btnKanban');
-        if (btnK) {
-            btnK.style.background = '#fff';
-            btnK.style.color = '#2563EB';
-            btnK.style.boxShadow = '0 1px 3px rgba(0,0,0,.1)';
-        }
-    })();
 </script>
 </body>
 </html>

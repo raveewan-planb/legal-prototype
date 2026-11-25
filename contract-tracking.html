@@ -18,7 +18,7 @@
         .table-wrapper { overflow-x: auto; overflow-y: auto; max-height: calc(100vh - 260px); }
         table { width: 100%; border-collapse: collapse; }
         thead th {
-            background: #1B3A6B; color: #fff; font-weight: 600; font-size: 13px;
+            background: #022867; color: #fff; font-weight: 600; font-size: 13px;
             padding: 14px 16px; text-align: left; white-space: nowrap;
             position: sticky; top: 0; z-index: 2;
         }
@@ -38,8 +38,8 @@
         .badge-return .dot { background: #F97316; }
         .badge-legal { background: #F5F3FF; color: #7C3AED; }
         .badge-legal .dot { background: #8B5CF6; }
-        .badge-review { background: #EFF6FF; color: #2563EB; }
-        .badge-review .dot { background: #2563EB; }
+        .badge-review { background: #F1FBFF; color: #4790FF; }
+        .badge-review .dot { background: #4790FF; }
         .badge-approve { background: #FFFBEB; color: #A16207; }
         .badge-approve .dot { background: #F59E0B; }
         .badge-risk { background: #FEF2F2; color: #DC2626; }
@@ -68,8 +68,8 @@
         /* ── Action Buttons ── */
         .action-btns { display: flex; gap: 6px; }
         .action-btn { width: 30px; height: 30px; border-radius: 6px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; }
-        .action-btn.view { background: #EFF6FF; color: #2563EB; }
-        .action-btn.view:hover { background: #DBEAFE; }
+        .action-btn.view { background: #F1FBFF; color: #4790FF; }
+        .action-btn.view:hover { background: #B9DDFF; }
         .action-btn.track { background: #F0FDF4; color: #15803D; }
         .action-btn.track:hover { background: #DCFCE7; }
 
@@ -89,7 +89,7 @@
             display: flex; align-items: center; justify-content: space-between;
             padding: 20px 28px; border-bottom: 1px solid #E2E8F0;
         }
-        .modal-header h2 { font-size: 18px; font-weight: 700; color: #1B3A6B; display: flex; align-items: center; gap: 8px; }
+        .modal-header h2 { font-size: 18px; font-weight: 700; color: #022867; display: flex; align-items: center; gap: 8px; }
         .modal-close {
             width: 34px; height: 34px; border-radius: 8px; border: none; cursor: pointer;
             display: flex; align-items: center; justify-content: center;
@@ -123,7 +123,7 @@
             outline: none; transition: border .2s;
         }
         .form-box select:focus, .form-box input[type="date"]:focus, .form-box textarea:focus {
-            border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+            border-color: #4790FF; box-shadow: 0 0 0 3px rgba(37,99,235,.1);
         }
         .form-box textarea { resize: vertical; min-height: 70px; }
         .form-group { margin-bottom: 14px; }
@@ -132,13 +132,13 @@
         .radio-group label { display: flex; align-items: center; gap: 6px; font-weight: 500; cursor: pointer; margin-bottom: 0; }
         .btn-save-modal {
             width: 100%; padding: 12px; border-radius: 10px; border: none; cursor: pointer;
-            background: #FFC567; color: #1B3A6B; font-size: 14px; font-weight: 700;
+            background: #FFC567; color: #022867; font-size: 14px; font-weight: 700;
             font-family: inherit; transition: all .2s; margin-top: 10px;
         }
         .btn-save-modal:hover { background: #FFB84D; }
 
         /* History Timeline (in modal) */
-        .history-title { font-size: 15px; font-weight: 700; color: #1B3A6B; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+        .history-title { font-size: 15px; font-weight: 700; color: #022867; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
         .modal-right .timeline-item { display: flex; gap: 14px; padding-bottom: 20px; position: relative; }
         .modal-right .timeline-item:not(:last-child)::after {
             content: ''; position: absolute; left: 18px; top: 36px; bottom: 0; width: 2px; background: #E2E8F0;
@@ -146,7 +146,7 @@
         .modal-right .timeline-dot { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .modal-right .timeline-dot svg { width: 16px; height: 16px; }
         .modal-right .timeline-dot.green { background: #DCFCE7; color: #15803D; }
-        .modal-right .timeline-dot.blue { background: #DBEAFE; color: #2563EB; }
+        .modal-right .timeline-dot.blue { background: #B9DDFF; color: #4790FF; }
         .modal-right .timeline-dot.yellow { background: #FEF9C3; color: #A16207; }
         .modal-right .timeline-dot.red { background: #FEE2E2; color: #DC2626; }
         .modal-right .timeline-dot.purple { background: #F3E8FF; color: #7C3AED; }
@@ -167,8 +167,8 @@
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             font-family: inherit; transition: all .2s;
         }
-        .pagination button:hover { background: #EFF6FF; border-color: #2563EB; color: #2563EB; }
-        .pagination button.pg-active { background: #2563EB; color: #fff; border-color: #2563EB; }
+        .pagination button:hover { background: #F1FBFF; border-color: #4790FF; color: #4790FF; }
+        .pagination button.pg-active { background: #4790FF; color: #fff; border-color: #4790FF; }
         .pagination button.nav { font-size: 12px; }
 
         /* ── Responsive ── */
@@ -189,17 +189,17 @@
     <div class="flex justify-between items-start mb-5 max-md:flex-col max-md:gap-3">
         <div>
             <h1 class="text-[26px] font-bold text-slate-800 flex items-center gap-2.5 max-md:text-xl max-[480px]:text-lg">
-                <i data-lucide="clipboard-check" class="w-5.5 h-5.5 text-[#2563EB]"></i>
+                <i data-lucide="clipboard-check" class="w-5.5 h-5.5 text-[#4790FF]"></i>
                 <span>ติดตามสัญญา</span>
             </h1>
             <p class="text-slate-500 text-sm mt-1">ติดตามสถานะและกำหนดเวลาของสัญญาทั้งหมดในระบบ — <strong id="totalCount">16</strong> รายการ</p>
         </div>
         <div class="flex gap-2.5 items-center shrink-0">
-            <button class="inline-flex items-center justify-center gap-2 px-4.5 py-2.5 rounded-lg text-sm font-semibold bg-[#5475CB] text-white border border-[#5475CB] hover:bg-[#4565B8] transition-all cursor-pointer font-[inherit] whitespace-nowrap">
+            <button class="inline-flex items-center justify-center gap-2 px-4.5 py-2.5 rounded-lg text-sm font-semibold bg-[#F97316] text-white border border-[#F97316] hover:bg-[#EA580C] transition-all cursor-pointer font-[inherit] whitespace-nowrap">
                 <i data-lucide="file-down" class="w-4 h-4"></i>
                 <span>Import</span>
             </button>
-            <button class="inline-flex items-center justify-center gap-2 px-4.5 py-2.5 rounded-lg text-sm font-semibold bg-[#5475CB] text-white border border-[#5475CB] hover:bg-[#4565B8] transition-all cursor-pointer font-[inherit] whitespace-nowrap">
+            <button class="inline-flex items-center justify-center gap-2 px-4.5 py-2.5 rounded-lg text-sm font-semibold bg-[#4790FF] text-white border border-[#4790FF] hover:bg-[#2D56D2] transition-all cursor-pointer font-[inherit] whitespace-nowrap">
                 <i data-lucide="file-up" class="w-4 h-4"></i>
                 <span>Export</span>
             </button>
@@ -251,13 +251,15 @@
                     <tr>
                         <th>จัดการ</th>
                         <th>เลขสัญญา</th>
+                        <th>ระดับความเสี่ยง</th>
                         <th>ชื่อสัญญา</th>
                         <th>ประเภทสัญญา</th>
                         <th>คู่สัญญา</th>
                         <th>บริษัท</th>
-                        <th>สถานะ</th>
+                        <th>สถานะในระบบ</th>
+                        <th>สถานะการติดตามสัญญา</th>
+                        <th>หมายเหตุ</th>
                         <th>ระยะเวลาสัญญา</th>
-                        <th>วันคงเหลือต่อสัญญา</th>
                         <th>วันที่สรุปความเสี่ยง</th>
                         <th>วันคงเหลือนำส่งฉบับสมบูรณ์</th>
                         <th>แผนก</th>
@@ -271,7 +273,7 @@
                     -->
                     <tr data-end="2026-04-14" data-risk="">
                         <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn track" title="บันทึกความคืบหน้า" onclick="openTrackModal(this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i></button></div></td>
-                        <td style="font-weight:700;color:#2563EB;">PB2026/002</td>
+                        <td style="font-weight:700;color:#4790FF;">PB2026/002</td>
                         <td>สัญญาจ้างพัฒนาระบบ ERP</td>
                         <td>สัญญาจ้างบริการ</td>
                         <td>บริษัท เทคโนโลยี จำกัด</td>
@@ -286,7 +288,7 @@
                     </tr>
                     <tr data-end="2026-05-31" data-risk="">
                         <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn track" title="บันทึกความคืบหน้า" onclick="openTrackModal(this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i></button></div></td>
-                        <td style="font-weight:700;color:#2563EB;">PB2026/005</td>
+                        <td style="font-weight:700;color:#4790FF;">PB2026/005</td>
                         <td>สัญญาเช่าพื้นที่โฆษณา ถ.สุขุมวิท</td>
                         <td>สัญญาเช่า</td>
                         <td>นายสมศักดิ์ พรหมมา</td>
@@ -301,7 +303,7 @@
                     </tr>
                     <tr data-end="2026-06-30" data-risk="2026-03-20">
                         <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn track" title="บันทึกความคืบหน้า" onclick="openTrackModal(this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i></button></div></td>
-                        <td style="font-weight:700;color:#2563EB;">PB2026/001</td>
+                        <td style="font-weight:700;color:#4790FF;">PB2026/001</td>
                         <td>สัญญาเช่าพื้นที่โฆษณา ถ.พหลโยธิน</td>
                         <td>สัญญาเช่า</td>
                         <td>นายประสิทธิ์ แสงทอง</td>
@@ -316,7 +318,7 @@
                     </tr>
                     <tr data-end="2026-04-30" data-risk="2026-03-10">
                         <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn track" title="บันทึกความคืบหน้า" onclick="openTrackModal(this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i></button></div></td>
-                        <td style="font-weight:700;color:#2563EB;">PB2026/011</td>
+                        <td style="font-weight:700;color:#4790FF;">PB2026/011</td>
                         <td>สัญญาบริการ Cloud Computing</td>
                         <td>สัญญาบริการ SaaS</td>
                         <td>AWS Thailand</td>
@@ -331,7 +333,7 @@
                     </tr>
                     <tr data-end="2026-03-31" data-risk="2026-02-15">
                         <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn track" title="บันทึกความคืบหน้า" onclick="openTrackModal(this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i></button></div></td>
-                        <td style="font-weight:700;color:#2563EB;">PB2026/006</td>
+                        <td style="font-weight:700;color:#4790FF;">PB2026/006</td>
                         <td>สัญญาผลิตงานป้าย Billboard</td>
                         <td>สัญญาผลิตงาน</td>
                         <td>บริษัท ไบร์ท ไซน์ จำกัด</td>
@@ -346,7 +348,7 @@
                     </tr>
                     <tr data-end="2026-02-28" data-risk="2026-01-20">
                         <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn track" title="บันทึกความคืบหน้า" onclick="openTrackModal(this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i></button></div></td>
-                        <td style="font-weight:700;color:#2563EB;">PB2026/018</td>
+                        <td style="font-weight:700;color:#4790FF;">PB2026/018</td>
                         <td>สัญญาจ้างบริการรักษาความปลอดภัย</td>
                         <td>สัญญาจ้างบริการ</td>
                         <td>บริษัท การ์ด ซิเคียวริตี้</td>
@@ -361,7 +363,7 @@
                     </tr>
                     <tr data-end="2025-12-31" data-risk="2025-11-10">
                         <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn track" title="บันทึกความคืบหน้า" onclick="openTrackModal(this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i></button></div></td>
-                        <td style="font-weight:700;color:#2563EB;">PB2026/007</td>
+                        <td style="font-weight:700;color:#4790FF;">PB2026/007</td>
                         <td>สัญญาบริการขนส่งสินค้า</td>
                         <td>สัญญาจ้างบริการ</td>
                         <td>บริษัท โลจิสติกส์ จำกัด</td>
@@ -376,7 +378,7 @@
                     </tr>
                     <tr data-end="2026-02-14" data-risk="2025-12-20">
                         <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn track" title="บันทึกความคืบหน้า" onclick="openTrackModal(this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i></button></div></td>
-                        <td style="font-weight:700;color:#2563EB;">PB2026/009</td>
+                        <td style="font-weight:700;color:#4790FF;">PB2026/009</td>
                         <td>สัญญาจ้างทำป้ายโฆษณา LED</td>
                         <td>สัญญาผลิตงาน</td>
                         <td>บริษัท แอลอีดี ไทย จำกัด</td>
@@ -391,7 +393,7 @@
                     </tr>
                     <tr data-end="2026-07-31" data-risk="">
                         <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn track" title="บันทึกความคืบหน้า" onclick="openTrackModal(this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i></button></div></td>
-                        <td style="font-weight:700;color:#2563EB;">PB2026/020</td>
+                        <td style="font-weight:700;color:#4790FF;">PB2026/020</td>
                         <td>สัญญาเช่าที่ดินเปล่า ลาดพร้าว</td>
                         <td>สัญญาเช่า</td>
                         <td>นายวิชัย เจริญสุข</td>
@@ -406,7 +408,7 @@
                     </tr>
                     <tr data-end="2026-08-31" data-risk="">
                         <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn track" title="บันทึกความคืบหน้า" onclick="openTrackModal(this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i></button></div></td>
-                        <td style="font-weight:700;color:#2563EB;">PB2026/022</td>
+                        <td style="font-weight:700;color:#4790FF;">PB2026/022</td>
                         <td>สัญญาจัดซื้ออุปกรณ์สำนักงาน</td>
                         <td>สัญญาจัดซื้อ</td>
                         <td>บริษัท ออฟฟิศเมท จำกัด</td>
@@ -421,7 +423,7 @@
                     </tr>
                     <tr data-end="2026-09-30" data-risk="">
                         <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn track" title="บันทึกความคืบหน้า" onclick="openTrackModal(this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i></button></div></td>
-                        <td style="font-weight:700;color:#2563EB;">PB2026/025</td>
+                        <td style="font-weight:700;color:#4790FF;">PB2026/025</td>
                         <td>สัญญาบริการ Internet Leased Line</td>
                         <td>สัญญาบริการ SaaS</td>
                         <td>TRUE Corp.</td>
@@ -436,7 +438,7 @@
                     </tr>
                     <tr data-end="2027-01-31" data-risk="2026-03-28">
                         <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn track" title="บันทึกความคืบหน้า" onclick="openTrackModal(this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i></button></div></td>
-                        <td style="font-weight:700;color:#2563EB;">PB2026/003</td>
+                        <td style="font-weight:700;color:#4790FF;">PB2026/003</td>
                         <td>สัญญาจ้างบริการทำความสะอาด</td>
                         <td>สัญญาจ้างบริการ</td>
                         <td>บริษัท คลีน จำกัด</td>
@@ -451,7 +453,7 @@
                     </tr>
                     <tr data-end="2027-07-31" data-risk="2026-04-01">
                         <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn track" title="บันทึกความคืบหน้า" onclick="openTrackModal(this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i></button></div></td>
-                        <td style="font-weight:700;color:#2563EB;">PB2026/004</td>
+                        <td style="font-weight:700;color:#4790FF;">PB2026/004</td>
                         <td>สัญญาเช่าที่ดินเปล่า ลาดพร้าว (ต่อ)</td>
                         <td>สัญญาเช่า</td>
                         <td>นายวิชัย เจริญสุข</td>
@@ -466,7 +468,7 @@
                     </tr>
                     <tr data-end="2027-02-28" data-risk="2026-02-25">
                         <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn track" title="บันทึกความคืบหน้า" onclick="openTrackModal(this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i></button></div></td>
-                        <td style="font-weight:700;color:#2563EB;">PB2025/301</td>
+                        <td style="font-weight:700;color:#4790FF;">PB2025/301</td>
                         <td>สัญญาบริการ Data Center</td>
                         <td>สัญญาบริการ SaaS</td>
                         <td>INET Thailand</td>
@@ -481,7 +483,7 @@
                     </tr>
                     <tr data-end="2026-05-15" data-risk="2026-03-05">
                         <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn track" title="บันทึกความคืบหน้า" onclick="openTrackModal(this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i></button></div></td>
-                        <td style="font-weight:700;color:#2563EB;">PB2026/030</td>
+                        <td style="font-weight:700;color:#4790FF;">PB2026/030</td>
                         <td>สัญญาจ้างที่ปรึกษาด้านกฎหมาย</td>
                         <td>สัญญาจ้างที่ปรึกษา</td>
                         <td>บริษัท ลอว์แอนด์ จำกัด</td>
@@ -496,7 +498,7 @@
                     </tr>
                     <tr data-end="2026-06-15" data-risk="2026-04-02">
                         <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn track" title="บันทึกความคืบหน้า" onclick="openTrackModal(this)"><i data-lucide="clipboard-check" class="w-3.5 h-3.5"></i></button></div></td>
-                        <td style="font-weight:700;color:#2563EB;">PB2026/035</td>
+                        <td style="font-weight:700;color:#4790FF;">PB2026/035</td>
                         <td>สัญญาจ้างวิจัยตลาด OOH</td>
                         <td>สัญญาจ้างที่ปรึกษา</td>
                         <td>บริษัท รีเสิร์ชโปร จำกัด</td>
@@ -512,11 +514,14 @@
                 </tbody>
             </table>
         </div>
-        <div class="pagination">
-            <button class="nav"><i data-lucide="chevron-left" class="w-3 h-3"></i></button>
-            <button class="pg-active">1</button>
-            <button>2</button>
-            <button class="nav"><i data-lucide="chevron-right" class="w-3 h-3"></i></button>
+        <div class="table-footer">
+            <div class="table-footer-info">แสดง <b>1-10</b> จาก <b>23</b> รายการ</div>
+            <div class="table-footer-pager">
+                <button class="pg-nav" aria-label="ก่อนหน้า"><i data-lucide="chevron-left"></i></button>
+                <button class="pg-num pg-active">1</button>
+                <button class="pg-num">2</button>
+                <button class="pg-nav" aria-label="ถัดไป"><i data-lucide="chevron-right"></i></button>
+            </div>
         </div>
     </div>
 </div>
@@ -525,7 +530,7 @@
 <div class="modal-overlay" id="trackModal">
     <div class="modal-card">
         <div class="modal-header">
-            <h2><i data-lucide="clipboard-check" class="w-5 h-5 text-[#2563EB]"></i> บันทึกความคืบหน้าสัญญา</h2>
+            <h2><i data-lucide="clipboard-check" class="w-5 h-5 text-[#4790FF]"></i> บันทึกความคืบหน้าสัญญา</h2>
             <button class="modal-close" onclick="closeTrackModal()"><i data-lucide="x" class="w-4 h-4"></i></button>
         </div>
         <div class="modal-body">
@@ -546,7 +551,7 @@
                 <!-- Form Box -->
                 <div class="form-box">
                     <div class="form-group">
-                        <label>รายละเอียดความคืบหน้า <span class="text-red-500">*</span></label>
+                        <label>สถานะการติดตามสัญญา <span class="text-red-500">*</span></label>
                         <select id="detailStatus" onchange="onDetailStatusChange()">
                             <option value="">-- เลือกสถานะ --</option>
                             <option value="รอคู่สัญญา">รอคู่สัญญา</option>
@@ -567,7 +572,7 @@
             </div>
             <!-- RIGHT SIDE: History (Timeline) -->
             <div class="modal-right">
-                <div class="history-title"><i data-lucide="history" class="w-4 h-4 text-[#2563EB]"></i> ประวัติการดำเนินการ</div>
+                <div class="history-title"><i data-lucide="history" class="w-4 h-4 text-[#4790FF]"></i> ประวัติการดำเนินการ</div>
                 <div id="historyTimeline">
                     <!-- JS will populate timeline -->
                 </div>
@@ -604,13 +609,52 @@
         }
     }
 
+    /* ─── Inject/Remove table columns:
+         +ระดับความเสี่ยง (after เลขสัญญา)
+         +สถานะการติดตามสัญญา, +หมายเหตุ (after สถานะในระบบ)
+         −วันคงเหลือต่อสัญญา (remove .renew-days td)
+    ─── */
+    (function augmentTrackingTable(){
+        const risks = [
+            {t:'สูง',    bg:'#FEE2E2', c:'#991B1B'},
+            {t:'ปานกลาง', bg:'#FEF3C7', c:'#92400E'},
+            {t:'ต่ำ',    bg:'#DCFCE7', c:'#166534'}
+        ];
+        const riskSeq = [0,1,2,1,0,2,1,0,2,1,0,1,2,0,1,2];
+        const details = ['รอคู่สัญญา','เสนอผู้บริหารลงนาม','ส่งคู่สัญญาลงนาม','รอตีตราสาร/อากรแสตมป์','รอคู่สัญญา','เสนอผู้บริหารลงนาม','-','ส่งคู่สัญญาลงนาม','รอตีตราสาร/อากรแสตมป์','รอคู่สัญญา','เสนอผู้บริหารลงนาม','ส่งคู่สัญญาลงนาม','-','อื่นๆ','รอคู่สัญญา','เสนอผู้บริหารลงนาม'];
+        const notes = ['อยู่ระหว่างรอเอกสาร','ติดตามคู่สัญญาแล้ว','นัดส่งเอกสารสัปดาห์หน้า','-','รอการตรวจสอบ','ได้รับแจ้งแล้ว','-','แจ้งเตือนครั้งที่ 2','ตรวจสอบเงื่อนไข','-','รอสัญญาลงนาม','นำส่งเรียบร้อย','-','รอเอกสารเพิ่มเติม','-','อยู่ระหว่างเจรจา'];
+        document.querySelectorAll('#tableBody tr').forEach((row, idx) => {
+            if (row.dataset.augmented === '1') return;
+            row.dataset.augmented = '1';
+            // (0) Remove วันคงเหลือต่อสัญญา td
+            const renewTd = row.querySelector('.renew-days');
+            if (renewTd) renewTd.remove();
+            const cells = row.children;
+            // (1) Insert ระดับความเสี่ยง after เลขสัญญา (new index 2)
+            const r = risks[riskSeq[idx % riskSeq.length]];
+            const riskTd = document.createElement('td');
+            riskTd.innerHTML = `<span style="display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;background:${r.bg};color:${r.c};font-weight:700;font-size:12px;">${r.t}</span>`;
+            row.insertBefore(riskTd, cells[2]);
+            // After step 1, สถานะในระบบ is at index 7 (was 6 originally, +1 from risk insert).
+            // (2) Insert สถานะการติดตามสัญญา + หมายเหตุ after สถานะ (before index 8 = ระยะเวลาสัญญา)
+            const detailTd = document.createElement('td');
+            detailTd.style.color = '#475569';
+            detailTd.textContent = details[idx % details.length];
+            row.insertBefore(detailTd, cells[8]);
+            const noteTd = document.createElement('td');
+            noteTd.style.color = '#475569';
+            noteTd.textContent = notes[idx % notes.length];
+            row.insertBefore(noteTd, cells[9]);
+        });
+    })();
+
     document.querySelectorAll('#tableBody tr').forEach(row => {
         const endDate = row.getAttribute('data-end');
         const riskDate = row.getAttribute('data-risk');
 
         // วันคงเหลือในการต่อสัญญา = วันสิ้นสุดสัญญา - วันปัจจุบัน
         const renewCell = row.querySelector('.renew-days');
-        if (endDate) {
+        if (endDate && renewCell) {
             const renewDays = diffDays(endDate);
             renewCell.innerHTML = renderDayChip(renewDays);
         }
@@ -632,9 +676,9 @@
     if (typeof lucide !== 'undefined') lucide.createIcons();
 
     // Pagination
-    document.querySelectorAll('.pagination button:not(.nav)').forEach(btn => {
+    document.querySelectorAll('.table-footer-pager .pg-num, .pagination button:not(.pg-nav):not(.nav)').forEach(btn => {
         btn.addEventListener('click', function() {
-            document.querySelectorAll('.pagination button').forEach(b => b.classList.remove('pg-active'));
+            document.querySelectorAll('.table-footer-pager button, .pagination button').forEach(b => b.classList.remove('pg-active'));
             this.classList.add('pg-active');
         });
     });
@@ -673,21 +717,21 @@
     function openTrackModal(btn) {
         const row = btn.closest('tr');
         const cells = row.querySelectorAll('td');
-        // cells index: 0=จัดการ, 1=เลขสัญญา, 2=ชื่อสัญญา, 3=ประเภท, 4=คู่สัญญา, 5=บริษัท, 6=สถานะ, 7=วันที่, 8=renewDays, 9=riskDate, 10=submitDays, 11=แผนก, 12=ผู้รับผิดชอบ
-        document.getElementById('mContractName').textContent = cells[2].textContent;
-        document.getElementById('mCompany').textContent = cells[5].textContent;
-        document.getElementById('mPartner').textContent = cells[4].textContent;
+        // cells index after augmentation: 0=จัดการ, 1=เลขสัญญา, 2=ระดับความเสี่ยง, 3=ชื่อสัญญา, 4=ประเภท, 5=คู่สัญญา, 6=บริษัท, 7=สถานะในระบบ, 8=สถานะการติดตามสัญญา, 9=หมายเหตุ, 10=ระยะเวลาสัญญา, 11=วันที่สรุปความเสี่ยง, 12=วันคงเหลือนำส่งฉบับสมบูรณ์, 13=แผนก, 14=ผู้รับผิดชอบ
+        document.getElementById('mContractName').textContent = cells[3].textContent;
+        document.getElementById('mCompany').textContent = cells[6].textContent;
+        document.getElementById('mPartner').textContent = cells[5].textContent;
         document.getElementById('mContractNo').textContent = cells[1].textContent;
-        document.getElementById('mDateRange').textContent = cells[7].textContent;
+        document.getElementById('mDateRange').textContent = cells[10].textContent;
         // Status badge HTML
-        const statusEl = cells[6].querySelector('.badge-status');
-        document.getElementById('mStatus').innerHTML = statusEl ? statusEl.outerHTML : cells[6].textContent;
+        const statusEl = cells[7].querySelector('.badge-status');
+        document.getElementById('mStatus').innerHTML = statusEl ? statusEl.outerHTML : cells[7].textContent;
         // วันที่อนุมัติจากฝ่ายกฎหมาย
-        const riskDateText = cells[9].textContent;
+        const riskDateText = cells[11].textContent;
         document.getElementById('mLegalApprove').textContent = riskDateText || '-';
         // จำนวนวันคงเหลือในการนำส่งสัญญา = (วันที่อนุมัติ + 45) - วันปัจจุบัน
         document.getElementById('mDaysLeft').innerHTML = calcModalDaysLeft(riskDateText);
-        document.getElementById('mOwner').textContent = cells[12].textContent;
+        document.getElementById('mOwner').textContent = cells[14].textContent;
 
         // Reset form
         document.getElementById('detailStatus').value = '';
@@ -725,7 +769,7 @@
         const noteVal = document.getElementById('trackNote').value.trim();
         let valid = true;
 
-        // Validate รายละเอียดความคืบหน้า
+        // Validate สถานะการติดตามสัญญา
         if (!detailVal) {
             document.getElementById('detailStatus').style.borderColor = '#EF4444';
             document.getElementById('detailStatus').style.boxShadow = '0 0 0 3px rgba(239,68,68,.12)';
