@@ -310,15 +310,15 @@
                 <label class="field-label">สถานะ <span class="req">*</span></label>
                 <select id="selStatus" onchange="onStatusChange()" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#B9DDFF] focus:ring-2 focus:ring-[#B9DDFF]/20 transition-all">
                     <option value="">-- เลือกสถานะ --</option>
-                    <option value="รอต่อสัญญา">รอต่อสัญญา</option>
-                    <option value="ไม่ต่อสัญญา">ไม่ต่อสัญญา</option>
-                    <option value="อยู่ระหว่างดำเนินการ">อยู่ระหว่างดำเนินการ</option>
                     <option value="ยังไม่ได้ดำเนินการ">ยังไม่ได้ดำเนินการ</option>
-                    <option value="ต่อสัญญาแล้ว">ต่อสัญญาแล้ว</option>
+                    <option value="รอการตรวจสอบ">รอการตรวจสอบ (รอตัดสินใจว่าจะต่อหรือไม่)</option>
+                    <option value="อยู่ระหว่างเจรจาสัญญา">อยู่ระหว่างเจรจาสัญญา</option>
+                    <option value="ต่อสัญญา">ต่อสัญญา</option>
+                    <option value="ไม่ต่อสัญญา">ไม่ต่อสัญญา</option>
                 </select>
             </div>
 
-            <!-- 3. Sub-status (แสดงเฉพาะ อยู่ระหว่างดำเนินการ) -->
+            <!-- 3. Sub-status (แสดงเฉพาะ อยู่ระหว่างเจรจาสัญญา) -->
             <div class="field-row is-hidden" id="subStatusRow">
                 <label class="field-label">รายละเอียดสถานะ <span class="req">*</span></label>
                 <select id="selSubStatus" onchange="onSubStatusChange()" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-[#B9DDFF] focus:ring-2 focus:ring-[#B9DDFF]/20 transition-all">
@@ -343,7 +343,7 @@
                 </div>
             </div>
 
-            <!-- 4. อ้างอิงสัญญา (แสดงเฉพาะ ต่อสัญญาแล้ว) -->
+            <!-- 4. อ้างอิงสัญญา (แสดงเฉพาะ ต่อสัญญา) -->
             <div class="is-hidden" id="refContractRow">
                 <label class="field-label mb-2">อ้างอิงสัญญาในระบบ <span class="req">*</span></label>
                 <div class="relative" id="refSelectWrap">
@@ -397,12 +397,22 @@
     </div>
 
     <!-- Filter Bar -->
-    <div class="filter-bar flex gap-3 items-center mb-5 flex-wrap max-md:flex-col max-md:items-stretch max-md:gap-2.5">
+    <div class="filter-bar tf-bar flex gap-3 items-center mb-5 flex-wrap max-md:flex-col max-md:items-stretch max-md:gap-2.5">
         <div class="flex-1 min-w-[200px] relative max-md:w-full max-md:min-w-0">
-            <i data-lucide="search" class="icon w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-            <input type="text" id="searchTable" oninput="filterTable()" placeholder="ค้นหาเลขสัญญา, สถานะ..." class="w-full py-2.5 pl-9 pr-3.5 border border-slate-300 rounded-lg text-sm font-[inherit] text-slate-600 bg-white outline-none transition-all focus:border-blue-500 focus:ring-3 focus:ring-blue-500/10">
+            <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" data-tf="search" oninput="tableFilter()" placeholder="ค้นหาเลขสัญญา, ชื่อสัญญา..." class="w-full py-2.5 pl-9 pr-3.5 border border-slate-300 rounded-lg text-sm font-[inherit] text-slate-600 bg-white outline-none">
         </div>
-        <div class="text-xs text-slate-400" id="rowCount">แสดง 10 รายการ</div>
+        <div class="seg-radio" role="radiogroup" aria-label="สถานะ" data-tf-col="สถานะ">
+            <label data-status="all"><input type="radio" name="tfStatus" value="" checked onchange="tableFilter()"><span class="sr-dot"></span>ทั้งหมด<span class="sr-count"></span></label>
+            <label data-status="pending"><input type="radio" name="tfStatus" value="รอดำเนินการ" onchange="tableFilter()"><span class="sr-dot"></span>รอดำเนินการ<span class="sr-count"></span></label>
+            <label data-status="done"><input type="radio" name="tfStatus" value="อนุมัติ" onchange="tableFilter()"><span class="sr-dot"></span>อนุมัติ<span class="sr-count"></span></label>
+            <label data-status="rejected"><input type="radio" name="tfStatus" value="ไม่อนุมัติ" onchange="tableFilter()"><span class="sr-dot"></span>ไม่อนุมัติ<span class="sr-count"></span></label>
+        </div>
+        <select data-tf-col="สถานะการต่อสัญญาใหม่" data-tf-auto onchange="tableFilter()" class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none min-w-[150px] max-md:w-full"><option value="">สถานะการต่อสัญญาทั้งหมด</option></select>
+        <select data-tf-col="แผนก" data-tf-auto onchange="tableFilter()" class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none min-w-[150px] max-md:w-full"><option value="">แผนกทั้งหมด</option></select>
+        <select data-tf-col="ประเภทสัญญา" data-tf-auto onchange="tableFilter()" class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none min-w-[150px] max-md:w-full"><option value="">ประเภทสัญญาทั้งหมด</option></select>
+        <div data-ldp-range data-tf-date="วันที่สร้างคำขอ" data-ph-start="วันเริ่มต้น" data-ph-end="วันสิ้นสุด" data-onchange="tableFilter"></div>
+        <div class="tf-count text-xs text-slate-400"></div>
     </div>
 
     <!-- Table Card -->
@@ -432,8 +442,8 @@
                         <td class="text-slate-700">สัญญาเช่าพื้นที่โฆษณา ถ.พหลโยธิน</td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">สัญญาเช่า</span></td>
                         <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
-                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-wait">รอต่อสัญญา</span></td>
-                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-inprogress">อยู่ระหว่างดำเนินการ</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-wait">รอการตรวจสอบ</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-inprogress">อยู่ระหว่างเจรจาสัญญา</span></td>
                         <td class="text-slate-600">Jiraporn Sangsuppakorn</td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">ฝ่ายจัดซื้อ</span></td>
                         <td><span class="badge-cs review">รอตรวจสอบ/ร่าง</span></td>
@@ -447,7 +457,7 @@
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">สัญญาเช่า</span></td>
                         <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-notyet">ยังไม่ได้ดำเนินการ</span></td>
-                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-inprogress">อยู่ระหว่างดำเนินการ</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-inprogress">อยู่ระหว่างเจรจาสัญญา</span></td>
                         <td class="text-slate-600">Chotika Kanchanakat</td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-700">ฝ่ายการตลาด</span></td>
                         <td><span class="badge-cs approve">รอหัวหน้าอนุมัติ</span></td>
@@ -461,7 +471,7 @@
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">สัญญาจ้าง</span></td>
                         <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-notyet">ยังไม่ได้ดำเนินการ</span></td>
-                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-wait">รอต่อสัญญา</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-wait">รอการตรวจสอบ</span></td>
                         <td class="text-slate-600">Nattapong Worawit</td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700">ฝ่ายขาย</span></td>
                         <td><span class="badge-cs legal">รอกฎหมายจ่ายงาน</span></td>
@@ -474,7 +484,7 @@
                         <td class="text-slate-700">สัญญาบริการขนส่ง</td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">สัญญาบริการ</span></td>
                         <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
-                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-wait">รอต่อสัญญา</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-wait">รอการตรวจสอบ</span></td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-no">ไม่ต่อสัญญา</span></td>
                         <td class="text-slate-600">Siriporn Chairat</td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-50 text-green-700">ฝ่ายปฏิบัติการ</span></td>
@@ -488,8 +498,8 @@
                         <td class="text-slate-700">สัญญาเช่าพื้นที่สำนักงาน อาคาร A</td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">สัญญาเช่า</span></td>
                         <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
-                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-inprogress">อยู่ระหว่างดำเนินการ</span></td>
-                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-done">ต่อสัญญาแล้ว</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-inprogress">อยู่ระหว่างเจรจาสัญญา</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-done">ต่อสัญญา</span></td>
                         <td class="text-slate-600">Wichai Rattanawong</td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700">ฝ่ายบัญชีและการเงิน</span></td>
                         <td><span class="badge-cs draft">แบบร่าง</span></td>
@@ -503,7 +513,7 @@
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">สัญญาจ้าง</span></td>
                         <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-notyet">ยังไม่ได้ดำเนินการ</span></td>
-                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-wait">รอต่อสัญญา</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-wait">รอการตรวจสอบ</span></td>
                         <td class="text-slate-600">Thanaporn Sukjai</td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-teal-50 text-teal-700">ฝ่ายทรัพยากรบุคคล</span></td>
                         <td><span class="badge-cs review">รอตรวจสอบ/ร่าง</span></td>
@@ -516,8 +526,8 @@
                         <td class="text-slate-700">สัญญาเช่าอุปกรณ์สำนักงาน</td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">สัญญาเช่า</span></td>
                         <td><span class="badge-status badge-pending"><span class="dot"></span> รอดำเนินการ</span></td>
-                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-inprogress">อยู่ระหว่างดำเนินการ</span></td>
-                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-done">ต่อสัญญาแล้ว</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-inprogress">อยู่ระหว่างเจรจาสัญญา</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-done">ต่อสัญญา</span></td>
                         <td class="text-slate-600">Kamonwan Petcharat</td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">ฝ่ายจัดซื้อ</span></td>
                         <td><span class="badge-cs approve">รอหัวหน้าอนุมัติ</span></td>
@@ -529,9 +539,9 @@
                         <td><span class="font-semibold" style="color:#94A3B8;">VS2024/013</span></td>
                         <td>บันทึกข้อตกลงแนบท้ายฯ (ฉบับที่ 5)</td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">บันทึกข้อตกลง</span></td>
-                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
+                        <td><span class="badge-status badge-done"><span class="dot"></span> อนุมัติ</span></td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-notyet">ยังไม่ได้ดำเนินการ</span></td>
-                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-done">ต่อสัญญาแล้ว</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-done">ต่อสัญญา</span></td>
                         <td>Piyawat Somboon</td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700">ฝ่ายขาย</span></td>
                         <td><span class="badge-cs complete">เสร็จสิ้น</span></td>
@@ -543,9 +553,9 @@
                         <td><span class="font-semibold" style="color:#94A3B8;">VS2024/007</span></td>
                         <td>สัญญาเช่าที่ดิน</td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">สัญญาเช่า</span></td>
-                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
-                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-wait">รอต่อสัญญา</span></td>
-                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-inprogress">อยู่ระหว่างดำเนินการ</span></td>
+                        <td><span class="badge-status badge-done"><span class="dot"></span> อนุมัติ</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-wait">รอการตรวจสอบ</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-inprogress">อยู่ระหว่างเจรจาสัญญา</span></td>
                         <td>Somchai Prasert</td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-700">ฝ่ายการตลาด</span></td>
                         <td><span class="badge-cs complete">เสร็จสิ้น</span></td>
@@ -557,9 +567,9 @@
                         <td><span class="font-semibold" style="color:#94A3B8;">VS2024/003</span></td>
                         <td>บันทึกข้อตกลงแนบท้ายฯ (ฉบับที่ 4)</td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">บันทึกข้อตกลง</span></td>
-                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
+                        <td><span class="badge-status badge-rejected"><span class="dot"></span> ไม่อนุมัติ</span></td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-notyet">ยังไม่ได้ดำเนินการ</span></td>
-                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-wait">รอต่อสัญญา</span></td>
+                        <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold badge-rn-wait">รอการตรวจสอบ</span></td>
                         <td>Wanida Srisuk</td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-50 text-green-700">ฝ่ายปฏิบัติการ</span></td>
                         <td><span class="badge-cs complete">เสร็จสิ้น</span></td>
@@ -700,12 +710,12 @@
        ══════════════════════════════════════ */
     function onStatusChange() {
         const val = document.getElementById('selStatus').value;
-        // Sub-status: show only for อยู่ระหว่างดำเนินการ
-        document.getElementById('subStatusRow').classList.toggle('is-hidden', val !== 'อยู่ระหว่างดำเนินการ');
-        // Ref contract: show only for ต่อสัญญาแล้ว
-        document.getElementById('refContractRow').classList.toggle('is-hidden', val !== 'ต่อสัญญาแล้ว');
+        // Sub-status: show only for อยู่ระหว่างเจรจาสัญญา
+        document.getElementById('subStatusRow').classList.toggle('is-hidden', val !== 'อยู่ระหว่างเจรจาสัญญา');
+        // Ref contract: show only for ต่อสัญญา
+        document.getElementById('refContractRow').classList.toggle('is-hidden', val !== 'ต่อสัญญา');
         // Hide send date when status changes away
-        if (val !== 'อยู่ระหว่างดำเนินการ') {
+        if (val !== 'อยู่ระหว่างเจรจาสัญญา') {
             document.getElementById('sendDateRow').classList.add('is-hidden');
             document.getElementById('selSubStatus').value = '';
         }
@@ -786,8 +796,8 @@
         const status = document.getElementById('selStatus').value;
         if (selectedContracts.length === 0) { alert('กรุณาเลือกสัญญาอย่างน้อย 1 รายการ'); return; }
         if (!status) { alert('กรุณาเลือกสถานะ'); return; }
-        if (status === 'อยู่ระหว่างดำเนินการ' && !document.getElementById('selSubStatus').value) { alert('กรุณาเลือกรายละเอียดสถานะ'); return; }
-        if (status === 'ต่อสัญญาแล้ว' && !selectedRef) { alert('กรุณาเลือกสัญญาอ้างอิง'); return; }
+        if (status === 'อยู่ระหว่างเจรจาสัญญา' && !document.getElementById('selSubStatus').value) { alert('กรุณาเลือกรายละเอียดสถานะ'); return; }
+        if (status === 'ต่อสัญญา' && !selectedRef) { alert('กรุณาเลือกสัญญาอ้างอิง'); return; }
         alert('บันทึกการปรับสถานะเรียบร้อยแล้ว');
         closeModal();
     }
@@ -823,7 +833,7 @@
         // Clear action button
         cells[0].innerHTML = '';
         // Update status badge to done
-        cells[4].innerHTML = '<span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span>';
+        cells[4].innerHTML = '<span class="badge-status badge-done"><span class="dot"></span> อนุมัติ</span>';
         // Set วันที่ดำเนินการ to today
         const now = new Date();
         const dd = String(now.getDate()).padStart(2, '0');
@@ -847,17 +857,7 @@
     /* ══════════════════════════════════════
        TABLE FILTER
        ══════════════════════════════════════ */
-    function filterTable() {
-        const q = document.getElementById('searchTable').value.toLowerCase();
-        const rows = document.querySelectorAll('#dataTable tbody tr');
-        let count = 0;
-        rows.forEach(row => {
-            const show = row.textContent.toLowerCase().includes(q);
-            row.style.display = show ? '' : 'none';
-            if (show) count++;
-        });
-        document.getElementById('rowCount').textContent = `แสดง ${count} รายการ`;
-    }
+    function filterTable() { tableFilter(); }
 
     function rj_closeConfirmRenew() {
         const wrap = document.getElementById('rj_remarkWrap');
@@ -872,6 +872,7 @@
             if (ta) { ta.classList.remove('is-invalid'); void ta.offsetWidth; ta.classList.add('is-invalid'); ta.focus(); }
             return;
         }
+        markRowRejected(ta.value.trim());
         closeConfirmRenew();
         setTimeout(() => { wrap.classList.remove('show'); if (ta) { ta.value=''; ta.classList.remove('is-invalid'); } }, 250);
     }

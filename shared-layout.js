@@ -30,19 +30,12 @@ function renderTopbar() {
             </div>
         </div>
         <div class="flex items-center gap-2.5 relative z-[1]">
-            <button class="topbar-icon-btn" aria-label="ค้นหา"><i data-lucide="search" class="w-[18px] h-[18px]"></i></button>
-            <button class="topbar-icon-btn" aria-label="การแจ้งเตือน">
-                <i data-lucide="bell" class="w-[18px] h-[18px]"></i>
-                <span class="topbar-badge-dot"></span>
-            </button>
-            <div class="topbar-divider"></div>
             <div class="topbar-user">
                 <div class="topbar-avatar">US<span class="topbar-online"></span></div>
                 <div class="topbar-user-meta">
                     <div class="topbar-user-name">User System</div>
                     <div class="topbar-user-role">ผู้ใช้งานทั่วไป</div>
                 </div>
-                <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-white/55 hidden md:block"></i>
             </div>
         </div>
     </div>`;
@@ -1147,6 +1140,417 @@ const LDP = {
     }
 };
 document.addEventListener('DOMContentLoaded', () => LDP.autoInit());
+
+/* ── Reject Reason Popup (shared) ── */
+const REJECT_REASONS = [
+    { reason: 'ข้อมูลผู้รับผิดชอบใหม่ไม่ถูกต้อง กรุณาตรวจสอบแผนกและตำแหน่งของผู้รับผิดชอบอีกครั้ง', by: 'คุณอัญชลี ผู้ดูแลระบบฝ่ายกฎหมาย' },
+    { reason: 'สัญญาอยู่ระหว่างการตรวจสอบร่างโดยฝ่ายกฎหมาย ไม่สามารถดำเนินการได้ในขณะนี้', by: 'คุณวรพจน์ ผู้จัดการฝ่ายกฎหมาย' },
+    { reason: 'เอกสารประกอบไม่ครบถ้วน กรุณาแนบหนังสืออนุมัติจากหัวหน้าฝ่ายก่อนยื่นคำขอใหม่', by: 'คุณอัญชลี ผู้ดูแลระบบฝ่ายกฎหมาย' },
+    { reason: 'ผู้อนุมัติที่เลือกไม่มีสิทธิ์อนุมัติสัญญาประเภทนี้ตามระเบียบอำนาจอนุมัติของบริษัท', by: 'คุณวรพจน์ ผู้จัดการฝ่ายกฎหมาย' },
+    { reason: 'สถานะที่ขอปรับไม่สอดคล้องกับข้อมูลการต่อสัญญาในระบบ กรุณาระบุสัญญาอ้างอิงให้ถูกต้อง', by: 'คุณประสิทธิ์ ฝ่ายกฎหมาย' }
+];
+
+function enhanceRejectBadges(root) {
+    (root || document).querySelectorAll('.ts-rejected, .badge-rejected, [data-reject-reason]').forEach((badge, i) => {
+        if (badge.dataset.rjReady || badge.closest('.seg-radio')) return;
+        badge.dataset.rjReady = '1';
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'rj-info';
+        btn.title = 'ดูเหตุผลที่ไม่อนุมัติ';
+        btn.setAttribute('aria-label', 'ดูเหตุผลที่ไม่อนุมัติ');
+        btn.innerHTML = '<i data-lucide="message-circle-warning"></i>';
+        const row = badge.closest('tr');
+        const idx = row ? [...row.parentNode.children].indexOf(row) : i;
+        const r = REJECT_REASONS[idx % REJECT_REASONS.length];
+        btn.dataset.reason = badge.dataset.rejectReason || r.reason;
+        btn.dataset.by = badge.dataset.rejectBy || r.by;
+        badge.insertAdjacentElement('afterend', btn);
+        if (badge.parentElement) badge.parentElement.classList.add('rj-cell');
+    });
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function ensureRejectModal() {
+    if (document.getElementById('sharedRejectModal')) return;
+    const w = document.createElement('div');
+    w.id = 'sharedRejectModal';
+    w.className = 'view-overlay';
+    w.innerHTML = `
+        <div class="rj-modal" role="dialog" aria-modal="true">
+            <button class="del-x" onclick="closeRejectModal()" aria-label="ปิด"><i data-lucide="x"></i></button>
+            <div class="rj-head">
+                <div class="rj-ico"><i data-lucide="circle-x"></i></div>
+                <div class="min-w-0">
+                    <div class="rj-title">เหตุผลที่ไม่อนุมัติ</div>
+                    <div class="rj-sub" id="rjmSub"></div>
+                </div>
+            </div>
+            <div class="rj-reason"><i data-lucide="quote"></i><p id="rjmReason"></p></div>
+            <div class="rj-meta">
+                <div><span>ผู้พิจารณา</span><b id="rjmBy"></b></div>
+                <div><span>วันที่พิจารณา</span><b id="rjmDate"></b></div>
+            </div>
+            <div class="rj-hint"><i data-lucide="lightbulb"></i>แก้ไขข้อมูลตามเหตุผลข้างต้น แล้วยื่นคำขอใหม่อีกครั้ง</div>
+            <div class="del-actions"><button class="view-btn secondary" onclick="closeRejectModal()"><i data-lucide="x" class="w-4 h-4"></i> ปิด</button></div>
+        </div>`;
+    w.addEventListener('click', e => { if (e.target === w) closeRejectModal(); });
+    document.body.appendChild(w);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeRejectModal(); });
+}
+
+function openRejectModal(btn) {
+    ensureRejectModal();
+    const row = btn.closest('tr');
+    let no = '', name = '', date = '';
+    if (row) {
+        const cells = [...row.cells].map(c => (c.innerText || c.textContent).replace(/\s+/g, ' ').trim());
+        const i = cells.findIndex(t => /^(LUR-|[A-Z]{2}\d{4}\/)/.test(t));
+        const heads = row.closest('table').tHead ? [...row.closest('table').tHead.querySelectorAll('th')].map(th => th.textContent.trim()) : [];
+        const ni = heads.findIndex(h => h.includes('ชื่อสัญญา'));
+        if (i >= 0) { no = cells[i]; name = cells[ni >= 0 ? ni : i + 1] || ''; }
+        const d = [...cells].reverse().map(t => (t.match(/\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}/) || [])[0]).find(Boolean);
+        if (d) date = LDP.fmt(LDP.parse(d));
+    }
+    document.getElementById('rjmSub').textContent = [no, name].filter(Boolean).join(' · ');
+    document.getElementById('rjmReason').textContent = btn.dataset.reason;
+    document.getElementById('rjmBy').textContent = btn.dataset.by;
+    document.getElementById('rjmDate').textContent = date || '-';
+    document.getElementById('sharedRejectModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function closeRejectModal() {
+    const m = document.getElementById('sharedRejectModal');
+    if (m) m.classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('click', function (e) {
+    const btn = e.target.closest('.rj-info');
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    openRejectModal(btn);
+}, true);
+document.addEventListener('DOMContentLoaded', () => setTimeout(enhanceRejectBadges, 0));
+
+/* ── Table Filter (shared) ── */
+function tfTableOf(bar) {
+    if (bar.dataset.tfTable) return document.querySelector(bar.dataset.tfTable);
+    return [...document.querySelectorAll('table')].find(t => bar.compareDocumentPosition(t) & Node.DOCUMENT_POSITION_FOLLOWING && t.tBodies[0]);
+}
+function tfHeads(table) {
+    const hr = table.tHead ? table.tHead.querySelector('tr:last-child') : null;
+    return hr ? [...hr.children].map(th => th.textContent.replace(/\s+/g, ' ').trim()) : [];
+}
+function tfCol(heads, name) {
+    if (!name) return -1;
+    let i = heads.findIndex(h => h === name);
+    if (i < 0) i = heads.findIndex(h => h.includes(name));
+    return i;
+}
+function tfCellText(row, i) { return i >= 0 && row.cells[i] ? row.cells[i].textContent.replace(/\s+/g, ' ').trim() : ''; }
+
+function tableFilter() {
+    document.querySelectorAll('.tf-bar').forEach(bar => {
+        const table = tfTableOf(bar);
+        if (!table) return;
+        const heads = tfHeads(table);
+        const rows = [...table.tBodies[0].rows].filter(r => r.cells.length > 1);
+        const q = (bar.querySelector('[data-tf="search"]') || {}).value;
+        const query = (q || '').trim().toLowerCase();
+        const seg = bar.querySelector('.seg-radio[data-tf-col]');
+        const segIdx = seg ? tfCol(heads, seg.dataset.tfCol) : -1;
+        const segVal = seg ? ((seg.querySelector('input:checked') || {}).value || '') : '';
+        const sels = [...bar.querySelectorAll('select[data-tf-col]')].map(s => [tfCol(heads, s.dataset.tfCol), s.value, s.hasAttribute('data-tf-auto')]).filter(x => x[0] >= 0 && x[1]);
+        const rng = bar.querySelector('[data-tf-date]');
+        const dIdx = rng ? tfCol(heads, rng.dataset.tfDate) : -1;
+        const st = rng && rng.ldp ? rng.ldp.get() : {};
+        const statusOk = (row, v) => { const t = tfCellText(row, segIdx); return !v || t === v || t.startsWith(v); };
+        const baseOk = row => {
+            if (query && !row.textContent.toLowerCase().includes(query)) return false;
+            for (const [i, v, exact] of sels) { const t = tfCellText(row, i); if (exact ? t !== v : !t.includes(v)) return false; }
+            if (dIdx >= 0 && (st.start || st.end)) {
+                const d = LDP.parse((tfCellText(row, dIdx).match(/\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}/) || [''])[0]);
+                if (!d || (st.start && d < st.start) || (st.end && d > st.end)) return false;
+            }
+            return true;
+        };
+        let n = 0;
+        rows.forEach(row => {
+            if (row.dataset.tfRemoved) return;
+            const show = baseOk(row) && statusOk(row, segVal);
+            row.style.display = show ? '' : 'none';
+            if (show) n++;
+        });
+        if (seg) seg.querySelectorAll('label').forEach(l => {
+            const v = (l.querySelector('input') || {}).value || '';
+            const c = l.querySelector('.sr-count');
+            if (c) c.textContent = rows.filter(r => !r.dataset.tfRemoved && baseOk(r) && statusOk(r, v)).length;
+        });
+        const cnt = bar.querySelector('.tf-count');
+        if (cnt) cnt.textContent = `แสดง ${n} รายการ`;
+    });
+}
+
+const RENEW_STATUSES = [
+    ['ยังไม่ได้ดำเนินการ', 'ยังไม่ได้ดำเนินการ'],
+    ['รอการตรวจสอบ', 'รอการตรวจสอบ (รอตัดสินใจว่าจะต่อหรือไม่)'],
+    ['อยู่ระหว่างเจรจาสัญญา', 'อยู่ระหว่างเจรจาสัญญา'],
+    ['ต่อสัญญา', 'ต่อสัญญา'],
+    ['ไม่ต่อสัญญา', 'ไม่ต่อสัญญา']
+];
+
+function tfInit() {
+    document.querySelectorAll('.tf-bar').forEach(bar => {
+        const table = tfTableOf(bar);
+        if (!table) return;
+        const heads = tfHeads(table);
+        bar.querySelectorAll('select[data-tf-auto]').forEach(sel => {
+            const i = tfCol(heads, sel.dataset.tfCol);
+            if (i < 0) return;
+            const vals = [...new Set([...table.tBodies[0].rows].map(r => tfCellText(r, i)).filter(v => v && v !== '—' && v !== '-'))].sort((a, b) => a.localeCompare(b, 'th'));
+            const rank = v => { const k = RENEW_STATUSES.findIndex(x => x[0] === v); return k < 0 ? 99 : k; };
+            vals.sort((a, b) => rank(a) - rank(b));
+            vals.forEach(v => { const r = RENEW_STATUSES.find(x => x[0] === v); sel.add(new Option(r ? r[1] : v, v)); });
+        });
+    });
+    tableFilter();
+}
+document.addEventListener('DOMContentLoaded', () => setTimeout(tfInit, 0));
+
+let _tfActionRow = null;
+document.addEventListener('click', e => {
+    const b = e.target.closest('tbody tr button, tbody tr a');
+    if (b) _tfActionRow = b.closest('tr');
+}, true);
+
+function markRowRejected(reason, row) {
+    row = row || _tfActionRow;
+    if (!row) return;
+    const table = row.closest('table');
+    const heads = tfHeads(table);
+    const bar = [...document.querySelectorAll('.tf-bar')].find(b => tfTableOf(b) === table);
+    const seg = bar && bar.querySelector('.seg-radio[data-tf-col]');
+    const sIdx = tfCol(heads, seg ? seg.dataset.tfCol : 'สถานะ');
+    const aIdx = heads.findIndex(h => /จัดการ/.test(h));
+    const dIdx = tfCol(heads, 'วันที่ดำเนินการ');
+    if (sIdx >= 0) {
+        const span = document.createElement('span');
+        span.className = 'badge-status badge-rejected';
+        span.dataset.rejectReason = reason || '-';
+        span.dataset.rejectBy = 'ผู้ดูแลระบบฝ่ายกฎหมาย (คุณ)';
+        span.innerHTML = '<span class="dot"></span> ไม่อนุมัติ';
+        row.cells[sIdx].innerHTML = '';
+        row.cells[sIdx].appendChild(span);
+    }
+    if (aIdx >= 0) row.cells[aIdx].innerHTML = '';
+    if (dIdx >= 0) row.cells[dIdx].textContent = LDP.fmt(LDP.today());
+    row.dataset.status = 'rejected';
+    enhanceRejectBadges(row);
+    tableFilter();
+    if (typeof showToast === 'function') showToast('บันทึกผลไม่อนุมัติเรียบร้อยแล้ว');
+}
+
+/* ── Edit Modal (shared example) ── */
+const EF = {
+    types: ['สัญญาจ้างบริการ', 'สัญญาเช่า', 'สัญญาจัดซื้อ', 'สัญญาบริการ SaaS', 'สัญญาผลิตงาน', 'สัญญาจ้างที่ปรึกษา'],
+    companies: ['บริษัท แพลนบี มีเดีย จำกัด (มหาชน)', 'บริษัท แพลนบี ดิเลเว่น จำกัด', 'บริษัท มาสเตอร์ แอนด์ มอร์ จำกัด'],
+    depts: ['ฝ่ายเทคโนโลยีสารสนเทศ', 'ฝ่ายจัดซื้อ', 'ฝ่ายการตลาด', 'ฝ่ายกฎหมาย', 'ฝ่ายปฏิบัติการ', 'ฝ่ายบัญชีและการเงิน'],
+    owners: ['นางสาววิภา สุขใจ', 'นายสมชาย โชดี', 'นายวิชัย เจริญสุข', 'นางสาวกนกพร ใจดี'],
+    pay: ['ชำระครั้งเดียว', 'ชำระเป็นงวด', 'ชำระรายเดือน', 'แลกเปลี่ยน (Barter)'],
+    renew: ['ไม่มีการต่ออายุ', 'ต่ออายุอัตโนมัติ', 'แจ้งล่วงหน้า', 'แจ้งภายในวันที่'],
+    guarantee: ['LG (หนังสือค้ำประกัน)', 'เช็ค', 'แคชเชียร์เช็ค', 'เงินสด'],
+    memoTypes: ['ขอถอยสัญญา', 'การแก้สัญญาฉบับสมบูรณ์', 'ขอทำสัญญาย้อนหลัง', 'ขอยกเลิกสัญญา', 'อื่นๆ'],
+    esc: v => String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'),
+    input(id, label, value, opt = {}) {
+        return `<label class="ef-field ${opt.full ? 'full' : ''}"><span>${label}${opt.req ? ' <em>*</em>' : ''}</span>
+            <input type="${opt.type || 'text'}" id="${id}" value="${EF.esc(value)}" ${opt.ldp ? `data-ldp ${opt.ldp}` : ''} ${opt.readonly ? 'readonly class="ef-ro"' : ''} placeholder="${opt.ph || ''}"></label>`;
+    },
+    select(id, label, list, value, opt = {}) {
+        const vals = value && !list.includes(value) ? [value, ...list] : list;
+        return `<label class="ef-field ${opt.full ? 'full' : ''}"><span>${label}${opt.req ? ' <em>*</em>' : ''}</span>
+            <select id="${id}">${vals.map(v => `<option ${v === value ? 'selected' : ''}>${EF.esc(v)}</option>`).join('')}</select></label>`;
+    },
+    textarea(id, label, value) {
+        return `<label class="ef-field full"><span>${label}</span><textarea id="${id}" rows="3">${EF.esc(value)}</textarea></label>`;
+    },
+    radios(name, list, value) {
+        return `<div class="ef-radios">${list.map(v => `<label class="ef-radio"><input type="radio" name="${name}" value="${EF.esc(v)}" ${v === value ? 'checked' : ''}><span>${v}</span></label>`).join('')}</div>`;
+    },
+    section(title, icon, inner) {
+        return `<section class="view-section"><div class="view-sec-title"><span class="vst-ico"><i data-lucide="${icon}"></i></span>${title}</div><div class="ef-grid">${inner}</div></section>`;
+    },
+    upload() {
+        return `<label class="ef-drop full"><input type="file" multiple hidden onchange="this.nextElementSibling.querySelector('b').textContent = this.files.length ? this.files.length + ' ไฟล์ที่เลือก' : 'ลากไฟล์มาวาง หรือคลิกเพื่อเลือกไฟล์'"><div><i data-lucide="cloud-upload"></i><b>ลากไฟล์มาวาง หรือคลิกเพื่อเลือกไฟล์</b><small>PDF, DOCX, XLSX ขนาดไม่เกิน 20MB</small></div></label>`;
+    }
+};
+
+let _efRow = null, _efPage = '';
+
+function ensureEditModal() {
+    if (document.getElementById('sharedEditModal')) return;
+    const w = document.createElement('div');
+    w.id = 'sharedEditModal';
+    w.className = 'view-overlay';
+    w.innerHTML = `
+        <div class="view-modal" role="dialog" aria-modal="true">
+            <div class="view-head ef-head">
+                <div class="view-head-icon"><i data-lucide="pencil"></i></div>
+                <div class="view-head-text">
+                    <div class="view-head-sub" id="efSub"></div>
+                    <div class="view-head-title" id="efTitle">แก้ไขข้อมูล</div>
+                </div>
+                <button class="view-close" onclick="closeEditModal()" aria-label="ปิด"><i data-lucide="x"></i></button>
+            </div>
+            <div class="view-body" id="efBody"></div>
+            <div class="view-foot">
+                <a class="view-btn secondary" id="efFull" href="#"><i data-lucide="external-link" class="w-4 h-4"></i> แก้ไขแบบเต็มหน้า</a>
+                <span class="flex-1"></span>
+                <button class="view-btn secondary" onclick="closeEditModal()"><i data-lucide="x" class="w-4 h-4"></i> ยกเลิก</button>
+                <button class="view-btn primary" onclick="saveEditModal_()"><i data-lucide="save" class="w-4 h-4"></i> บันทึก</button>
+            </div>
+        </div>`;
+    w.addEventListener('click', e => { if (e.target === w) closeEditModal(); });
+    document.body.appendChild(w);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeEditModal(); });
+}
+
+function closeEditModal() {
+    const m = document.getElementById('sharedEditModal');
+    if (m) m.classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+function efContractForm(map) {
+    const t = vmText(map);
+    const no = t(['เลขสัญญา']) || '';
+    const seed = VM.hash(no + t(['ชื่อสัญญา']));
+    const per = (t(['ระยะเวลาสัญญา']).match(/\d{2}\/\d{2}\/\d{4}/g) || ['01/04/2026', '31/03/2027']);
+    const p = VM.parsePeriod(per[0] + ' - ' + (per[1] || per[0]));
+    const amount = (t(['มูลค่าสัญญา', 'มูลค่า']) || VM.pick(['2,500,000.00', '850,000.00', '1,200,000.00', '360,000.00'], seed)).replace(/[^\d.,]/g, '');
+    return {
+        sub: 'แก้ไขข้อมูลสัญญา' + (no ? ' · ' + no : ' · แบบร่าง'),
+        title: t(['ชื่อสัญญา']) || 'แก้ไขข้อมูลสัญญา',
+        body:
+            EF.section('ข้อมูลสัญญา', 'file-text',
+                EF.input('efName', 'ชื่อสัญญา', t(['ชื่อสัญญา']), { req: true, full: true }) +
+                EF.select('efType', 'ประเภทสัญญา', EF.types, t(['ประเภทสัญญา']) || EF.types[0], { req: true }) +
+                EF.select('efCompany', 'บริษัทผู้ทำสัญญา', EF.companies, t(['บริษัท']) || EF.companies[0], { req: true }) +
+                EF.input('efPartner', 'คู่สัญญา', t(['คู่สัญญา']), { req: true, full: true })) +
+            EF.section('ระยะเวลาสัญญา', 'calendar-range',
+                EF.input('efStart', 'วันเริ่มต้นสัญญา', p ? p.start : '', { req: true, ldp: 'data-ldp-max="#efEnd" data-ldp-title="เลือกวันเริ่มต้นสัญญา"' }) +
+                EF.input('efEnd', 'วันสิ้นสุดสัญญา', p ? p.end : '', { req: true, ldp: 'data-ldp-min="#efStart" data-ldp-title="เลือกวันสิ้นสุดสัญญา"' }) +
+                EF.input('efDuration', 'ระยะเวลาสัญญา', p ? p.text : '', { readonly: true })) +
+            EF.section('มูลค่าและการชำระเงิน', 'banknote',
+                EF.input('efAmount', 'มูลค่ารวม (บาท)', amount, { req: true }) +
+                EF.select('efCurrency', 'สกุลเงิน', ['THB', 'USD', 'EUR', 'SGD'], 'THB') +
+                EF.select('efPay', 'รูปแบบการชำระ', EF.pay, VM.pick(EF.pay, seed))) +
+            EF.section('หลักประกันและการต่อสัญญา', 'shield-check',
+                `<div class="ef-field"><span>มีหลักประกันสัญญา</span>${EF.radios('efHasLG', ['มี', 'ไม่มี'], seed % 3 ? 'มี' : 'ไม่มี')}</div>` +
+                EF.select('efLGType', 'ประเภทหลักประกัน', EF.guarantee, EF.guarantee[0]) +
+                EF.input('efLGNo', 'เลขอ้างอิง LG', 'LG-2026-' + String(seed % 90000 + 10000)) +
+                EF.select('efRenew', 'เงื่อนไขการต่อสัญญา', EF.renew, VM.pick(EF.renew, seed))) +
+            EF.section('ผู้รับผิดชอบ', 'user',
+                EF.select('efOwner', 'ผู้รับผิดชอบ', EF.owners, t(['ผู้รับผิดชอบ']) || EF.owners[0]) +
+                EF.select('efDept', 'แผนก', EF.depts, t(['แผนก']) || EF.depts[0])) +
+            EF.section('ไฟล์แนบและหมายเหตุ', 'paperclip', EF.upload() + EF.textarea('efNote', 'หมายเหตุ', t(['หมายเหตุ'])))
+    };
+}
+
+function efMemoForm(map) {
+    const t = vmText(map);
+    const no = t(['เลขบันทึก']) || '';
+    return {
+        sub: 'แก้ไขบันทึกข้อความ' + (no ? ' · ' + no : ''),
+        title: t(['เรื่อง']) || 'แก้ไขบันทึกข้อความ',
+        body:
+            EF.section('ประเภทบันทึก', 'tag', `<div class="ef-field full">${EF.radios('efMemoType', EF.memoTypes, t(['ประเภทบันทึก']) || EF.memoTypes[0])}</div>`) +
+            EF.section('ข้อมูลบันทึกข้อความ', 'file-text',
+                EF.input('efName', 'เรื่อง', t(['เรื่อง']), { req: true, full: true }) +
+                EF.input('efRef', 'เลขอ้างอิง LUR', t(['เลขอ้างอิง']), { ph: 'เช่น PB2026/002' }) +
+                EF.select('efOwner', 'ผู้รับผิดชอบ', EF.owners, t(['ผู้รับผิดชอบ']) || EF.owners[0]) +
+                EF.textarea('efDetail', 'รายละเอียด', 'เรียน ฝ่ายกฎหมาย\nมีความประสงค์' + (t(['ประเภทบันทึก']) || '') + ' ตามรายละเอียดเรื่อง "' + (t(['เรื่อง']) || '') + '" จึงเรียนมาเพื่อโปรดพิจารณา')) +
+            EF.section('ไฟล์แนบและหมายเหตุ', 'paperclip', EF.upload() + EF.textarea('efNote', 'หมายเหตุ', ''))
+    };
+}
+
+function openEditModal_(btn) {
+    ensureEditModal();
+    const { map } = vmCollect(btn);
+    const file = (location.pathname.split('/').pop() || '').toLowerCase();
+    _efPage = /memo/.test(file) ? 'memo' : 'contract';
+    _efRow = btn.closest('tr') || btn.closest('.card');
+    const data = _efPage === 'memo' ? efMemoForm(map) : efContractForm(map);
+    document.getElementById('efSub').textContent = data.sub;
+    document.getElementById('efTitle').textContent = data.title;
+    const body = document.getElementById('efBody');
+    body.innerHTML = data.body;
+    body.scrollTop = 0;
+    body.querySelectorAll('.view-section').forEach((s, i) => s.style.animationDelay = (i * 0.05) + 's');
+    LDP.autoInit(body);
+    const dur = () => { const a = LDP.parse(document.getElementById('efStart')?.value), b = LDP.parse(document.getElementById('efEnd')?.value); const el = document.getElementById('efDuration'); if (el && a && b) el.value = VM.parsePeriod(LDP.fmt(a) + ' - ' + LDP.fmt(b)).text; };
+    ['efStart', 'efEnd'].forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('change', dur); });
+    const lg = () => { const on = (document.querySelector('input[name="efHasLG"]:checked') || {}).value === 'มี'; ['efLGType', 'efLGNo'].forEach(id => { const el = document.getElementById(id); if (el) el.closest('.ef-field').classList.toggle('ef-off', !on); }); };
+    body.querySelectorAll('input[name="efHasLG"]').forEach(r => r.addEventListener('change', lg));
+    lg();
+    let href = btn.getAttribute('href') || '';
+    const m = (btn.getAttribute('onclick') || '').match(/location\.href\s*=\s*['"]([^'"]+)['"]/);
+    if (!href && m) href = m[1];
+    if (!href || href === '#') href = _efPage === 'memo' ? 'memo-step1-create.html' : 'step1-request.html';
+    document.getElementById('efFull').href = href;
+    document.getElementById('sharedEditModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function saveEditModal_() {
+    const name = document.getElementById('efName');
+    if (!name.value.trim()) { name.classList.add('ef-invalid'); name.focus(); setTimeout(() => name.classList.remove('ef-invalid'), 1200); return; }
+    const v = id => (document.getElementById(id) || {}).value || '';
+    const row = _efRow;
+    if (row && row.tagName === 'TR') {
+        const heads = tfHeads(row.closest('table'));
+        const set = (h, val) => {
+            const i = heads.indexOf(h);
+            if (i < 0 || !val || !row.cells[i]) return;
+            const badge = row.cells[i].querySelector('span:not(.dot)');
+            if (badge && badge.children.length === 0 && /^(ประเภท|แผนก)/.test(h)) badge.textContent = val; else row.cells[i].textContent = val;
+        };
+        if (_efPage === 'memo') {
+            set('เรื่อง', v('efName')); set('ประเภทบันทึก', (document.querySelector('input[name="efMemoType"]:checked') || {}).value); set('เลขอ้างอิง', v('efRef')); set('ผู้รับผิดชอบ', v('efOwner'));
+        } else {
+            set('ชื่อสัญญา', v('efName')); set('ประเภทสัญญา', v('efType')); set('คู่สัญญา', v('efPartner')); set('บริษัท', v('efCompany'));
+            if (v('efStart') && v('efEnd')) set('ระยะเวลาสัญญา', v('efStart') + ' - ' + v('efEnd'));
+            set('ผู้รับผิดชอบ', v('efOwner')); set('แผนก', v('efDept'));
+        }
+        if (row.dataset.view) {
+            try {
+                const mp = JSON.parse(row.dataset.view);
+                heads.forEach((h, i) => { if (mp[h] && row.cells[i]) { const t = row.cells[i].textContent.replace(/\s+/g, ' ').trim(); mp[h] = { text: t, html: row.cells[i].innerHTML.trim() }; } });
+                row.dataset.view = JSON.stringify(mp);
+                row.dataset.name = v('efName');
+            } catch (e) {}
+        }
+        row.classList.remove('ef-flash'); void row.offsetWidth; row.classList.add('ef-flash');
+    } else if (row) {
+        const tt = row.querySelector('.card-title'); if (tt) tt.textContent = v('efName');
+        row.classList.remove('ef-flash'); void row.offsetWidth; row.classList.add('ef-flash');
+    }
+    closeEditModal();
+    if (typeof showToast === 'function') showToast('บันทึกการแก้ไขเรียบร้อยแล้ว');
+}
+
+document.addEventListener('click', function (e) {
+    const btn = e.target.closest('.action-btn.edit');
+    if (!btn || (!btn.closest('tr') && !btn.closest('.card'))) return;
+    if (/open[A-Z]\w*\(/.test(btn.getAttribute('onclick') || '')) return;
+    e.preventDefault();
+    e.stopPropagation();
+    openEditModal_(btn);
+}, true);
 
 /* ── Sortable Tables ── */
 function enableSortableTables(root) {

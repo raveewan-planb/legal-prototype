@@ -159,12 +159,17 @@
         .badge-complete { background: #F0FDF4; color: #15803D; }
         .badge-complete .dot { background: #22C55E; }
 
+        .rtbl tbody tr { cursor: default !important; }
+        .rtbl .badge-renew { font-size: 11.5px; font-weight: 600; padding: 2px 9px; border-radius: 999px; border: 1px solid transparent; }
+        .rtbl .badge-renew .dot { width: 6px; height: 6px; border-radius: 50%; }
+        .rtbl .cx-no.none { color: #94A3B8; font-weight: 500; font-style: italic; }
         .ctbl { table-layout: auto; }
+        .ctbl tbody tr { cursor: default !important; }
         .ctbl thead th { padding: 12px 12px; position: sticky; top: 0; z-index: 5; box-shadow: 0 2px 6px -2px rgba(2,40,103,.18); }
         .ctbl tbody td { padding: 12px 12px; white-space: normal; vertical-align: middle; }
         .ctbl .action-btns { display: grid !important; grid-template-columns: repeat(2, 28px); gap: 4px; }
         .ctbl .action-btn { width: 28px; height: 28px; }
-        .cx-no { font-size: 12px; font-weight: 700; color: #2D56D2; letter-spacing: .2px; }
+        .cx-no { font-size: 13px; font-weight: 700; color: #2D56D2; letter-spacing: .2px; white-space: nowrap; }
         .cx-no.none { color: #94A3B8; font-weight: 500; font-style: italic; }
         .cx-name { font-size: 13.5px; font-weight: 600; color: #022867; line-height: 1.35; margin: 2px 0 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-width: 180px; }
         .cx-type { display: inline-block; padding: 1px 8px; border-radius: 999px; background: #EAF3FF; color: #2D56D2; font-size: 11px; font-weight: 600; }
@@ -175,21 +180,23 @@
         .cx-period b { font-weight: 500; }
         .cx-dur { display: inline-block; margin-top: 4px; padding: 1px 8px; border-radius: 999px; background: #F1F5F9; color: #64748B; font-size: 11px; font-weight: 600; }
         .cx-status { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; }
-        .cx-status .badge-renew { font-size: 11.5px; font-weight: 600; padding: 2px 9px; border-radius: 999px; border: 1px solid transparent; }
+        
         .cx-status .badge-renew .dot { width: 6px; height: 6px; border-radius: 50%; }
-        .rn-done { color: #15803D; background: #F0FDF4; border-color: #BBF7D0 !important; }
-        .rn-done .dot { background: #22C55E !important; }
-        .rn-auto { color: #2D56D2; background: #EAF3FF; border-color: #B9DDFF !important; }
-        .rn-auto .dot { background: #4790FF !important; }
-        .rn-wait { color: #B45309; background: #FFFBEB; border-color: #FDE68A !important; }
-        .rn-wait .dot { background: #F59E0B !important; }
-        .rn-no { color: #B91C1C; background: #FEF2F2; border-color: #FECACA !important; }
-        .rn-no .dot { background: #EF4444 !important; }
+        .rtbl .rn-none { color: #475569; background: #F1F5F9; border-color: #E2E8F0 !important; }
+        .rtbl .rn-none .dot { background: #94A3B8 !important; }
+        .rtbl .rn-done { color: #15803D; background: #F0FDF4; border-color: #BBF7D0 !important; }
+        .rtbl .rn-done .dot { background: #22C55E !important; }
+        .rtbl .rn-auto { color: #2D56D2; background: #EAF3FF; border-color: #B9DDFF !important; }
+        .rtbl .rn-auto .dot { background: #4790FF !important; }
+        .rtbl .rn-wait { color: #B45309; background: #FFFBEB; border-color: #FDE68A !important; }
+        .rtbl .rn-wait .dot { background: #F59E0B !important; }
+        .rtbl .rn-no { color: #B91C1C; background: #FEF2F2; border-color: #FECACA !important; }
+        .rtbl .rn-no .dot { background: #EF4444 !important; }
         .cx-user { display: flex; align-items: center; gap: 9px; min-width: 150px; }
         .cx-date { font-size: 12.5px; color: #334155; white-space: nowrap; }
         .cx-time { font-size: 11.5px; color: #94A3B8; }
-        @media (max-width: 1280px) { .ctbl .cx-hide-md { display: none; } }
-        @media (max-width: 1180px) { .ctbl .cx-user { min-width: 96px; } .ctbl .cx-name { min-width: 120px; } .ctbl tbody td, .ctbl thead th { padding-left: 9px; padding-right: 9px; } }
+        @media (max-width: 1280px) { .ctbl .cx-hide-md { display: none; } .ctbl tbody td, .ctbl thead th { padding-left: 10px; padding-right: 10px; } .ctbl .cx-name { min-width: 150px; } }
+        @media (max-width: 1180px) { .ctbl .cx-user { min-width: 80px; } .ctbl .cx-name { min-width: 96px; } .ctbl tbody td, .ctbl thead th { padding-left: 7px; padding-right: 7px; } .ctbl .cx-no, .ctbl .cx-period { font-size: 12px; } .ctbl .cx-main { font-size: 12.5px; } .ctbl .badge-status { font-size: 11px; padding: 3px 8px; gap: 4px; } .ctbl  .ctbl .action-btns { grid-template-columns: repeat(2, 26px); } .ctbl .action-btn { width: 26px; height: 26px; } }
         .badge-renew {
             display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500;
         }
@@ -772,7 +779,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr onclick="location.href='step1-request.html'">
+                        <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button><button class="action-btn delete" title="ลบ"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button><button class="action-btn cancel" title="ยกเลิก" onclick="event.stopPropagation();openCancelModal(this)"><i data-lucide="x-circle" class="w-3.5 h-3.5"></i></button></div></td>
                             <td style="font-weight:700;color:#4790FF;">-</td>
                             <td>สัญญาจ้างพัฒนาระบบ ERP</td>
@@ -781,7 +788,7 @@
                             <td>บริษัท แพลนบี มีเดีย</td>
                             <td>15/04/2025 - 14/04/2026</td>
                             <td><span class="badge-status badge-draft"><span class="dot"></span> แบบร่าง</span></td>
-                            <td><span class="badge-renew"><span class="dot dot-green"></span> ต่ออายุอัตโนมัติ</span></td>
+                            <td><span class="badge-renew"><span class="dot dot-green"></span> ยังไม่ได้ดำเนินการ</span></td>
                             <td>26/03/2026 10:30</td>
                             <td>นางสาววิภา สุขใจ</td>
                             <td>ฝ่ายเทคโนโลยีสารสนเทศ</td>
@@ -795,7 +802,7 @@
                             <td>บริษัท แพลนบี มีเดีย</td>
                             <td>01/05/2025 - 30/04/2026</td>
                             <td><span class="badge-status badge-draft"><span class="dot"></span> แบบร่าง</span></td>
-                            <td><span class="badge-renew"><span class="dot dot-green"></span> ต่ออายุแล้ว</span></td>
+                            <td><span class="badge-renew"><span class="dot dot-green"></span> ต่อสัญญา</span></td>
                             <td>25/03/2026 14:15</td>
                             <td>นายสมชาย โชดี</td>
                             <td>ฝ่ายปฏิบัติการ</td>
@@ -809,7 +816,7 @@
                             <td>บริษัท แพลนบี มีเดีย</td>
                             <td>01/06/2025 - 31/05/2026</td>
                             <td><span class="badge-status badge-return"><span class="dot"></span> ส่งกลับแก้ไข</span></td>
-                            <td><span class="badge-renew"><span class="dot dot-green"></span> ต่ออายุแล้ว</span></td>
+                            <td><span class="badge-renew"><span class="dot dot-green"></span> ต่อสัญญา</span></td>
                             <td>24/03/2026 09:45</td>
                             <td>นายวิชัย เจริญสุข</td>
                             <td>ฝ่ายกฎหมาย</td>
@@ -823,7 +830,7 @@
                             <td>บริษัท แพลนบี มีเดีย</td>
                             <td>01/03/2025 - 28/02/2026</td>
                             <td><span class="badge-status badge-return"><span class="dot"></span> ส่งกลับแก้ไข</span></td>
-                            <td><span class="badge-renew"><span class="dot dot-red"></span> ไม่ต่ออายุ</span></td>
+                            <td><span class="badge-renew"><span class="dot dot-red"></span> ไม่ต่อสัญญา</span></td>
                             <td>23/03/2026 16:00</td>
                             <td>นางสาววิภา สุขใจ</td>
                             <td>ฝ่ายเทคโนโลยีสารสนเทศ</td>
@@ -837,7 +844,7 @@
                             <td>บริษัท แพลนบี มีเดีย</td>
                             <td>01/07/2025 - 30/06/2026</td>
                             <td><span class="badge-status badge-legal"><span class="dot"></span> รอกฎหมายจ่ายงาน</span></td>
-                            <td><span class="badge-renew"><span class="dot dot-green"></span> ต่ออายุอัตโนมัติ</span></td>
+                            <td><span class="badge-renew"><span class="dot dot-green"></span> ยังไม่ได้ดำเนินการ</span></td>
                             <td>25/03/2026 11:00</td>
                             <td>นายสมชาย โชดี</td>
                             <td>ฝ่ายการตลาด</td>
@@ -851,7 +858,7 @@
                             <td>บริษัท แพลนบี มีเดีย</td>
                             <td>01/10/2025 - 30/09/2026</td>
                             <td><span class="badge-status badge-legal"><span class="dot"></span> รอกฎหมายจ่ายงาน</span></td>
-                            <td><span class="badge-renew"><span class="dot dot-orange"></span> รอต่ออายุ</span></td>
+                            <td><span class="badge-renew"><span class="dot dot-orange"></span> รอการตรวจสอบ</span></td>
                             <td>24/03/2026 13:30</td>
                             <td>นายวิชัย เจริญสุข</td>
                             <td>ฝ่ายเทคโนโลยีสารสนเทศ</td>
@@ -865,7 +872,7 @@
                             <td>บริษัท แพลนบี ดิเลเว่น</td>
                             <td>01/01/2026 - 31/12/2026</td>
                             <td><span class="badge-status badge-review"><span class="dot"></span> รอตรวจสอบ/ร่าง</span></td>
-                            <td><span class="badge-renew"><span class="dot dot-red"></span> ไม่ต่ออายุ</span></td>
+                            <td><span class="badge-renew"><span class="dot dot-red"></span> ไม่ต่อสัญญา</span></td>
                             <td>22/03/2026 08:45</td>
                             <td>นายวิชัย เจริญสุข</td>
                             <td>ฝ่ายจัดซื้อ</td>
@@ -879,7 +886,7 @@
                             <td>บริษัท แพลนบี มีเดีย</td>
                             <td>16/06/2025 - 15/06/2026</td>
                             <td><span class="badge-status badge-review"><span class="dot"></span> รอตรวจสอบ/ร่าง</span></td>
-                            <td><span class="badge-renew"><span class="dot dot-green"></span> ต่ออายุอัตโนมัติ</span></td>
+                            <td><span class="badge-renew"><span class="dot dot-green"></span> ยังไม่ได้ดำเนินการ</span></td>
                             <td>21/03/2026 15:20</td>
                             <td>นางสาววิภา สุขใจ</td>
                             <td>ฝ่ายเทคโนโลยีสารสนเทศ</td>
@@ -893,7 +900,7 @@
                             <td>บริษัท แพลนบี มีเดีย</td>
                             <td>01/08/2025 - 31/07/2026</td>
                             <td><span class="badge-status badge-review"><span class="dot"></span> รอตรวจสอบ/ร่าง</span></td>
-                            <td><span class="badge-renew"><span class="dot dot-green"></span> ต่ออายุแล้ว</span></td>
+                            <td><span class="badge-renew"><span class="dot dot-green"></span> ต่อสัญญา</span></td>
                             <td>23/03/2026 10:00</td>
                             <td>นายสมชาย โชดี</td>
                             <td>ฝ่ายปฏิบัติการ</td>
@@ -907,7 +914,7 @@
                             <td>บริษัท แพลนบี ดิเลเว่น</td>
                             <td>16/05/2025 - 15/05/2026</td>
                             <td><span class="badge-status badge-approve"><span class="dot"></span> รอหัวหน้าอนุมัติ</span></td>
-                            <td><span class="badge-renew"><span class="dot dot-green"></span> ต่ออายุแล้ว</span></td>
+                            <td><span class="badge-renew"><span class="dot dot-green"></span> ต่อสัญญา</span></td>
                             <td>22/03/2026 11:30</td>
                             <td>นายวิชัย เจริญสุข</td>
                             <td>ฝ่ายการตลาด</td>
@@ -921,7 +928,7 @@
                             <td>บริษัท แพลนบี มีเดีย</td>
                             <td>01/09/2025 - 31/08/2026</td>
                             <td><span class="badge-status badge-approve"><span class="dot"></span> รอหัวหน้าอนุมัติ</span></td>
-                            <td><span class="badge-renew"><span class="dot dot-blue"></span> รอพิจารณา</span></td>
+                            <td><span class="badge-renew"><span class="dot dot-blue"></span> อยู่ระหว่างเจรจาสัญญา</span></td>
                             <td>21/03/2026 09:15</td>
                             <td>นางสาววิภา สุขใจ</td>
                             <td>ฝ่ายปฏิบัติการ</td>
@@ -935,7 +942,7 @@
                             <td>บริษัท แพลนบี มีเดีย</td>
                             <td>01/02/2026 - 31/01/2027</td>
                             <td><span class="badge-status badge-sign"><span class="dot"></span> รอลงนาม</span></td>
-                            <td><span class="badge-renew"><span class="dot dot-orange"></span> รอต่ออายุ</span></td>
+                            <td><span class="badge-renew"><span class="dot dot-orange"></span> รอการตรวจสอบ</span></td>
                             <td>20/03/2026 14:00</td>
                             <td>นายสมชาย โชดี</td>
                             <td>ฝ่ายเทคโนโลยีสารสนเทศ</td>
@@ -949,7 +956,7 @@
                             <td>บริษัท แพลนบี มีเดีย</td>
                             <td>01/11/2025 - 31/10/2026</td>
                             <td><span class="badge-status badge-sign"><span class="dot"></span> รอลงนาม</span></td>
-                            <td><span class="badge-renew"><span class="dot dot-green"></span> ต่ออายุอัตโนมัติ</span></td>
+                            <td><span class="badge-renew"><span class="dot dot-green"></span> ยังไม่ได้ดำเนินการ</span></td>
                             <td>19/03/2026 10:45</td>
                             <td>นายวิชัย เจริญสุข</td>
                             <td>ฝ่ายการตลาด</td>
@@ -963,7 +970,7 @@
                             <td>บริษัท แพลนบี มีเดีย</td>
                             <td>01/04/2025 - 31/03/2026</td>
                             <td><span class="badge-status badge-complete"><span class="dot"></span> เสร็จสิ้น</span></td>
-                            <td><span class="badge-renew"><span class="dot dot-orange"></span> รอต่ออายุ</span></td>
+                            <td><span class="badge-renew"><span class="dot dot-orange"></span> รอการตรวจสอบ</span></td>
                             <td>18/03/2026 16:30</td>
                             <td>นายวิชัย เจริญสุข</td>
                             <td>ฝ่ายกฎหมาย</td>
@@ -977,7 +984,7 @@
                             <td>บริษัท แพลนบี มีเดีย</td>
                             <td>01/03/2026 - 28/02/2027</td>
                             <td><span class="badge-status badge-complete"><span class="dot"></span> เสร็จสิ้น</span></td>
-                            <td><span class="badge-renew"><span class="dot dot-green"></span> ต่ออายุแล้ว</span></td>
+                            <td><span class="badge-renew"><span class="dot dot-green"></span> ต่อสัญญา</span></td>
                             <td>15/03/2026 09:00</td>
                             <td>นายสมชาย โชดี</td>
                             <td>ฝ่ายเทคโนโลยีสารสนเทศ</td>
@@ -991,7 +998,7 @@
                             <td>บริษัท แพลนบี มีเดีย</td>
                             <td>01/12/2025 - 30/11/2026</td>
                             <td><span class="badge-status badge-complete"><span class="dot"></span> เสร็จสิ้น</span></td>
-                            <td><span class="badge-renew"><span class="dot dot-green"></span> ต่ออายุอัตโนมัติ</span></td>
+                            <td><span class="badge-renew"><span class="dot dot-green"></span> ยังไม่ได้ดำเนินการ</span></td>
                             <td>10/03/2026 13:45</td>
                             <td>นางสาววิภา สุขใจ</td>
                             <td>ฝ่ายกฎหมาย</td>
@@ -1165,50 +1172,25 @@
         if (item.textContent.trim().includes('คลังสัญญา')) item.classList.add('active');
     });
 
-    (function compactRepoTable() {
+    (function prepRepoTable() {
         const table = document.querySelector('.table-wrapper table');
         if (!table) return;
+        table.classList.add('rtbl');
         const heads = [...table.tHead.querySelectorAll('th')].map(th => th.textContent.trim());
-        const H = ['จัดการ', 'สัญญา', 'คู่สัญญา / บริษัท', 'ระยะเวลาสัญญา', 'สถานะ', 'ผู้รับผิดชอบ', 'วันที่สร้างคำขอ'];
-        table.classList.add('ctbl');
-        table.tHead.rows[0].innerHTML = H.map((h, i) => `<th${i === 6 ? ' class="cx-hide-md"' : ''}>${h}</th>`).join('');
-        const months = (a, b) => {
-            const p = x => { const [d, m, y] = x.split('/').map(Number); return new Date(y, m - 1, d); };
-            const n = Math.round((p(b) - p(a)) / 2629800000);
-            return n >= 12 && n % 12 === 0 ? (n / 12) + ' ปี' : n + ' เดือน';
-        };
-        const renewTone = t => /ไม่/.test(t) ? 'rn-no' : /รอ/.test(t) ? 'rn-wait' : /อัตโนมัติ/.test(t) ? 'rn-auto' : /แล้ว/.test(t) ? 'rn-done' : '';
+        const idx = n => heads.indexOf(n);
+        const renewTone = t => /ไม่ต่อ/.test(t) ? 'rn-no' : /รอการตรวจสอบ/.test(t) ? 'rn-wait' : /เจรจา/.test(t) ? 'rn-auto' : /ยังไม่ได้/.test(t) ? 'rn-none' : /ต่อสัญญา/.test(t) ? 'rn-done' : '';
         [...table.tBodies[0].rows].forEach(row => {
             const c = [...row.cells];
             const map = {};
             heads.forEach((h, i) => { if (i && c[i]) { const t = c[i].textContent.replace(/\s+/g, ' ').trim(); map[h] = { text: t, html: t && t !== '-' ? c[i].innerHTML.trim() : '' }; } });
-            const v = k => (map[k] || {}).text || '';
-            const vh = k => (map[k] || {}).html || '';
             row.dataset.view = JSON.stringify(map);
-            row.dataset.no = v('เลขสัญญา');
-            row.dataset.name = v('ชื่อสัญญา');
-            const no = v('เลขสัญญา');
-            const per = v('ระยะเวลาสัญญา').split(/\s*-\s*/);
-            const [dt, tm] = v('วันที่สร้างคำขอ').split(' ');
-            const owner = v('ผู้รับผิดชอบ');
-            const actions = c[0].innerHTML;
-            row.innerHTML = `
-                <td>${actions}</td>
-                <td>
-                    <div class="cx-no ${no && no !== '-' ? '' : 'none'}">${no && no !== '-' ? no : 'ยังไม่ออกเลขสัญญา'}</div>
-                    <div class="cx-name" title="${v('ชื่อสัญญา')}">${v('ชื่อสัญญา')}</div>
-                    <span class="cx-type">${v('ประเภทสัญญา')}</span>
-                </td>
-                <td>
-                    <div class="cx-main">${v('คู่สัญญา')}</div>
-                    <div class="cx-sub"><i data-lucide="building-2"></i>${v('บริษัท')}</div>
-                </td>
-                <td>
-                    ${per.length === 2 ? `<div class="cx-period"><b>${per[0]}</b></div><div class="cx-period"><span class="text-slate-400">ถึง</span> <b>${per[1]}</b></div><span class="cx-dur">${months(per[0], per[1])}</span>` : v('ระยะเวลาสัญญา')}
-                </td>
-                <td><div class="cx-status">${vh('สถานะในระบบ')}${vh('สถานะต่อสัญญา').replace('class="badge-renew"', `class="badge-renew ${renewTone(v('สถานะต่อสัญญา'))}"`)}</div></td>
-                <td><div class="cx-user"><div class="min-w-0"><div class="cx-main">${owner}</div><div class="cx-sub">${v('แผนก')}</div></div></div></td>
-                <td class="cx-hide-md"><div class="cx-date">${dt || ''}</div><div class="cx-time">${tm ? tm + ' น.' : ''}</div></td>`;
+            row.dataset.no = (map['เลขสัญญา'] || {}).text || '';
+            row.dataset.name = (map['ชื่อสัญญา'] || {}).text || '';
+            const noCell = c[idx('เลขสัญญา')];
+            if (noCell && noCell.textContent.trim() === '-') noCell.innerHTML = '<span class="cx-no none">ยังไม่ออกเลข</span>';
+            const rn = c[idx('สถานะต่อสัญญา')];
+            const badge = rn && rn.querySelector('.badge-renew');
+            if (badge) badge.classList.add(renewTone(rn.textContent));
         });
     })();
     if (typeof lucide !== 'undefined') lucide.createIcons();

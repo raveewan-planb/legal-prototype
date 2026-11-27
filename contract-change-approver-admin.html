@@ -574,36 +574,21 @@
     </div>
 
     <!-- Filter Bar -->
-    <div class="filter-bar flex gap-3 items-center mb-5 flex-wrap max-md:flex-col max-md:items-stretch max-md:gap-2.5">
+    <div class="filter-bar tf-bar flex gap-3 items-center mb-5 flex-wrap max-md:flex-col max-md:items-stretch max-md:gap-2.5">
         <div class="flex-1 min-w-[200px] relative max-md:w-full max-md:min-w-0">
-            <i data-lucide="search" class="icon w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-            <input type="text" id="searchTable" oninput="filterTable()" placeholder="ค้นหาเลขสัญญา, ผู้อนุมัติ..." class="w-full py-2.5 pl-9 pr-3.5 border border-slate-300 rounded-lg text-sm font-[inherit] text-slate-600 bg-white outline-none transition-all focus:border-blue-500 focus:ring-3 focus:ring-blue-500/10">
+            <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" data-tf="search" oninput="tableFilter()" placeholder="ค้นหาเลขสัญญา, ผู้อนุมัติ..." class="w-full py-2.5 pl-9 pr-3.5 border border-slate-300 rounded-lg text-sm font-[inherit] text-slate-600 bg-white outline-none">
         </div>
-        <div class="seg-radio" role="radiogroup" aria-label="สถานะการเปลี่ยนผู้อนุมัติ">
-            <label data-status="all"><input type="radio" name="filterChangeStatus" value="" checked onchange="filterTable()"><span class="sr-dot"></span>ทั้งหมด</label>
-            <label data-status="pending"><input type="radio" name="filterChangeStatus" value="รอดำเนินการ" onchange="filterTable()"><span class="sr-dot"></span>รอดำเนินการ</label>
-            <label data-status="done"><input type="radio" name="filterChangeStatus" value="ดำเนินการแล้ว" onchange="filterTable()"><span class="sr-dot"></span>ดำเนินการแล้ว</label>
+        <div class="seg-radio" role="radiogroup" aria-label="สถานะการเปลี่ยนผู้อนุมัติ" data-tf-col="สถานะการเปลี่ยนผู้อนุมัติ">
+            <label data-status="all"><input type="radio" name="tfStatus" value="" checked onchange="tableFilter()"><span class="sr-dot"></span>ทั้งหมด<span class="sr-count"></span></label>
+            <label data-status="pending"><input type="radio" name="tfStatus" value="รอดำเนินการ" onchange="tableFilter()"><span class="sr-dot"></span>รอดำเนินการ<span class="sr-count"></span></label>
+            <label data-status="done"><input type="radio" name="tfStatus" value="อนุมัติ" onchange="tableFilter()"><span class="sr-dot"></span>อนุมัติ<span class="sr-count"></span></label>
+            <label data-status="rejected"><input type="radio" name="tfStatus" value="ไม่อนุมัติ" onchange="tableFilter()"><span class="sr-dot"></span>ไม่อนุมัติ<span class="sr-count"></span></label>
         </div>
-        <select id="filterDept" onchange="filterTable()" class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27%2364748B%27%20stroke-width=%272%27%3E%3Cpolyline%20points=%276%209%2012%2015%2018%209%27/%3E%3C/svg%3E')] bg-no-repeat bg-[right_10px_center] min-w-[160px]">
-            <option value="">แผนกทั้งหมด</option>
-            <option>ฝ่ายจัดซื้อ</option>
-            <option>ฝ่ายขาย</option>
-            <option>ฝ่ายการตลาด</option>
-            <option>ฝ่ายปฏิบัติการ</option>
-            <option>ฝ่ายบัญชีและการเงิน</option>
-            <option>ฝ่ายทรัพยากรบุคคล</option>
-        </select>
-        <select id="filterContractType" onchange="filterTable()" class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27%2364748B%27%20stroke-width=%272%27%3E%3Cpolyline%20points=%276%209%2012%2015%2018%209%27/%3E%3C/svg%3E')] bg-no-repeat bg-[right_10px_center] min-w-[160px]">
-            <option value="">ประเภทสัญญาทั้งหมด</option>
-            <option>สัญญาจ้างบริการ</option>
-            <option>สัญญาเช่า</option>
-            <option>สัญญาจัดซื้อ</option>
-            <option>สัญญาบริการ SaaS</option>
-            <option>สัญญาผลิตงาน</option>
-            <option>สัญญาจ้างที่ปรึกษา</option>
-        </select>
-        <div data-ldp-range data-from="filterDateFrom" data-to="filterDateTo" data-ph-start="วันเริ่มต้น" data-ph-end="วันสิ้นสุด" data-onchange="filterTable"></div>
-        <div class="text-xs text-slate-400" id="rowCount">แสดง 8 รายการ</div>
+        <select data-tf-col="แผนก" data-tf-auto onchange="tableFilter()" class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none min-w-[150px] max-md:w-full"><option value="">แผนกทั้งหมด</option></select>
+        <select data-tf-col="ประเภทสัญญา" data-tf-auto onchange="tableFilter()" class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none min-w-[150px] max-md:w-full"><option value="">ประเภทสัญญาทั้งหมด</option></select>
+        <div data-ldp-range data-tf-date="วันที่สร้างคำขอ" data-ph-start="วันเริ่มต้น" data-ph-end="วันสิ้นสุด" data-onchange="tableFilter"></div>
+        <div class="tf-count text-xs text-slate-400"></div>
     </div>
 
     <!-- Table Card -->
@@ -697,7 +682,7 @@
                         <td><span class="font-semibold" style="color:#94A3B8;">LUR-202511004</span></td>
                         <td style="color:#94A3B8;">สัญญาจ้างพัฒนาระบบ IT</td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">สัญญาจ้าง</span></td>
-                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
+                        <td><span class="badge-status badge-done"><span class="dot"></span> อนุมัติ</span></td>
                         <td>Narumon Kaewsai</td>
                         <td>Pracha Decharat</td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-teal-50 text-teal-700">ฝ่ายทรัพยากรบุคคล</span></td>
@@ -710,7 +695,7 @@
                         <td><span class="font-semibold" style="color:#94A3B8;">LUR-202510006</span></td>
                         <td style="color:#94A3B8;">สัญญาเช่าอุปกรณ์สำนักงาน</td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">สัญญาเช่า</span></td>
-                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
+                        <td><span class="badge-status badge-done"><span class="dot"></span> อนุมัติ</span></td>
                         <td>Kittisak Tanawat</td>
                         <td>Somchai Prasert</td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">ฝ่ายจัดซื้อ</span></td>
@@ -723,7 +708,7 @@
                         <td><span class="font-semibold" style="color:#94A3B8;">VS2024/013</span></td>
                         <td style="color:#94A3B8;">บันทึกข้อตกลงแนบท้ายฯ (ฉบับที่ 5)</td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">บันทึกข้อตกลง</span></td>
-                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
+                        <td><span class="badge-status badge-rejected"><span class="dot"></span> ไม่อนุมัติ</span></td>
                         <td>Supaporn Jaidee</td>
                         <td>Pichit Thongkam</td>
                         <td><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700">ฝ่ายขาย</span></td>
@@ -1043,7 +1028,7 @@
         // Clear action button
         cells[0].innerHTML = '';
         // Update status badge to done
-        cells[8].innerHTML = '<span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span>';
+        cells[8].innerHTML = '<span class="badge-status badge-done"><span class="dot"></span> อนุมัติ</span>';
         // Set วันที่ดำเนินการ to today
         const now = new Date();
         const dd = String(now.getDate()).padStart(2, '0');
@@ -1080,37 +1065,7 @@
         return `${dd}/${mm}/${yy}`;
     }
     
-    function filterTable() {
-        const q  = document.getElementById('searchTable').value.toLowerCase();
-        const cs = (document.querySelector('input[name="filterChangeStatus"]:checked')?.value || '').toLowerCase();
-        const dept = (document.getElementById('filterDept').value || '').toLowerCase();
-        const type = (document.getElementById('filterContractType').value || '').toLowerCase();
-        const dFrom = document.getElementById('filterDateFrom').value;
-        const dTo   = document.getElementById('filterDateTo').value;
-        function toDate(s){ const m = (s || '').match(/\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}/); return m ? LDP.parse(m[0]) : null; }
-        const from = dFrom ? LDP.parse(dFrom) : null;
-        const to   = dTo   ? LDP.parse(dTo)   : null;
-        const rows = document.querySelectorAll('#dataTable tbody tr');
-        let count = 0;
-        rows.forEach(row => {
-            const cells = row.querySelectorAll('td');
-            const text = row.textContent.toLowerCase();
-            const rStatus = (cells[8]?.textContent || '').toLowerCase();
-            const rType   = (cells[4]?.textContent || '').toLowerCase();
-            const rDept   = (cells[9]?.textContent || '').toLowerCase();
-            const rDate   = [...cells].reverse().map(c => toDate(c.textContent)).find(Boolean) || null;
-            let show = true;
-            if (q && !text.includes(q)) show = false;
-            if (show && cs && !rStatus.includes(cs)) show = false;
-            if (show && dept && !rDept.includes(dept)) show = false;
-            if (show && type && !rType.includes(type)) show = false;
-            if (show && from && rDate && rDate < from) show = false;
-            if (show && to   && rDate && rDate > to)   show = false;
-            row.style.display = show ? '' : 'none';
-            if (show) count++;
-        });
-        document.getElementById('rowCount').textContent = `แสดง ${count} รายการ`;
-    }
+    function filterTable() { tableFilter(); }
 
     function rj_closeConfirmChange() {
         const wrap = document.getElementById('rj_remarkWrap');
@@ -1125,6 +1080,7 @@
             if (ta) { ta.classList.remove('is-invalid'); void ta.offsetWidth; ta.classList.add('is-invalid'); ta.focus(); }
             return;
         }
+        markRowRejected(ta.value.trim());
         closeConfirmChange();
         setTimeout(() => { wrap.classList.remove('show'); if (ta) { ta.value=''; ta.classList.remove('is-invalid'); } }, 250);
     }

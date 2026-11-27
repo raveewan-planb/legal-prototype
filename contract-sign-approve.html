@@ -10,8 +10,6 @@
     <link rel="stylesheet" href="shared-styles.css">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <!-- Flatpickr -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <style>
         /* ══════════ TABLE ══════════ */
         .table-card {
@@ -284,60 +282,23 @@
         </div>
     </div>
 
-    <!-- Filter Bar Row 1 -->
-    <div class="filter-bar">
-        <div class="search-box">
-            <i data-lucide="search" class="w-4 h-4 text-slate-400"></i>
-            <input type="text" placeholder="ค้นหาเลขสัญญา / ชื่อสัญญา...">
+    <!-- Filter Bar -->
+    <div class="filter-bar tf-bar flex gap-3 items-center mb-5 flex-wrap max-md:flex-col max-md:items-stretch max-md:gap-2.5">
+        <div class="flex-1 min-w-[200px] relative max-md:w-full max-md:min-w-0">
+            <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" data-tf="search" oninput="tableFilter()" placeholder="ค้นหาเลขสัญญา / ชื่อสัญญา..." class="w-full py-2.5 pl-9 pr-3.5 border border-slate-300 rounded-lg text-sm font-[inherit] text-slate-600 bg-white outline-none">
         </div>
-        <div class="status-toggle" id="statusToggle">
-            <button class="status-tab" data-status="all" onclick="switchStatusTab(this)"><span class="dot" style="background:#3B82F6;"></span> ทั้งหมด <span class="tab-count" id="countAll">7</span></button>
-            <button class="status-tab active" data-status="pending" onclick="switchStatusTab(this)"><span class="dot" style="background:#F97316;"></span> รอดำเนินการ <span class="tab-count" id="countPending">5</span></button>
-            <button class="status-tab" data-status="done" onclick="switchStatusTab(this)"><span class="dot" style="background:#22C55E;"></span> ดำเนินการแล้ว <span class="tab-count" id="countDone">2</span></button>
+        <div class="seg-radio" role="radiogroup" aria-label="สถานะ" data-tf-col="สถานะ">
+            <label data-status="all"><input type="radio" name="tfStatus" value="" checked onchange="tableFilter()"><span class="sr-dot"></span>ทั้งหมด<span class="sr-count"></span></label>
+            <label data-status="pending"><input type="radio" name="tfStatus" value="รอดำเนินการ" onchange="tableFilter()"><span class="sr-dot"></span>รอดำเนินการ<span class="sr-count"></span></label>
+            <label data-status="done"><input type="radio" name="tfStatus" value="อนุมัติ" onchange="tableFilter()"><span class="sr-dot"></span>อนุมัติ<span class="sr-count"></span></label>
+            <label data-status="rejected"><input type="radio" name="tfStatus" value="ไม่อนุมัติ" onchange="tableFilter()"><span class="sr-dot"></span>ไม่อนุมัติ<span class="sr-count"></span></label>
         </div>
-        <select class="filter-select">
-            <option>แผนกทั้งหมด</option>
-            <option>ฝ่ายกฎหมาย</option>
-            <option>ฝ่ายการตลาด</option>
-            <option>ฝ่ายเทคโนโลยีสารสนเทศ</option>
-            <option>ฝ่ายปฏิบัติการ</option>
-            <option>ฝ่ายจัดซื้อ</option>
-            <option>ฝ่ายบัญชีและการเงิน</option>
-        </select>
-        <select class="filter-select">
-            <option>ประเภทสัญญาทั้งหมด</option>
-            <option>สัญญาจ้างบริการ</option>
-            <option>สัญญาเช่า</option>
-            <option>สัญญาจัดซื้อ</option>
-            <option>สัญญาบริการ SaaS</option>
-            <option>สัญญาผลิตงาน</option>
-            <option>สัญญาจ้างที่ปรึกษา</option>
-        </select>
-        <select class="filter-select">
-            <option>สถานะสัญญาทั้งหมด</option>
-            <option>แบบร่าง</option>
-            <option>ส่งกลับเพื่อแก้ไข</option>
-            <option>รอกฎหมายจ่ายงาน</option>
-            <option>รอกฎหมายตรวจสอบ/ร่าง</option>
-            <option>รอหัวหน้างานอนุมัติ</option>
-            <option>รอกฎหมายสรุปความเสี่ยง</option>
-            <option>เลือกการลงนาม</option>
-            <option>รอจัดทำสัญญาฉบับสมบูรณ์</option>
-            <option>แนบสัญญาฉบับสมบูรณ์</option>
-            <option>รอกฎหมายตรวจสอบ</option>
-            <option>เสร็จสิ้น</option>
-        </select>
-        <div class="date-range-group">
-            <div class="date-input-wrap">
-                <i data-lucide="calendar" class="w-3.5 h-3.5 date-icon"></i>
-                <input type="text" id="filterDateStart" placeholder="วันเริ่มต้น" readonly>
-            </div>
-            <span class="date-sep">—</span>
-            <div class="date-input-wrap">
-                <i data-lucide="calendar" class="w-3.5 h-3.5 date-icon"></i>
-                <input type="text" id="filterDateEnd" placeholder="วันสิ้นสุด" readonly>
-            </div>
-        </div>
+        <select data-tf-col="แผนก" data-tf-auto onchange="tableFilter()" class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none min-w-[150px] max-md:w-full"><option value="">แผนกทั้งหมด</option></select>
+        <select data-tf-col="ประเภทสัญญา" data-tf-auto onchange="tableFilter()" class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none min-w-[150px] max-md:w-full"><option value="">ประเภทสัญญาทั้งหมด</option></select>
+        <select data-tf-col="สถานะสัญญา" data-tf-auto onchange="tableFilter()" class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none min-w-[150px] max-md:w-full"><option value="">สถานะสัญญาทั้งหมด</option></select>
+        <div data-ldp-range data-tf-date="วันที่สร้างคำขอ" data-ph-start="วันเริ่มต้น" data-ph-end="วันสิ้นสุด" data-onchange="tableFilter"></div>
+        <div class="tf-count text-xs text-slate-400"></div>
     </div>
 
     <!-- Selected count bar -->
@@ -477,7 +438,7 @@
                         <td></td>
                         <td></td>
                         <td style="font-weight:700;color:#94A3B8;">PB2026/051</td>
-                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
+                        <td><span class="badge-status badge-done"><span class="dot"></span> อนุมัติ</span></td>
                         <td>สัญญาจ้างพิมพ์สิ่งพิมพ์ประจำปี</td>
                         <td>สัญญาจ้างบริการ</td>
                         <td>บริษัท ปริ้นท์โปร</td>
@@ -493,11 +454,11 @@
                         <td>19/03/2026 10:45</td>
                     </tr>
                     <!-- Row 7 (done) -->
-                    <tr class="row-done" data-status="done" style="display:none;">
+                    <tr class="row-done" data-status="rejected" style="display:none;">
                         <td></td>
                         <td></td>
                         <td style="font-weight:700;color:#94A3B8;">PB2026/055</td>
-                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
+                        <td><span class="badge-status badge-rejected"><span class="dot"></span> ไม่อนุมัติ</span></td>
                         <td>สัญญาจ้างวิจัยตลาด OOH</td>
                         <td>สัญญาจ้างที่ปรึกษา</td>
                         <td>บริษัท รีเสิร์ชโปร</td>
@@ -573,12 +534,12 @@
             <!-- วันเริ่มต้นสัญญา -->
             <div>
                 <label class="edit-label">วันเริ่มต้นสัญญา</label>
-                <input type="text" id="editStartDate" class="edit-input edit-date" placeholder="dd/mm/yyyy" readonly>
+                <input type="text" id="editStartDate" data-ldp data-ldp-max="#editEndDate" data-ldp-title="เลือกวันเริ่มต้นสัญญา" class="edit-input edit-date" placeholder="dd/mm/yyyy" readonly>
             </div>
             <!-- วันสิ้นสุดสัญญา -->
             <div>
                 <label class="edit-label">วันสิ้นสุดสัญญา</label>
-                <input type="text" id="editEndDate" class="edit-input edit-date" placeholder="dd/mm/yyyy" readonly>
+                <input type="text" id="editEndDate" data-ldp data-ldp-min="#editStartDate" data-ldp-title="เลือกวันสิ้นสุดสัญญา" class="edit-input edit-date" placeholder="dd/mm/yyyy" readonly>
             </div>
             <!-- ระยะเวลาสัญญา (auto-calculated) -->
             <div>
@@ -652,18 +613,6 @@
         if (el.textContent.trim().includes('การจัดการสัญญา')) el.classList.add('active');
     });
     if (typeof lucide !== 'undefined') lucide.createIcons();
-
-    // ── Flatpickr ──
-    flatpickr('#filterDateStart', {
-        dateFormat: 'd/m/Y', allowInput: false, disableMobile: true,
-        locale: { firstDayOfWeek: 1 },
-        onReady: function(s, d, instance) { instance.calendarContainer.style.fontFamily = "'Kanit', sans-serif"; }
-    });
-    flatpickr('#filterDateEnd', {
-        dateFormat: 'd/m/Y', allowInput: false, disableMobile: true,
-        locale: { firstDayOfWeek: 1 },
-        onReady: function(s, d, instance) { instance.calendarContainer.style.fontFamily = "'Kanit', sans-serif"; }
-    });
 
     // ── Checkbox Logic ──
     function toggleAll(el) {
@@ -786,7 +735,7 @@
 
             // Replace status badge
             const statusCell = row.querySelectorAll('td')[3];
-            statusCell.innerHTML = '<span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span>';
+            statusCell.innerHTML = '<span class="badge-status badge-done"><span class="dot"></span> อนุมัติ</span>';
 
             // Remove checkbox, edit, remark
             row.querySelectorAll('td')[0].innerHTML = '';
@@ -807,39 +756,9 @@
     }
 
     // ── Status Tab Toggle ──
-    function switchStatusTab(btn) {
-        document.querySelectorAll('.status-tab').forEach(t => t.classList.remove('active'));
-        btn.classList.add('active');
+    function switchStatusTab() { tableFilter(); }
 
-        const status = btn.getAttribute('data-status');
-        const rows = document.querySelectorAll('#tableBody tr');
-        rows.forEach(row => {
-            const rowStatus = row.getAttribute('data-status');
-            row.style.display = (status === 'all' || rowStatus === status) ? '' : 'none';
-        });
-
-        // Show/hide header checkbox and send button based on tab
-        const checkAllTh = document.getElementById('checkAll');
-        const sendBtn = document.getElementById('btnSendEmail');
-        const selectedBar = document.getElementById('selectedBar');
-        if (status === 'done') {
-            checkAllTh.style.display = 'none';
-            sendBtn.style.display = 'none';
-            selectedBar.classList.remove('show');
-        } else {
-            checkAllTh.style.display = '';
-            sendBtn.style.display = '';
-            updateSelectedCount();
-        }
-    }
-
-    function updateTabCounts() {
-        const pending = document.querySelectorAll('#tableBody tr[data-status="pending"]').length;
-        const done = document.querySelectorAll('#tableBody tr[data-status="done"]').length;
-        document.getElementById('countPending').textContent = pending;
-        document.getElementById('countDone').textContent = done;
-        document.getElementById('countAll').textContent = pending + done;
-    }
+    function updateTabCounts() { tableFilter(); }
 
     document.getElementById('emailConfirmModal').addEventListener('click', function(e) {
         if (e.target === this) closeEmailConfirmModal();
@@ -857,22 +776,9 @@
 
     // ── Edit Modal ──
     let currentEditRow = null;
-    let editStartPicker = null;
-    let editEndPicker = null;
-
-    // Init Flatpickr for edit modal dates
-    editStartPicker = flatpickr('#editStartDate', {
-        dateFormat: 'd/m/Y', allowInput: false, disableMobile: true,
-        locale: { firstDayOfWeek: 1 },
-        onReady: function(s, d, instance) { instance.calendarContainer.style.fontFamily = "'Kanit', sans-serif"; },
-        onChange: function() { calcEditDuration(); }
-    });
-    editEndPicker = flatpickr('#editEndDate', {
-        dateFormat: 'd/m/Y', allowInput: false, disableMobile: true,
-        locale: { firstDayOfWeek: 1 },
-        onReady: function(s, d, instance) { instance.calendarContainer.style.fontFamily = "'Kanit', sans-serif"; },
-        onChange: function() { calcEditDuration(); }
-    });
+    ['editStartDate', 'editEndDate'].forEach(id => document.getElementById(id).addEventListener('change', calcEditDuration));
+    const editStartPicker = { setDate: v => { document.getElementById('editStartDate').value = v; } };
+    const editEndPicker = { setDate: v => { document.getElementById('editEndDate').value = v; } };
 
     function calcEditDuration() {
         const startVal = document.getElementById('editStartDate').value;

@@ -426,11 +426,11 @@
             <!-- สถานะการต่อสัญญา -->
             <select class="filter-select py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27%2364748B%27%20stroke-width=%272%27%3E%3Cpolyline%20points=%276%209%2012%2015%2018%209%27/%3E%3C/svg%3E')] bg-no-repeat bg-[right_10px_center]">
                 <option>สถานะการต่อสัญญาทั้งหมด</option>
-                <option>รอต่อสัญญา</option>
-                <option>ไม่ต่อสัญญา</option>
-                <option>อยู่ระหว่างดำเนินการ</option>
-                <option>ยังไม่ได้ดำเนินการ</option>
-                <option>ต่อสัญญาแล้ว</option>
+                <option value="ยังไม่ได้ดำเนินการ">ยังไม่ได้ดำเนินการ</option>
+                <option value="รอการตรวจสอบ">รอการตรวจสอบ (รอตัดสินใจว่าจะต่อหรือไม่)</option>
+                <option value="อยู่ระหว่างเจรจาสัญญา">อยู่ระหว่างเจรจาสัญญา</option>
+                <option value="ต่อสัญญา">ต่อสัญญา</option>
+                <option value="ไม่ต่อสัญญา">ไม่ต่อสัญญา</option>
             </select>
         </div>
     </div>
@@ -439,9 +439,49 @@
     <div class="board-wrapper" id="kanbanView" style="flex:1;padding-bottom:16px;width:100%;display:none;">
         <div class="board">
 
-            <!-- 1. รอต่อสัญญา -->
+            <!-- 1. ยังไม่ได้ดำเนินการ -->
+            <div class="lane lane-notyet">
+                <div class="lane-header"><div class="lane-header-left"><div class="lane-dot"></div><div class="lane-title">ยังไม่ได้ดำเนินการ</div></div><div class="lane-count">3</div></div>
+                <div class="lane-body">
+                    <div class="card" data-contract="PB2026/020" data-name="สัญญาเช่าที่ดินเปล่า ลาดพร้าว" data-partner="นายวิชัย" data-company="นายวิชัย" data-period="01/08/2025 - 31/07/2026">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">PB2026/020</div>
+                        <div class="card-title">สัญญาเช่าที่ดินเปล่า ลาดพร้าว</div>
+                        <div class="card-meta"><span class="card-tag type">เช่า</span><span class="card-tag company">นายวิชัย</span></div>
+                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 01/08/2025 - 31/07/2026</div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#EC4899;">พว</div><div class="name">Piyawat S.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> Finance</div></div>
+                    </div>
+                    <div class="card" data-contract="PB2026/022" data-name="สัญญาจัดซื้ออุปกรณ์สำนักงาน" data-partner="บ. ออฟฟิศเมท" data-company="บ. ออฟฟิศเมท" data-period="01/09/2025 - 31/08/2026">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">PB2026/022</div>
+                        <div class="card-title">สัญญาจัดซื้ออุปกรณ์สำนักงาน</div>
+                        <div class="card-meta"><span class="card-tag type">จัดซื้อ</span><span class="card-tag company">บ. ออฟฟิศเมท</span></div>
+                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 01/09/2025 - 31/08/2026</div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#8B5CF6;">ธน</div><div class="name">Thanaporn S.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> Operations</div></div>
+                    </div>
+                    <div class="card" data-contract="PB2026/025" data-name="สัญญาบริการ Internet Leased Line" data-partner="TRUE Corp." data-company="TRUE Corp." data-period="01/10/2025 - 30/09/2026">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">PB2026/025</div>
+                        <div class="card-title">สัญญาบริการ Internet Leased Line</div>
+                        <div class="card-meta"><span class="card-tag type">SaaS</span><span class="card-tag company">TRUE Corp.</span></div>
+                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 01/10/2025 - 30/09/2026</div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#F59E0B;">วช</div><div class="name">Wichai R.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> IT Dept</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. รอการตรวจสอบ -->
             <div class="lane lane-wait">
-                <div class="lane-header"><div class="lane-header-left"><div class="lane-dot"></div><div class="lane-title">รอต่อสัญญา</div></div><div class="lane-count">4</div></div>
+                <div class="lane-header"><div class="lane-header-left"><div class="lane-dot"></div><div class="lane-title">รอการตรวจสอบ</div></div><div class="lane-count">4</div></div>
                 <div class="lane-body">
                     <div class="card" data-contract="PB2026/002" data-name="สัญญาจ้างพัฒนาระบบ ERP" data-partner="บ. เทคโนโลยี" data-company="บ. เทคโนโลยี" data-period="15/04/2025 - 14/04/2026">
                         <div class="card-actions">
@@ -490,38 +530,9 @@
                 </div>
             </div>
 
-            <!-- 2. ไม่ต่อสัญญา -->
-            <div class="lane lane-no">
-                <div class="lane-header"><div class="lane-header-left"><div class="lane-dot"></div><div class="lane-title">ไม่ต่อสัญญา</div></div><div class="lane-count">2</div></div>
-                <div class="lane-body">
-                    <div class="card" data-contract="PB2026/007" data-name="สัญญาบริการขนส่งสินค้า" data-partner="บ. โลจิสติกส์" data-company="บ. โลจิสติกส์" data-period="01/01/2025 - 31/12/2025">
-                        <div class="card-actions">
-                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
-                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
-                        </div>
-                        <div class="card-ref">PB2026/007</div>
-                        <div class="card-title">สัญญาบริการขนส่งสินค้า</div>
-                        <div class="card-meta"><span class="card-tag type">จ้างบริการ</span><span class="card-tag company">บ. โลจิสติกส์</span></div>
-                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 01/01/2025 - 31/12/2025</div>
-                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#F59E0B;">นพ</div><div class="name">Nattapong W.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> Operations</div></div>
-                    </div>
-                    <div class="card" data-contract="PB2026/009" data-name="สัญญาจ้างทำป้ายโฆษณา LED" data-partner="บ. แอลอีดี ไทย" data-company="บ. แอลอีดี ไทย" data-period="15/02/2025 - 14/02/2026">
-                        <div class="card-actions">
-                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
-                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
-                        </div>
-                        <div class="card-ref">PB2026/009</div>
-                        <div class="card-title">สัญญาจ้างทำป้ายโฆษณา LED</div>
-                        <div class="card-meta"><span class="card-tag type">ผลิตงาน</span><span class="card-tag company">บ. แอลอีดี ไทย</span></div>
-                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 15/02/2025 - 14/02/2026</div>
-                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#EC4899;">ศร</div><div class="name">Siriporn C.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> Marketing</div></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 3. อยู่ระหว่างดำเนินการ -->
+            <!-- 3. อยู่ระหว่างเจรจาสัญญา -->
             <div class="lane lane-inprogress">
-                <div class="lane-header"><div class="lane-header-left"><div class="lane-dot"></div><div class="lane-title">อยู่ระหว่างดำเนินการ</div></div><div class="lane-count">3</div></div>
+                <div class="lane-header"><div class="lane-header-left"><div class="lane-dot"></div><div class="lane-title">อยู่ระหว่างเจรจาสัญญา</div></div><div class="lane-count">3</div></div>
                 <div class="lane-body">
                     <div class="card" data-contract="PB2026/001" data-name="สัญญาเช่าพื้นที่โฆษณา ถ.พหลโยธิน" data-partner="นายประสิทธิ์" data-company="นายประสิทธิ์" data-period="01/07/2025 - 30/06/2026">
                         <div class="card-actions">
@@ -559,49 +570,9 @@
                 </div>
             </div>
 
-            <!-- 4. ยังไม่ได้ดำเนินการ -->
-            <div class="lane lane-notyet">
-                <div class="lane-header"><div class="lane-header-left"><div class="lane-dot"></div><div class="lane-title">ยังไม่ได้ดำเนินการ</div></div><div class="lane-count">3</div></div>
-                <div class="lane-body">
-                    <div class="card" data-contract="PB2026/020" data-name="สัญญาเช่าที่ดินเปล่า ลาดพร้าว" data-partner="นายวิชัย" data-company="นายวิชัย" data-period="01/08/2025 - 31/07/2026">
-                        <div class="card-actions">
-                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
-                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
-                        </div>
-                        <div class="card-ref">PB2026/020</div>
-                        <div class="card-title">สัญญาเช่าที่ดินเปล่า ลาดพร้าว</div>
-                        <div class="card-meta"><span class="card-tag type">เช่า</span><span class="card-tag company">นายวิชัย</span></div>
-                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 01/08/2025 - 31/07/2026</div>
-                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#EC4899;">พว</div><div class="name">Piyawat S.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> Finance</div></div>
-                    </div>
-                    <div class="card" data-contract="PB2026/022" data-name="สัญญาจัดซื้ออุปกรณ์สำนักงาน" data-partner="บ. ออฟฟิศเมท" data-company="บ. ออฟฟิศเมท" data-period="01/09/2025 - 31/08/2026">
-                        <div class="card-actions">
-                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
-                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
-                        </div>
-                        <div class="card-ref">PB2026/022</div>
-                        <div class="card-title">สัญญาจัดซื้ออุปกรณ์สำนักงาน</div>
-                        <div class="card-meta"><span class="card-tag type">จัดซื้อ</span><span class="card-tag company">บ. ออฟฟิศเมท</span></div>
-                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 01/09/2025 - 31/08/2026</div>
-                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#8B5CF6;">ธน</div><div class="name">Thanaporn S.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> Operations</div></div>
-                    </div>
-                    <div class="card" data-contract="PB2026/025" data-name="สัญญาบริการ Internet Leased Line" data-partner="TRUE Corp." data-company="TRUE Corp." data-period="01/10/2025 - 30/09/2026">
-                        <div class="card-actions">
-                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
-                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
-                        </div>
-                        <div class="card-ref">PB2026/025</div>
-                        <div class="card-title">สัญญาบริการ Internet Leased Line</div>
-                        <div class="card-meta"><span class="card-tag type">SaaS</span><span class="card-tag company">TRUE Corp.</span></div>
-                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 01/10/2025 - 30/09/2026</div>
-                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#F59E0B;">วช</div><div class="name">Wichai R.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> IT Dept</div></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 5. ต่อสัญญาแล้ว -->
+            <!-- 4. ต่อสัญญา -->
             <div class="lane lane-done">
-                <div class="lane-header"><div class="lane-header-left"><div class="lane-dot"></div><div class="lane-title">ต่อสัญญาแล้ว</div></div><div class="lane-count">3</div></div>
+                <div class="lane-header"><div class="lane-header-left"><div class="lane-dot"></div><div class="lane-title">ต่อสัญญา</div></div><div class="lane-count">3</div></div>
                 <div class="lane-body">
                     <div class="card" data-contract="PB2026/003" data-name="สัญญาจ้างบริการทำความสะอาด (ต่อ)" data-partner="บ. คลีน" data-company="บ. คลีน" data-period="01/02/2026 - 31/01/2027">
                         <div class="card-actions">
@@ -639,6 +610,34 @@
                 </div>
             </div>
 
+            <!-- 5. ไม่ต่อสัญญา -->
+            <div class="lane lane-no">
+                <div class="lane-header"><div class="lane-header-left"><div class="lane-dot"></div><div class="lane-title">ไม่ต่อสัญญา</div></div><div class="lane-count">2</div></div>
+                <div class="lane-body">
+                    <div class="card" data-contract="PB2026/007" data-name="สัญญาบริการขนส่งสินค้า" data-partner="บ. โลจิสติกส์" data-company="บ. โลจิสติกส์" data-period="01/01/2025 - 31/12/2025">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">PB2026/007</div>
+                        <div class="card-title">สัญญาบริการขนส่งสินค้า</div>
+                        <div class="card-meta"><span class="card-tag type">จ้างบริการ</span><span class="card-tag company">บ. โลจิสติกส์</span></div>
+                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 01/01/2025 - 31/12/2025</div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#F59E0B;">นพ</div><div class="name">Nattapong W.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> Operations</div></div>
+                    </div>
+                    <div class="card" data-contract="PB2026/009" data-name="สัญญาจ้างทำป้ายโฆษณา LED" data-partner="บ. แอลอีดี ไทย" data-company="บ. แอลอีดี ไทย" data-period="15/02/2025 - 14/02/2026">
+                        <div class="card-actions">
+                            <button class="action-btn view" title="ดู" onclick="event.stopPropagation()"><i data-lucide="eye" class="w-3 h-3"></i></button>
+                            <button class="action-btn edit" title="แก้ไข" onclick="event.stopPropagation();openRenewModal(this)"><i data-lucide="pencil" class="w-3 h-3"></i></button>
+                        </div>
+                        <div class="card-ref">PB2026/009</div>
+                        <div class="card-title">สัญญาจ้างทำป้ายโฆษณา LED</div>
+                        <div class="card-meta"><span class="card-tag type">ผลิตงาน</span><span class="card-tag company">บ. แอลอีดี ไทย</span></div>
+                        <div class="card-period"><i data-lucide="calendar" class="w-3 h-3"></i> 15/02/2025 - 14/02/2026</div>
+                        <div class="card-footer"><div class="card-assignee"><div class="avatar" style="background:#EC4899;">ศร</div><div class="name">Siriporn C.</div></div><div class="card-date"><i data-lucide="clock" class="w-3 h-3"></i> Marketing</div></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -667,7 +666,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- รอต่อสัญญา (4) -->
+                        <!-- รอการตรวจสอบ (4) -->
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
                             <td style="font-weight:700;color:#4790FF;">PB2026/002</td>
@@ -676,7 +675,7 @@
                             <td>บริษัท เทคโนโลยี จำกัด</td>
                             <td>แพลนบี มีเดีย</td>
                             <td>15/04/2025 - 14/04/2026</td>
-                            <td><span class="badge-status badge-wait"><span class="dot"></span> รอต่อสัญญา</span></td>
+                            <td><span class="badge-status badge-wait"><span class="dot"></span> รอการตรวจสอบ</span></td>
                             <td>01/04/2026</td>
                             <td>IT Department</td>
                             <td>Jiraporn S.</td>
@@ -689,7 +688,7 @@
                             <td>นายสมศักดิ์ พรหมมา</td>
                             <td>แพลนบี มีเดีย</td>
                             <td>01/06/2025 - 31/05/2026</td>
-                            <td><span class="badge-status badge-wait"><span class="dot"></span> รอต่อสัญญา</span></td>
+                            <td><span class="badge-status badge-wait"><span class="dot"></span> รอการตรวจสอบ</span></td>
                             <td>28/03/2026</td>
                             <td>Marketing</td>
                             <td>Nattapong W.</td>
@@ -702,7 +701,7 @@
                             <td>AWS Thailand</td>
                             <td>แพลนบี ดิเลเว่น</td>
                             <td>01/05/2025 - 30/04/2026</td>
-                            <td><span class="badge-status badge-wait"><span class="dot"></span> รอต่อสัญญา</span></td>
+                            <td><span class="badge-status badge-wait"><span class="dot"></span> รอการตรวจสอบ</span></td>
                             <td>05/04/2026</td>
                             <td>IT Department</td>
                             <td>Wichai R.</td>
@@ -715,7 +714,7 @@
                             <td>บริษัท การ์ด ซิเคียวริตี้</td>
                             <td>แพลนบี มีเดีย</td>
                             <td>01/03/2025 - 28/02/2026</td>
-                            <td><span class="badge-status badge-wait"><span class="dot"></span> รอต่อสัญญา</span></td>
+                            <td><span class="badge-status badge-wait"><span class="dot"></span> รอการตรวจสอบ</span></td>
                             <td>25/02/2026</td>
                             <td>Operations</td>
                             <td>Jiraporn S.</td>
@@ -749,7 +748,7 @@
                             <td>Siriporn C.</td>
                         </tr>
 
-                        <!-- อยู่ระหว่างดำเนินการ (3) -->
+                        <!-- อยู่ระหว่างเจรจาสัญญา (3) -->
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
                             <td style="font-weight:700;color:#4790FF;">PB2026/001</td>
@@ -758,7 +757,7 @@
                             <td>นายประสิทธิ์ แสงทอง</td>
                             <td>แพลนบี มีเดีย</td>
                             <td>01/07/2025 - 30/06/2026</td>
-                            <td><span class="badge-status badge-inprogress"><span class="dot"></span> อยู่ระหว่างดำเนินการ</span></td>
+                            <td><span class="badge-status badge-inprogress"><span class="dot"></span> อยู่ระหว่างเจรจาสัญญา</span></td>
                             <td>15/03/2026</td>
                             <td>Marketing</td>
                             <td>Jiraporn S.</td>
@@ -771,7 +770,7 @@
                             <td>บริษัท ไบร์ท ไซน์ จำกัด</td>
                             <td>แพลนบี มีเดีย</td>
                             <td>01/04/2025 - 31/03/2026</td>
-                            <td><span class="badge-status badge-inprogress"><span class="dot"></span> อยู่ระหว่างดำเนินการ</span></td>
+                            <td><span class="badge-status badge-inprogress"><span class="dot"></span> อยู่ระหว่างเจรจาสัญญา</span></td>
                             <td>20/03/2026</td>
                             <td>Marketing</td>
                             <td>Chotika K.</td>
@@ -784,7 +783,7 @@
                             <td>บริษัท คลีน จำกัด</td>
                             <td>แพลนบี เจวี</td>
                             <td>01/02/2025 - 31/01/2026</td>
-                            <td><span class="badge-status badge-inprogress"><span class="dot"></span> อยู่ระหว่างดำเนินการ</span></td>
+                            <td><span class="badge-status badge-inprogress"><span class="dot"></span> อยู่ระหว่างเจรจาสัญญา</span></td>
                             <td>18/01/2026</td>
                             <td>Operations</td>
                             <td>Kamonwan P.</td>
@@ -831,7 +830,7 @@
                             <td>Wichai R.</td>
                         </tr>
 
-                        <!-- ต่อสัญญาแล้ว (3) -->
+                        <!-- ต่อสัญญา (3) -->
                         <tr>
                             <td><div class="action-btns"><button class="action-btn view" title="ดู"><i data-lucide="eye" class="w-3.5 h-3.5"></i></button><button class="action-btn edit" title="แก้ไข" onclick="openRenewModal(this)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button></div></td>
                             <td style="font-weight:700;color:#4790FF;">PB2026/003</td>
@@ -840,7 +839,7 @@
                             <td>บริษัท คลีน จำกัด</td>
                             <td>แพลนบี เจวี</td>
                             <td>01/02/2026 - 31/01/2027</td>
-                            <td><span class="badge-status badge-done"><span class="dot"></span> ต่อสัญญาแล้ว</span></td>
+                            <td><span class="badge-status badge-done"><span class="dot"></span> ต่อสัญญา</span></td>
                             <td>28/01/2026</td>
                             <td>Operations</td>
                             <td>Kamonwan P.</td>
@@ -853,7 +852,7 @@
                             <td>นายวิชัย เจริญสุข</td>
                             <td>มาสเตอร์ แอด</td>
                             <td>01/08/2026 - 31/07/2027</td>
-                            <td><span class="badge-status badge-done"><span class="dot"></span> ต่อสัญญาแล้ว</span></td>
+                            <td><span class="badge-status badge-done"><span class="dot"></span> ต่อสัญญา</span></td>
                             <td>25/07/2026</td>
                             <td>Finance</td>
                             <td>Piyawat S.</td>
@@ -866,7 +865,7 @@
                             <td>INET Thailand</td>
                             <td>แพลนบี มีเดีย</td>
                             <td>01/03/2026 - 28/02/2027</td>
-                            <td><span class="badge-status badge-done"><span class="dot"></span> ต่อสัญญาแล้ว</span></td>
+                            <td><span class="badge-status badge-done"><span class="dot"></span> ต่อสัญญา</span></td>
                             <td>20/02/2026</td>
                             <td>IT Department</td>
                             <td>Somchai C.</td>

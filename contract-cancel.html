@@ -260,16 +260,22 @@
     </div>
 
     <!-- Filter Bar -->
-    <div class="flex gap-3 items-center mb-5 flex-wrap max-md:flex-col max-md:items-stretch max-md:gap-2.5">
+    <div class="filter-bar tf-bar flex gap-3 items-center mb-5 flex-wrap max-md:flex-col max-md:items-stretch max-md:gap-2.5">
         <div class="flex-1 min-w-[200px] relative max-md:w-full max-md:min-w-0">
             <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-            <input type="text" placeholder="ค้นหาเลขสัญญา, ชื่อสัญญา, บริษัท..." class="w-full py-2.5 pl-9 pr-3.5 border border-slate-300 rounded-lg text-sm font-[inherit] text-slate-600 bg-white outline-none transition-all focus:border-blue-500 focus:ring-3 focus:ring-blue-500/10">
+            <input type="text" data-tf="search" oninput="tableFilter()" placeholder="ค้นหาเลขสัญญา, ชื่อสัญญา, บริษัท..." class="w-full py-2.5 pl-9 pr-3.5 border border-slate-300 rounded-lg text-sm font-[inherit] text-slate-600 bg-white outline-none">
         </div>
-        <select class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27%2364748B%27%20stroke-width=%272%27%3E%3Cpolyline%20points=%276%209%2012%2015%2018%209%27/%3E%3C/svg%3E')] bg-no-repeat bg-[right_10px_center] max-md:flex-1">
-            <option>สถานะทั้งหมด</option>
-            <option>รอดำเนินการ</option>
-            <option>ดำเนินการแล้ว</option>
-        </select>
+        <div class="seg-radio" role="radiogroup" aria-label="สถานะ" data-tf-col="สถานะ">
+            <label data-status="all"><input type="radio" name="tfStatus" value="" checked onchange="tableFilter()"><span class="sr-dot"></span>ทั้งหมด<span class="sr-count"></span></label>
+            <label data-status="pending"><input type="radio" name="tfStatus" value="รอดำเนินการ" onchange="tableFilter()"><span class="sr-dot"></span>รอดำเนินการ<span class="sr-count"></span></label>
+            <label data-status="done"><input type="radio" name="tfStatus" value="อนุมัติ" onchange="tableFilter()"><span class="sr-dot"></span>อนุมัติ<span class="sr-count"></span></label>
+            <label data-status="rejected"><input type="radio" name="tfStatus" value="ไม่อนุมัติ" onchange="tableFilter()"><span class="sr-dot"></span>ไม่อนุมัติ<span class="sr-count"></span></label>
+        </div>
+        <select data-tf-col="ประเภทสัญญา" data-tf-auto onchange="tableFilter()" class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none min-w-[150px] max-md:w-full"><option value="">ประเภทสัญญาทั้งหมด</option></select>
+        <select data-tf-col="บริษัทผู้ทำสัญญา" data-tf-auto onchange="tableFilter()" class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none min-w-[150px] max-md:w-full"><option value="">บริษัทผู้ทำสัญญาทั้งหมด</option></select>
+        <select data-tf-col="แผนก" data-tf-auto onchange="tableFilter()" class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none min-w-[150px] max-md:w-full"><option value="">แผนกทั้งหมด</option></select>
+        <div data-ldp-range data-tf-date="วันที่สร้างคำขอ" data-ph-start="วันเริ่มต้น" data-ph-end="วันสิ้นสุด" data-onchange="tableFilter"></div>
+        <div class="tf-count text-xs text-slate-400"></div>
     </div>
 
     <!-- Table -->
@@ -390,11 +396,11 @@
                         <td>20/03/2026</td>
                         <td style="color:#94A3B8;">—</td>
                     </tr>
-                    <!-- Row 7 - ดำเนินการแล้ว -->
+                    <!-- Row 7 - อนุมัติ -->
                     <tr>
                         <td><div class="action-btns"></div></td>
                         <td style="font-weight:700;color:#4790FF;">PB2026/112</td>
-                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
+                        <td><span class="badge-status badge-done"><span class="dot"></span> อนุมัติ</span></td>
                         <td>สัญญาจ้างพัฒนาแอปมือถือ</td>
                         <td>สัญญาจ้างบริการ</td>
                         <td style="font-weight:600;color:#1E293B;">บ. โมบายเทค</td>
@@ -404,11 +410,11 @@
                         <td>23/03/2026</td>
                         <td>10/04/2026</td>
                     </tr>
-                    <!-- Row 8 - ดำเนินการแล้ว -->
+                    <!-- Row 8 - อนุมัติ -->
                     <tr>
                         <td><div class="action-btns"></div></td>
                         <td style="font-weight:700;color:#4790FF;">PB2026/098</td>
-                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
+                        <td><span class="badge-status badge-done"><span class="dot"></span> อนุมัติ</span></td>
                         <td>สัญญาบริการ Internet Leased Line</td>
                         <td>สัญญาบริการ SaaS</td>
                         <td style="font-weight:600;color:#1E293B;">TRUE Corp.</td>
@@ -418,11 +424,11 @@
                         <td>24/03/2026</td>
                         <td>08/04/2026</td>
                     </tr>
-                    <!-- Row 9 - ดำเนินการแล้ว -->
+                    <!-- Row 9 - อนุมัติ -->
                     <tr>
                         <td><div class="action-btns"></div></td>
                         <td style="font-weight:700;color:#4790FF;">PB2026/089</td>
-                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
+                        <td><span class="badge-status badge-rejected"><span class="dot"></span> ไม่อนุมัติ</span></td>
                         <td>สัญญาจ้างทำความสะอาดอาคาร</td>
                         <td>สัญญาจ้างบริการ</td>
                         <td style="font-weight:600;color:#1E293B;">บ. คลีนเซอร์วิส</td>
@@ -574,7 +580,7 @@
             // Remove action icon
             cells[0].innerHTML = '<div class="action-btns"></div>';
             // Update status to done
-            cells[2].innerHTML = '<span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span>';
+            cells[2].innerHTML = '<span class="badge-status badge-done"><span class="dot"></span> อนุมัติ</span>';
             // Update contract status to ยกเลิก
             cells[6].innerHTML = '<span class="badge-contract" style="background:#FEE2E2;color:#991B1B;">ยกเลิก</span>';
             // Update วันที่ดำเนินการ
@@ -613,6 +619,7 @@
             if (ta) { ta.classList.remove('is-invalid'); void ta.offsetWidth; ta.classList.add('is-invalid'); ta.focus(); }
             return;
         }
+        markRowRejected(ta.value.trim());
         closeCancelModal();
         setTimeout(() => { wrap.classList.remove('show'); if (ta) { ta.value=''; ta.classList.remove('is-invalid'); } }, 250);
     }

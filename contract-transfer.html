@@ -871,7 +871,7 @@
             const rDate   = [...cells].reverse().map(c => toDate(c.textContent)).find(Boolean) || null;
             let show = true;
             if (q && !text.includes(q)) show = false;
-            if (show && ts && !rStatus.includes(ts)) show = false;
+            if (show && ts && !rStatus.trim().startsWith(ts)) show = false;
             if (show && dept && !rDept.includes(dept)) show = false;
             if (show && type && !rType.includes(type)) show = false;
             if (show && from && rDate && rDate < from) show = false;

@@ -249,22 +249,22 @@
     </div>
 
     <!-- Filter Bar -->
-    <div class="flex gap-3 items-center mb-5 flex-wrap max-md:flex-col max-md:items-stretch max-md:gap-2.5">
+    <div class="filter-bar tf-bar flex gap-3 items-center mb-5 flex-wrap max-md:flex-col max-md:items-stretch max-md:gap-2.5">
         <div class="flex-1 min-w-[200px] relative max-md:w-full max-md:min-w-0">
             <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-            <input type="text" placeholder="ค้นหาบริษัท, เลขสัญญา..." class="w-full py-2.5 pl-9 pr-3.5 border border-slate-300 rounded-lg text-sm font-[inherit] text-slate-600 bg-white outline-none transition-all focus:border-blue-500 focus:ring-3 focus:ring-blue-500/10">
+            <input type="text" data-tf="search" oninput="tableFilter()" placeholder="ค้นหาบริษัท, ผู้รับผิดชอบ, เลขสัญญา..." class="w-full py-2.5 pl-9 pr-3.5 border border-slate-300 rounded-lg text-sm font-[inherit] text-slate-600 bg-white outline-none">
         </div>
-        <select class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27%2364748B%27%20stroke-width=%272%27%3E%3Cpolyline%20points=%276%209%2012%2015%2018%209%27/%3E%3C/svg%3E')] bg-no-repeat bg-[right_10px_center] max-md:flex-1">
-            <option>สถานะทั้งหมด</option>
-            <option>รอดำเนินการ</option>
-            <option>ดำเนินการแล้ว</option>
-        </select>
-        <select class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2712%27%20height=%2712%27%20viewBox=%270%200%2024%2024%27%20fill=%27none%27%20stroke=%27%2364748B%27%20stroke-width=%272%27%3E%3Cpolyline%20points=%276%209%2012%2015%2018%209%27/%3E%3C/svg%3E')] bg-no-repeat bg-[right_10px_center] max-md:flex-1">
-            <option>ปีทั้งหมด</option>
-            <option>2025</option>
-            <option>2024</option>
-            <option>2023</option>
-        </select>
+        <div class="seg-radio" role="radiogroup" aria-label="สถานะ" data-tf-col="สถานะ">
+            <label data-status="all"><input type="radio" name="tfStatus" value="" checked onchange="tableFilter()"><span class="sr-dot"></span>ทั้งหมด<span class="sr-count"></span></label>
+            <label data-status="pending"><input type="radio" name="tfStatus" value="รอดำเนินการ" onchange="tableFilter()"><span class="sr-dot"></span>รอดำเนินการ<span class="sr-count"></span></label>
+            <label data-status="done"><input type="radio" name="tfStatus" value="อนุมัติ" onchange="tableFilter()"><span class="sr-dot"></span>อนุมัติ<span class="sr-count"></span></label>
+            <label data-status="rejected"><input type="radio" name="tfStatus" value="ไม่อนุมัติ" onchange="tableFilter()"><span class="sr-dot"></span>ไม่อนุมัติ<span class="sr-count"></span></label>
+        </div>
+        <select data-tf-col="บริษัทผู้ทำสัญญา" data-tf-auto onchange="tableFilter()" class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none min-w-[150px] max-md:w-full"><option value="">บริษัทผู้ทำสัญญาทั้งหมด</option></select>
+        <select data-tf-col="ปีย้อนหลัง" data-tf-auto onchange="tableFilter()" class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none min-w-[150px] max-md:w-full"><option value="">ปีย้อนหลังทั้งหมด</option></select>
+        <select data-tf-col="แผนก" data-tf-auto onchange="tableFilter()" class="py-2.5 px-3 pr-8 border border-slate-300 rounded-lg text-[13px] font-[inherit] text-slate-600 bg-white outline-none appearance-none min-w-[150px] max-md:w-full"><option value="">แผนกทั้งหมด</option></select>
+        <div data-ldp-range data-tf-date="วันที่สร้างคำขอ" data-ph-start="วันเริ่มต้น" data-ph-end="วันสิ้นสุด" data-onchange="tableFilter"></div>
+        <div class="tf-count text-xs text-slate-400"></div>
     </div>
 
     <!-- Table -->
@@ -371,7 +371,7 @@
                         <td>10/03/2026</td>
                         <td style="color:#94A3B8;">—</td>
                     </tr>
-                    <!-- Row 6 - ดำเนินการแล้ว -->
+                    <!-- Row 6 - อนุมัติ -->
                     <tr>
                         <td>
                             <div class="action-btns"></div>
@@ -379,14 +379,14 @@
                         <td style="font-weight:600;color:#1E293B;">บ. คลีนเซอร์วิส จำกัด</td>
                         <td>2025</td>
                         <td><span style="font-weight:700;color:#4790FF;">3</span> ฉบับ</td>
-                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
+                        <td><span class="badge-status badge-done"><span class="dot"></span> อนุมัติ</span></td>
                         <td>นายวิชัย เจริญสุข</td>
                         <td>Operations</td>
                         <td style="font-weight:600;color:#4790FF;">PB2025/201, PB2025/202, PB2025/203</td>
                         <td>05/03/2026</td>
                         <td>01/04/2026</td>
                     </tr>
-                    <!-- Row 7 - ดำเนินการแล้ว -->
+                    <!-- Row 7 - อนุมัติ -->
                     <tr>
                         <td>
                             <div class="action-btns"></div>
@@ -394,14 +394,14 @@
                         <td style="font-weight:600;color:#1E293B;">AWS Thailand จำกัด</td>
                         <td>2024</td>
                         <td><span style="font-weight:700;color:#4790FF;">2</span> ฉบับ</td>
-                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
+                        <td><span class="badge-status badge-done"><span class="dot"></span> อนุมัติ</span></td>
                         <td>นางสาววิภา สุขใจ</td>
                         <td>IT Department</td>
                         <td style="font-weight:600;color:#4790FF;">PB2024/150, PB2024/151</td>
                         <td>28/02/2026</td>
                         <td>25/03/2026</td>
                     </tr>
-                    <!-- Row 8 - ดำเนินการแล้ว -->
+                    <!-- Row 8 - อนุมัติ -->
                     <tr>
                         <td>
                             <div class="action-btns"></div>
@@ -409,7 +409,7 @@
                         <td style="font-weight:600;color:#1E293B;">บ. ออฟฟิศ ซัพพลาย จำกัด</td>
                         <td>2023</td>
                         <td><span style="font-weight:700;color:#4790FF;">1</span> ฉบับ</td>
-                        <td><span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span></td>
+                        <td><span class="badge-status badge-rejected"><span class="dot"></span> ไม่อนุมัติ</span></td>
                         <td>นายสมชาย โชดี</td>
                         <td>Operations</td>
                         <td style="font-weight:600;color:#4790FF;">PB2023/088</td>
@@ -618,7 +618,7 @@
             // Update action column — remove create icon
             cells[0].innerHTML = '<div class="action-btns"></div>';
             // Update status
-            cells[4].innerHTML = '<span class="badge-status badge-done"><span class="dot"></span> ดำเนินการแล้ว</span>';
+            cells[4].innerHTML = '<span class="badge-status badge-done"><span class="dot"></span> อนุมัติ</span>';
             // Update contract numbers
             cells[7].style.fontWeight = '600';
             cells[7].style.color = '#4790FF';
@@ -659,6 +659,7 @@
             if (ta) { ta.classList.remove('is-invalid'); void ta.offsetWidth; ta.classList.add('is-invalid'); ta.focus(); }
             return;
         }
+        markRowRejected(ta.value.trim());
         closeBackdateModal();
         setTimeout(() => { wrap.classList.remove('show'); if (ta) { ta.value=''; ta.classList.remove('is-invalid'); } }, 250);
     }
